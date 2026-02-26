@@ -22,7 +22,6 @@
 
       --a1: #52ffd6;
       --a2: #7aa7ff;
-      --a3: #c7c7c7;
 
       --radius: 18px;
       --shadow: 0 18px 60px rgba(0,0,0,.55);
@@ -37,10 +36,11 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-      background: radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
-                  radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
-                  radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
+        radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
+        radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
+        var(--bg);
       overflow-x:hidden;
       line-height:1.35;
     }
@@ -287,7 +287,6 @@
         rgba(255,255,255,.05);
     }
 
-    /* ===== PROGRAMA (render) ===== */
     details{
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.12);
@@ -305,7 +304,6 @@
     .muted{ color: var(--muted2); font-size: 13px; }
     ul{ margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
 
-    /* ===== Speakers cards ===== */
     .speaker{ display:flex; gap: 14px; align-items:center; }
     .avatar{
       width: 56px; height: 56px;
@@ -324,6 +322,29 @@
                   radial-gradient(circle at 70% 75%, rgba(122,167,255,.22), transparent 60%);
       transform: rotate(18deg);
     }
+
+    /* ===== SEDE (IMÁGENES) ===== */
+    .img-card{ padding:0; overflow:hidden; position:relative; }
+    .img-card img{
+      width:100%;
+      height:100%;
+      min-height:320px;
+      object-fit:cover;
+      opacity:.80;
+      filter:saturate(.92) contrast(1.05);
+      display:block;
+    }
+    .img-overlay{
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 520px at 20% 30%, rgba(82,255,214,.12), transparent 60%),
+        radial-gradient(820px 560px at 80% 40%, rgba(122,167,255,.12), transparent 60%),
+        linear-gradient(180deg, rgba(7,10,15,.20), rgba(7,10,15,.70));
+    }
+    .img-caption{
+      position:absolute; left:16px; right:16px; bottom:16px;
+    }
+    .strip img{ height:180px; min-height:auto; opacity:.82; }
 
     footer{ padding: 28px 0 44px; color: var(--muted2); }
 
@@ -362,7 +383,7 @@
           <a href="#diferenciales">Diferenciales</a>
           <a href="#programa">Programa</a>
           <a href="#speakers">Speakers</a>
-          <a href="#dirigido">Dirigido a</a>
+          <a href="#sede">Sede</a>
           <a href="#entradas">Entradas</a>
           <a href="#faq">FAQ</a>
         </nav>
@@ -377,7 +398,7 @@
         <a href="#diferenciales">Diferenciales</a>
         <a href="#programa">Programa</a>
         <a href="#speakers">Speakers</a>
-        <a href="#dirigido">Dirigido a</a>
+        <a href="#sede">Sede</a>
         <a href="#entradas">Entradas</a>
         <a href="#faq">FAQ</a>
       </div>
@@ -388,7 +409,7 @@
        ====================== -->
 
   <!-- =========================
-       COMIENZO: HERO (FORMATO CAPTURA)
+       COMIENZO: HERO (FORMATO PREMIUM)
        ========================= -->
   <header class="hero">
     <div class="glow" aria-hidden="true"></div>
@@ -411,7 +432,7 @@
           <p class="subhead">
             Formación intensiva para cosmiatras, dermatólogos y profesionales del sector.
             Protocolos, equipamiento y tendencias de vanguardia.
-            <b style="color:var(--text); font-weight:680;">El primer congreso en la Patagonia.</b>
+            <b style="color:var(--text); font-weight:680;">El primer congreso de estética en la Patagonia.</b>
           </p>
 
           <div class="hero-actions">
@@ -462,11 +483,11 @@
           <div style="height:14px"></div>
 
           <div class="grid-2">
-            <div class="card" style="padding:14px; background: rgba(7,10,15,.35);">
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Enfoque</div>
               <div style="margin-top:6px; font-weight:760;">Tecnología & evidencia</div>
             </div>
-            <div class="card" style="padding:14px; background: rgba(7,10,15,.35);">
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Nivel</div>
               <div style="margin-top:6px; font-weight:760;">Profesionales</div>
             </div>
@@ -540,6 +561,101 @@
        ====================== -->
 
   <!-- =========================
+       COMIENZO: SEDE (SAN MARTÍN DE LOS ANDES + IMÁGENES)
+       ========================= -->
+  <section id="sede">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Sede</h2>
+          <p>San Martín de los Andes como marco: presente, pero sin competir con el contenido académico.</p>
+        </div>
+        <a class="btn btn-ghost" href="#entradas">Ver entradas</a>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));">
+          <div class="kicker" style="margin-bottom:12px;">
+            <span class="dot" aria-hidden="true"></span>
+            Patagonia • contexto del evento
+          </div>
+
+          <h3 style="margin-top:0;">San Martín de los Andes</h3>
+
+          <p style="margin-top:8px;">
+            La sede suma experiencia, foco y networking en un entorno cuidado.
+            <br/><br/>
+            <b style="color:var(--text); font-weight:680;">La innovación y la tecnología son el eje.</b>
+            La Patagonia potencia el encuentro.
+          </p>
+
+          <div style="height:12px;"></div>
+
+          <div class="grid-2">
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
+              <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Ubicación</div>
+              <div style="margin-top:6px; font-weight:760;">Neuquén, Argentina</div>
+            </div>
+
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
+              <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Acceso</div>
+              <div style="margin-top:6px; font-weight:760;">Avión + traslados</div>
+            </div>
+          </div>
+
+          <div style="height:12px;"></div>
+          <a class="btn" href="#" onclick="alert('Acá va link a mapa/logística cuando lo tengas'); return false;">Ver cómo llegar</a>
+        </div>
+
+        <div class="card img-card">
+          <img src="assets/sma-01.jpg" alt="San Martín de los Andes (entorno)" />
+          <div class="img-overlay" aria-hidden="true"></div>
+          <div class="img-caption">
+            <div class="kicker">
+              <span class="dot" aria-hidden="true"></span>
+              Naturaleza como marco
+            </div>
+            <div style="margin-top:10px; font-weight:820;">Innovación como protagonista.</div>
+            <div class="muted" style="margin-top:6px;">Una experiencia que acompaña, sin desviar el foco.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:14px;"></div>
+
+      <div class="grid-3 strip">
+        <div class="card img-card">
+          <img src="assets/sma-02.jpg" alt="Entorno / lago" />
+          <div class="img-overlay" aria-hidden="true"></div>
+          <div class="img-caption">
+            <div class="muted">Entorno que potencia el aprendizaje</div>
+          </div>
+        </div>
+
+        <div class="card img-card">
+          <img src="assets/sma-03.jpg" alt="Ciudad / infraestructura" />
+          <div class="img-overlay" aria-hidden="true"></div>
+          <div class="img-caption">
+            <div class="muted">Servicios, hotelería, traslados</div>
+          </div>
+        </div>
+
+        <div class="card img-card">
+          <img src="assets/sma-04.jpg" alt="Bosque / textura patagónica" />
+          <div class="img-overlay" aria-hidden="true"></div>
+          <div class="img-caption">
+            <div class="muted">Patagonia presente, sin competir</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+  <!-- ======================
+       FIN: SEDE
+       ====================== -->
+
+  <!-- =========================
        COMIENZO: DIRIGIDO A
        ========================= -->
   <section id="dirigido">
@@ -596,12 +712,12 @@
       </div>
 
       <details>
-        <summary>¿A quién está dirigido?</summary>
+        <summary>¿A quiénes está dirigido?</summary>
         <p>Profesionales de la estética: cosmiatras, dermatólogos, médicos estéticos y afines.</p>
       </details>
       <details>
-        <summary>¿Incluye certificación?</summary>
-        <p>Se puede incluir certificado de asistencia (definir formato).</p>
+        <summary>¿Habrá certificación?</summary>
+        <p>Se puede incluir certificado/diploma de asistencia (definir formato final).</p>
       </details>
       <details>
         <summary>¿Cómo será la compra de entradas?</summary>
@@ -627,7 +743,6 @@
 
   <!-- =========================
        COMIENZO: SCRIPTS (DATA + RENDER)
-       IMPORTANTE: data.js debe estar en la raíz del repo
        ========================= -->
   <script src="./data.js"></script>
   <script>
@@ -649,9 +764,9 @@
       }));
     }
 
-    // Guardas: si data.js no cargó
+    // Guardas
     if (!window.CEP) {
-      console.error("No se cargó window.CEP. Revisá que data.js exista y esté en la raíz.");
+      console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
       // Meta
       document.getElementById('metaDate').textContent = window.CEP.meta.fecha;
