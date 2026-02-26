@@ -5,76 +5,263 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#0b0f14" />
   <title>CEPATAGONIA — Congreso</title>
-  <meta name="description" content="Congreso de capacitación profesional: estética regenerativa, biotecnología aplicada, innovación y tecnología. Patagonia como marco." />
+  <meta name="description" content="Congreso de capacitación en estética avanzada: innovación, tecnología y formación profesional. Patagonia como marco." />
 
   <!-- =========================
-       COMIENZO: ESTILOS GENERALES
+       COMIENZO: ESTILOS (FORMATO PREMIUM)
        ========================= -->
   <style>
     :root{
-      --bg:#070a0f;
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.70);
-      --muted2:rgba(255,255,255,.58);
-      --line:rgba(255,255,255,.12);
-      --panel:rgba(255,255,255,.04);
+      --bg: #070a0f;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.58);
+      --line: rgba(255,255,255,.12);
 
-      --a1:#52ffd6;   /* verde quirúrgico */
-      --a2:#7aa7ff;   /* azul frío */
-      --radius:18px;
+      --a1: #52ffd6;
+      --a2: #7aa7ff;
+      --a3: #c7c7c7;
+
+      --radius: 18px;
       --shadow: 0 18px 60px rgba(0,0,0,.55);
       --shadow2: 0 10px 30px rgba(0,0,0,.35);
 
-      --max:1160px;
+      --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
     }
 
-    *{ box-sizing:border-box; }
-    html,body{ height:100%; }
+    *{ box-sizing: border-box; }
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-      background:
-        radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
-        radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
-        var(--bg);
-      line-height:1.35;
+      background: radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
+                  radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
+                  radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
+                  var(--bg);
       overflow-x:hidden;
+      line-height:1.35;
     }
+
     a{ color:inherit; text-decoration:none; }
     .container{
       width: min(var(--max), calc(100% - (var(--pad) * 2)));
       margin: 0 auto;
     }
 
-    section{ padding: 58px 0; border-top: 1px solid var(--line); }
+    /* ===== NAV ===== */
+    .nav{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(7,10,15,.55);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 650;
+      font-size: 12px;
+    }
+    .mark{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(82,255,214,.85), transparent 60%),
+        radial-gradient(20px 20px at 70% 65%, rgba(122,167,255,.85), transparent 65%),
+        rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .nav-links{
+      display:flex;
+      gap: 18px;
+      align-items:center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .nav-links a{
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .nav-links a:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.08);
+      color: var(--text);
+    }
 
     .btn{
-      display:inline-flex; align-items:center; justify-content:center; gap:10px;
-      padding: 12px 14px; border-radius: 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
       box-shadow: var(--shadow2);
       color: var(--text);
-      font-weight: 650; font-size: 13px;
-      cursor:pointer; user-select:none; white-space:nowrap;
+      font-weight: 620;
+      font-size: 13px;
+      cursor:pointer;
       transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+      white-space:nowrap;
     }
     .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18); }
-    .btn:active{ transform: translateY(0); }
-
     .btn-primary{
       border-color: rgba(82,255,214,.40);
       background: linear-gradient(135deg, rgba(82,255,214,.18), rgba(122,167,255,.12));
     }
-    .btn-ghost{
-      background: transparent;
-      box-shadow:none;
-      border-color: rgba(255,255,255,.12);
+    .btn-ghost{ background: transparent; box-shadow:none; border-color: rgba(255,255,255,.12); color: var(--muted); }
+
+    .hamburger{ display:none; }
+    .mobile-drawer{
+      display:none;
+      border-top:1px solid var(--line);
+      padding: 10px 0 16px;
+    }
+    .mobile-drawer a{ display:block; padding: 10px 8px; color: var(--muted); }
+    .mobile-drawer a:hover{ color: var(--text); background: rgba(255,255,255,.05); border-radius: 12px; }
+
+    /* ===== HERO ===== */
+    header.hero{ padding: clamp(54px, 7vw, 92px) 0 44px; position: relative; }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: clamp(18px, 4vw, 36px);
+      align-items:start;
+    }
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+    .dot{
+      width:8px; height:8px; border-radius: 99px;
+      background: var(--a1);
+      box-shadow: 0 0 20px rgba(82,255,214,.55);
+    }
+    h1{
+      margin: 18px 0 10px;
+      font-size: clamp(34px, 4.8vw, 60px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .subhead{
+      color: var(--muted);
+      font-size: clamp(16px, 1.5vw, 18px);
+      max-width: 56ch;
+      margin: 12px 0 22px;
+    }
+    .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 10px; }
+    .hero-meta{ display:flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; color: var(--muted2); font-size: 13px; }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .pill b{ color: var(--text); font-weight: 650; }
+
+    .hero-card{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      min-height: 340px;
+    }
+    .hero-card h3{
+      margin: 6px 0 8px;
+      font-size: 14px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
       color: var(--muted);
     }
+    .hero-card .big{
+      font-size: 26px;
+      line-height:1.1;
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
 
+    .topo{
+      position:absolute;
+      inset:-60px -120px -60px -120px;
+      opacity:.85;
+      pointer-events:none;
+    }
+    .glow{
+      position:absolute;
+      width: 420px; height: 420px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(82,255,214,.20), transparent 60%);
+      right:-180px; top:-160px;
+      pointer-events:none;
+    }
+    .glow2{
+      position:absolute;
+      width: 520px; height: 520px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(122,167,255,.20), transparent 60%);
+      left:-220px; bottom:-240px;
+      pointer-events:none;
+    }
+
+    /* ===== SECTIONS ===== */
+    section{ padding: 58px 0; border-top: 1px solid var(--line); }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-head p{
+      margin:0;
+      color: var(--muted2);
+      max-width: 64ch;
+      font-size: 13.5px;
+    }
+    .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
     .card{
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,.12);
@@ -82,31 +269,25 @@
       padding: 18px;
       box-shadow: var(--shadow2);
     }
-    .tag{
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px; border-radius: 999px;
-      border: 1px solid rgba(82,255,214,.22);
-      background: rgba(82,255,214,.08);
-      color: rgba(82,255,214,.92);
-      font-size: 12px;
+    .card h3{
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+    .card p{ margin:0; color: var(--muted); font-size: 13.5px; }
+    .icon{
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(16px 16px at 30% 30%, rgba(82,255,214,.45), transparent 65%),
+        radial-gradient(18px 18px at 70% 70%, rgba(122,167,255,.45), transparent 65%),
+        rgba(255,255,255,.05);
     }
 
-    .section-head{
-      display:flex; align-items:flex-end; justify-content:space-between;
-      gap: 18px; margin-bottom: 22px;
-    }
-    .section-head h2{
-      margin:0; font-size: 18px; letter-spacing: .18em;
-      text-transform: uppercase; color: var(--muted);
-    }
-    .section-head p{
-      margin:0; color: var(--muted2);
-      max-width: 72ch; font-size: 13.5px;
-    }
-
-    .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-
+    /* ===== PROGRAMA (render) ===== */
     details{
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.12);
@@ -116,18 +297,40 @@
     details + details{ margin-top: 10px; }
     summary{
       cursor:pointer;
-      font-weight: 800;
+      font-weight: 750;
       color: var(--text);
-      list-style: none;
+      list-style:none;
     }
     summary::-webkit-details-marker{ display:none; }
-    details p, details li{ color: var(--muted); font-size: 13.5px; }
-    ul{ margin: 10px 0 0; padding-left: 18px; }
+    .muted{ color: var(--muted2); font-size: 13px; }
+    ul{ margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+
+    /* ===== Speakers cards ===== */
+    .speaker{ display:flex; gap: 14px; align-items:center; }
+    .avatar{
+      width: 56px; height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      position: relative;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .avatar:before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background: radial-gradient(circle at 30% 30%, rgba(82,255,214,.22), transparent 60%),
+                  radial-gradient(circle at 70% 75%, rgba(122,167,255,.22), transparent 60%);
+      transform: rotate(18deg);
+    }
 
     footer{ padding: 28px 0 44px; color: var(--muted2); }
 
     @media (max-width: 920px){
-      .grid-3, .grid-2{ grid-template-columns: 1fr; }
+      .hero-grid{ grid-template-columns: 1fr; }
+      .grid-3{ grid-template-columns: 1fr; }
+      .grid-2{ grid-template-columns: 1fr; }
       .nav-links{ display:none; }
       .hamburger{ display:inline-flex; }
       .mobile-drawer{ display:block; }
@@ -135,112 +338,143 @@
     }
   </style>
   <!-- ======================
-       FIN: ESTILOS GENERALES
+       FIN: ESTILOS
        ====================== -->
 </head>
 
 <body>
 
   <!-- =========================
-       COMIENZO: NAV + MENÚ MOBILE
+       COMIENZO: NAV + MENU MOBILE
        ========================= -->
-  <div class="nav" style="position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(7,10,15,.55);border-bottom:1px solid var(--line);">
+  <div class="nav">
     <div class="container">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;">
-        <div style="display:flex;align-items:center;gap:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;font-size:12px;">
-          <div style="width:34px;height:34px;border-radius:12px;background:
-            radial-gradient(18px 18px at 30% 30%, rgba(82,255,214,.85), transparent 60%),
-            radial-gradient(20px 20px at 70% 65%, rgba(122,167,255,.85), transparent 65%),
-            rgba(255,255,255,.06);
-            border:1px solid rgba(255,255,255,.10);"></div>
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
           <div>
             CEPATAGONIA<br/>
-            <span style="color:var(--muted);font-weight:560;letter-spacing:.20em;">CONGRESO</span>
+            <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO</span>
           </div>
         </div>
 
-        <nav class="nav-links" aria-label="Navegación" style="display:flex;gap:18px;align-items:center;font-size:13px;color:var(--muted);">
-          <a href="#ejes" style="padding:10px 10px;border-radius:12px;">Ejes</a>
-          <a href="#speakers" style="padding:10px 10px;border-radius:12px;">Speakers</a>
-          <a href="#dirigido" style="padding:10px 10px;border-radius:12px;">Dirigido a</a>
-          <a href="#entradas" style="padding:10px 10px;border-radius:12px;">Entradas</a>
+        <nav class="nav-links" aria-label="Navegación principal">
+          <a href="#diferenciales">Diferenciales</a>
+          <a href="#programa">Programa</a>
+          <a href="#speakers">Speakers</a>
+          <a href="#dirigido">Dirigido a</a>
+          <a href="#entradas">Entradas</a>
+          <a href="#faq">FAQ</a>
         </nav>
 
-        <div style="display:flex;gap:10px;align-items:center;">
-          <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" style="display:none;">
-            Menú
-          </button>
-          <a class="btn btn-primary" href="#entradas">Ver entradas</a>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
+          <a class="btn btn-primary" href="#entradas">Comprar entradas</a>
         </div>
       </div>
 
-      <div class="mobile-drawer" id="mobileMenu" hidden style="display:none;border-top:1px solid var(--line);padding:10px 0 16px;">
-        <a href="#ejes" style="display:block;padding:10px 8px;color:var(--muted);">Ejes</a>
-        <a href="#speakers" style="display:block;padding:10px 8px;color:var(--muted);">Speakers</a>
-        <a href="#dirigido" style="display:block;padding:10px 8px;color:var(--muted);">Dirigido a</a>
-        <a href="#entradas" style="display:block;padding:10px 8px;color:var(--muted);">Entradas</a>
+      <div class="mobile-drawer" id="mobileMenu" hidden>
+        <a href="#diferenciales">Diferenciales</a>
+        <a href="#programa">Programa</a>
+        <a href="#speakers">Speakers</a>
+        <a href="#dirigido">Dirigido a</a>
+        <a href="#entradas">Entradas</a>
+        <a href="#faq">FAQ</a>
       </div>
     </div>
   </div>
-
-  <script>
-    // Menú mobile (muestra botón solo en mobile)
-    const menuBtn = document.getElementById('menuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    function syncMobileUI(){
-      const isMobile = window.matchMedia("(max-width: 920px)").matches;
-      if(isMobile){
-        menuBtn.style.display = "inline-flex";
-        mobileMenu.style.display = "block";
-      } else {
-        menuBtn.style.display = "none";
-        mobileMenu.hidden = true;
-        menuBtn.setAttribute('aria-expanded','false');
-        mobileMenu.style.display = "none";
-      }
-    }
-    syncMobileUI();
-    window.addEventListener('resize', syncMobileUI);
-
-    if(menuBtn && mobileMenu){
-      menuBtn.addEventListener('click', () => {
-        const isOpen = menuBtn.getAttribute('aria-expanded') === 'true';
-        menuBtn.setAttribute('aria-expanded', String(!isOpen));
-        mobileMenu.hidden = isOpen;
-      });
-      mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-        menuBtn.setAttribute('aria-expanded','false');
-        mobileMenu.hidden = true;
-      }));
-    }
-  </script>
   <!-- ======================
-       FIN: NAV + MENÚ MOBILE
+       FIN: NAV + MENU MOBILE
        ====================== -->
 
   <!-- =========================
-       COMIENZO: HERO
+       COMIENZO: HERO (FORMATO CAPTURA)
        ========================= -->
-  <header style="padding: clamp(54px, 7vw, 92px) 0 44px;">
+  <header class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="glow2" aria-hidden="true"></div>
+
     <div class="container">
-      <div style="display:inline-flex;gap:10px;align-items:center;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05);color:var(--muted);font-size:12px;letter-spacing:.10em;text-transform:uppercase;">
-        <span style="width:8px;height:8px;border-radius:99px;background:var(--a1);box-shadow:0 0 20px rgba(82,255,214,.55);"></span>
-        Capacitación profesional • innovación • tecnología
-      </div>
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span class="dot" aria-hidden="true"></span>
+            Capacitación profesional • estética avanzada
+          </div>
 
-      <h1 style="margin:18px 0 10px;font-size:clamp(34px,4.8vw,60px);line-height:1.02;letter-spacing:-0.02em;text-transform:uppercase;">
-        Estética Regenerativa<br/> & Biotecnología Aplicada
-      </h1>
+          <h1>
+            Innovación y<br/>
+            tecnología aplicada<br/>
+            a la estética
+          </h1>
 
-      <p style="color:var(--muted);font-size:clamp(16px,1.5vw,18px);max-width:64ch;margin:12px 0 22px;">
-        Ciencia y tecnología como núcleo del congreso. Patagonia como marco diferencial: el primer congreso profesional de estética en la región.
-      </p>
+          <p class="subhead">
+            Formación intensiva para cosmiatras, dermatólogos y profesionales del sector.
+            Protocolos, equipamiento y tendencias de vanguardia.
+            <b style="color:var(--text); font-weight:680;">El primer congreso en la Patagonia.</b>
+          </p>
 
-      <div style="display:flex;gap:12px;flex-wrap:wrap;">
-        <a class="btn btn-primary" href="#ejes">Ver ejes</a>
-        <a class="btn" href="#speakers">Ver speakers</a>
-        <a class="btn btn-ghost" href="#dirigido">¿A quién está dirigido?</a>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#entradas">Ver entradas</a>
+            <a class="btn" href="#programa">Ver programa</a>
+            <a class="btn btn-ghost" href="#speakers">Conocer speakers</a>
+          </div>
+
+          <div class="hero-meta">
+            <div class="pill"><b>Fecha:</b> <span id="metaDate">—</span></div>
+            <div class="pill"><b>Ciudad:</b> <span id="metaCity">—</span></div>
+            <div class="pill"><b>Modalidad:</b> <span id="metaMode">—</span></div>
+          </div>
+        </div>
+
+        <aside class="hero-card">
+          <div class="topo" aria-hidden="true">
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="rgba(82,255,214,.75)"/>
+                  <stop offset="1" stop-color="rgba(122,167,255,.60)"/>
+                </linearGradient>
+              </defs>
+              <g fill="none" stroke="url(#g)" stroke-width="1.2" opacity=".55">
+                <path d="M-50,150 C180,80 320,200 520,150 C720,100 840,40 1250,120" />
+                <path d="M-70,220 C200,140 360,270 560,220 C760,170 900,120 1280,170" />
+                <path d="M-90,290 C200,230 390,340 610,300 C830,260 960,190 1320,250" />
+                <path d="M-120,360 C160,330 430,420 660,380 C890,340 1060,280 1340,320" />
+                <path d="M-140,430 C160,450 470,520 720,480 C970,440 1120,380 1360,390" />
+                <path d="M-160,500 C160,560 520,610 780,570 C1040,530 1180,470 1380,460" />
+                <path d="M-180,570 C170,660 600,700 860,670 C1120,640 1250,590 1400,540" />
+              </g>
+              <g fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1" opacity=".35">
+                <path d="M100,90 C260,20 440,60 600,100 C760,140 980,120 1120,60" />
+                <path d="M60,640 C240,560 460,620 640,680 C820,740 1020,740 1180,660" />
+              </g>
+            </svg>
+          </div>
+
+          <h3>Qué vas a llevarte</h3>
+          <div class="big">Protocolos + criterio + actualización real</div>
+          <p>
+            Un congreso diseñado para mejorar la práctica profesional con herramientas actuales:
+            equipos, técnicas, seguridad, tendencias y aplicación clínica.
+          </p>
+
+          <div style="height:14px"></div>
+
+          <div class="grid-2">
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35);">
+              <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Enfoque</div>
+              <div style="margin-top:6px; font-weight:760;">Tecnología & evidencia</div>
+            </div>
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35);">
+              <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Nivel</div>
+              <div style="margin-top:6px; font-weight:760;">Profesionales</div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+          <a class="btn btn-primary" href="#entradas" style="width:100%;">Reservar lugar</a>
+        </aside>
       </div>
     </div>
   </header>
@@ -249,222 +483,60 @@
        ====================== -->
 
   <!-- =========================
-       COMIENZO: EJES ACADÉMICOS
+       COMIENZO: DIFERENCIALES
        ========================= -->
-  <section id="ejes">
+  <section id="diferenciales">
     <div class="container">
       <div class="section-head">
         <div>
-          <h2>Ejes Académicos</h2>
-          <p>Programa organizado por ejes temáticos. (Podés editar cada bloque fácilmente.)</p>
+          <h2>Diferenciales</h2>
+          <p>Innovación y tecnología como núcleo. Patagonia como marco estratégico.</p>
         </div>
       </div>
 
-      <!-- EJE 1 -->
-      <details>
-        <summary>EJE 1 — Regeneración Celular & Wellaging</summary>
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Adriana Sardot</h3>
-          <p style="color:var(--muted);margin:0;">
-            Cosmetóloga y dermocosmiatra. +30 años de trayectoria. Diplomada en Cosmiatría Avanzada.
-          </p>
-          <p style="margin-top:12px;"><b>Disertación:</b> Estética Personalizada & Wellaging — Rol de células madre y telómeros en la longevidad cutánea.</p>
-          <ul>
-            <li>Bases biológicas del wellaging</li>
-            <li>Senescencia celular y longevidad funcional</li>
-            <li>Impacto de telómeros en envejecimiento cutáneo</li>
-            <li>Células madre como herramienta regenerativa</li>
-            <li>Protocolos personalizados basados en biología celular</li>
-          </ul>
-        </div>
-      </details>
-
-      <!-- EJE 2 -->
-      <details>
-        <summary>EJE 2 — Terapias Manuales Avanzadas & Modelado Corporal</summary>
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Ana Paula Travattoni</h3>
-          <p style="color:var(--muted);margin:0;">
-            APM (UAI). Especialista en cosmiatría y dermatocosmiatría. Drenaje linfático Método Renata França. Directora Académica AnaPau Estética.
-          </p>
-          <p style="margin-top:12px;"><b>Disertación:</b> Drenaje Linfático, Maderoterapia y Lipodrenaje Integrado.</p>
-          <ul>
-            <li>Técnica correcta de drenaje linfático corporal</li>
-            <li>Beneficios clínicos y optimización post procedimientos</li>
-            <li>Maderoterapia en celulitis, fibrosis y lipedema</li>
-            <li>Precauciones y criterios profesionales</li>
-            <li>Integración del Método AnaPau en protocolos combinados</li>
-            <li>Lipodrenaje modelador y reducción de contornos</li>
-          </ul>
-        </div>
-      </details>
-
-      <!-- EJE 3 -->
-      <details>
-        <summary>EJE 3 — Biotecnología & Skin Quality</summary>
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Dra. Carolina Laxague</h3>
-          <p style="color:var(--muted);margin:0;">
-            Médica (UBA). Especialista en Dermatología. Formación en Medicina Estética (AMA).
-          </p>
-          <p style="margin-top:12px;"><b>Disertación:</b> Inside Out Glow — Nutracéuticos como potenciadores de la calidad cutánea.</p>
-          <ul>
-            <li>Concepto Skin Quality 360°</li>
-            <li>Suplementación estratégica</li>
-            <li>Sinergia con procedimientos estéticos</li>
-            <li>Optimización de resultados clínicos</li>
-            <li>Evidencia y seguridad</li>
-          </ul>
-        </div>
-      </details>
-
-      <!-- EJE 4 -->
-      <details>
-        <summary>EJE 4 — Innovación en Exosomas & Microbiota Cutánea</summary>
-
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Laboratorio UDERM — Pablo González</h3>
-          <p style="color:var(--muted);margin:0;">Docente y CEO de U-DERM.</p>
-          <p style="margin-top:12px;"><b>Disertación:</b> La revolución del mercado con Exosomas Exodermal.</p>
-          <ul>
-            <li>Aplicación clínica real</li>
-            <li>Bioestimulación avanzada</li>
-            <li>Impacto en la práctica profesional</li>
-          </ul>
-        </div>
-
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Ing. Sandra Molinzavez</h3>
-          <p style="color:var(--muted);margin:0;">CEO Laboratorio SEM.</p>
-          <p style="margin-top:12px;"><b>Disertación:</b> Lanzamiento Exclusivo 2026 — Máscara con Exosomas + Pre y Probióticos.</p>
-          <ul>
-            <li>Microbiota y regeneración</li>
-            <li>Desarrollo biotecnológico</li>
-            <li>Innovación en formulación</li>
-          </ul>
-        </div>
-      </details>
-
-      <!-- EJE 5 -->
-      <details>
-        <summary>EJE 5 — Estética Reparadora & Estimulación Folicular</summary>
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Laura Varela</h3>
-          <p style="color:var(--muted);margin:0;">
-            Dermatocosmiatra hospitalaria. Instructora internacional. Fundadora de Dalí Global International Training.
-          </p>
-          <p style="margin-top:12px;"><b>Disertación:</b> Recuperación Regenerativa sin Tintas.</p>
-          <ul>
-            <li>Tratamiento innovador de estrías y cicatrices atróficas</li>
-            <li>Estimulación dérmica controlada</li>
-            <li>Recuperación rápida de volumen en cejas y barba</li>
-            <li>Técnica avanzada de activación folicular</li>
-            <li>Alternativas regenerativas sin pigmentación</li>
-          </ul>
-        </div>
-      </details>
-
-      <!-- EJE 6 -->
-      <details>
-        <summary>EJE 6 — Gestión, Marketing & Rentabilidad del Gabinete</summary>
-        <div class="card" style="margin-top:12px;">
-          <div class="tag">Speaker</div>
-          <h3 style="margin:10px 0 6px;letter-spacing:.06em;text-transform:uppercase;">Eduardo Finci</h3>
-          <p style="color:var(--muted);margin:0;">
-            Presidente de la Asociación Americana de Spa. Presidente de la American Wellness Association.
-            Embajador Emérito World Wellness Weekend (LATAM).
-          </p>
-          <p style="margin-top:12px;"><b>Disertación:</b> Ventas Aplicadas al Gabinete + Marketing Aplicado al Profesional Estético.</p>
-          <ul>
-            <li>Estrategias éticas y efectivas</li>
-            <li>Experiencia del paciente</li>
-            <li>Conversión y fidelización</li>
-            <li>Posicionamiento estratégico</li>
-            <li>Comunicación de valor</li>
-            <li>Autoridad en el mercado</li>
-          </ul>
-
-          <div class="tag" style="margin-top:12px;">Post Congreso Exclusivo</div>
-          <ul>
-            <li>Gerenciamiento Estratégico de SPA</li>
-            <li>Organización operativa</li>
-            <li>Rentabilidad</li>
-            <li>Escalabilidad del negocio</li>
-          </ul>
-        </div>
-      </details>
-
+      <div class="grid-3" id="diferencialesGrid"></div>
     </div>
   </section>
   <!-- ======================
-       FIN: EJES ACADÉMICOS
+       FIN: DIFERENCIALES
        ====================== -->
 
   <!-- =========================
-       COMIENZO: SPEAKERS (RESUMEN RÁPIDO)
+       COMIENZO: PROGRAMA (EJES DINÁMICOS)
+       ========================= -->
+  <section id="programa">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Programa</h2>
+          <p>Ejes académicos con speakers y contenidos clave.</p>
+        </div>
+      </div>
+
+      <div id="ejesList"></div>
+    </div>
+  </section>
+  <!-- ======================
+       FIN: PROGRAMA
+       ====================== -->
+
+  <!-- =========================
+       COMIENZO: SPEAKERS (GRID)
        ========================= -->
   <section id="speakers">
     <div class="container">
       <div class="section-head">
         <div>
           <h2>Speakers</h2>
-          <p>Resumen rápido para decidir y encontrar info sin leer todo.</p>
+          <p>Vista rápida por eje para encontrar info sin fricción.</p>
         </div>
       </div>
 
-      <div class="grid-2">
-        <div class="card">
-          <div class="tag">EJE 1</div>
-          <h3 style="margin-top:12px;">Adriana Sardot</h3>
-          <p style="color:var(--muted);">Wellaging • células madre • telómeros • longevidad cutánea</p>
-        </div>
-
-        <div class="card">
-          <div class="tag">EJE 2</div>
-          <h3 style="margin-top:12px;">Ana Paula Travattoni</h3>
-          <p style="color:var(--muted);">Drenaje • maderoterapia • lipodrenaje integrado</p>
-        </div>
-
-        <div class="card">
-          <div class="tag">EJE 3</div>
-          <h3 style="margin-top:12px;">Dra. Carolina Laxague</h3>
-          <p style="color:var(--muted);">Nutracéuticos • Skin Quality • enfoque 360°</p>
-        </div>
-
-        <div class="card">
-          <div class="tag">EJE 4</div>
-          <h3 style="margin-top:12px;">UDERM — Pablo González</h3>
-          <p style="color:var(--muted);">Exosomas • bioestimulación • aplicación clínica</p>
-        </div>
-
-        <div class="card">
-          <div class="tag">EJE 4</div>
-          <h3 style="margin-top:12px;">Ing. Sandra Molinzavez</h3>
-          <p style="color:var(--muted);">Exosomas + pre/probióticos • microbiota • innovación</p>
-        </div>
-
-        <div class="card">
-          <div class="tag">EJE 5</div>
-          <h3 style="margin-top:12px;">Laura Varela</h3>
-          <p style="color:var(--muted);">Regeneración sin tintas • estrías • cicatrices • activación folicular</p>
-        </div>
-
-        <div class="card">
-          <div class="tag">EJE 6</div>
-          <h3 style="margin-top:12px;">Eduardo Finci</h3>
-          <p style="color:var(--muted);">Marketing • ventas • rentabilidad • gerenciamiento SPA</p>
-        </div>
-      </div>
+      <div class="grid-2" id="speakersGrid"></div>
     </div>
   </section>
   <!-- ======================
-       FIN: SPEAKERS (RESUMEN RÁPIDO)
+       FIN: SPEAKERS
        ====================== -->
 
   <!-- =========================
@@ -475,19 +547,12 @@
       <div class="section-head">
         <div>
           <h2>Dirigido a</h2>
-          <p>Profesionales de la estética y áreas afines.</p>
+          <p>Perfil profesional al que apunta el congreso.</p>
         </div>
       </div>
 
       <div class="card">
-        <ul>
-          <li>Cosmiatras</li>
-          <li>Dermatocosmiatras</li>
-          <li>Médicos estéticos</li>
-          <li>Profesionales en estética corporal</li>
-          <li>Directores de SPA</li>
-          <li>Estudiantes avanzados</li>
-        </ul>
+        <ul id="dirigidoList"></ul>
       </div>
     </div>
   </section>
@@ -503,16 +568,14 @@
       <div class="section-head">
         <div>
           <h2>Entradas</h2>
-          <p>Cuando tengas el link real de compra, lo pegás acá.</p>
+          <p>Reemplazá el link cuando lo tengas.</p>
         </div>
       </div>
 
       <div class="card">
-        <p style="color:var(--muted);margin:0;">Link de compra: <b>pendiente</b></p>
+        <p class="muted">Link de compra: <b>pendiente</b></p>
         <div style="height:12px;"></div>
-        <a class="btn btn-primary" href="#" onclick="alert('Pegá tu link de compra en el href del botón.');return false;">
-          Comprar
-        </a>
+        <a class="btn btn-primary" href="#" onclick="alert('Pegá tu link de compra en el href del botón.'); return false;">Comprar</a>
       </div>
     </div>
   </section>
@@ -521,17 +584,133 @@
        ====================== -->
 
   <!-- =========================
+       COMIENZO: FAQ
+       ========================= -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>FAQ</h2>
+          <p>Preguntas frecuentes para bajar fricción.</p>
+        </div>
+      </div>
+
+      <details>
+        <summary>¿A quién está dirigido?</summary>
+        <p>Profesionales de la estética: cosmiatras, dermatólogos, médicos estéticos y afines.</p>
+      </details>
+      <details>
+        <summary>¿Incluye certificación?</summary>
+        <p>Se puede incluir certificado de asistencia (definir formato).</p>
+      </details>
+      <details>
+        <summary>¿Cómo será la compra de entradas?</summary>
+        <p>Se publicará un link oficial de compra (Eventbrite / MercadoPago / etc.).</p>
+      </details>
+    </div>
+  </section>
+  <!-- ======================
+       FIN: FAQ
+       ====================== -->
+
+  <!-- =========================
        COMIENZO: FOOTER
        ========================= -->
   <footer>
     <div class="container">
-      © <span id="year"></span> CEPATAGONIA — Ciencia. Innovación. Naturaleza.
+      © <span id="year"></span> CEPATAGONIA.
     </div>
   </footer>
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
   <!-- ======================
        FIN: FOOTER
        ====================== -->
 
+  <!-- =========================
+       COMIENZO: SCRIPTS (DATA + RENDER)
+       IMPORTANTE: data.js debe estar en la raíz del repo
+       ========================= -->
+  <script src="./data.js"></script>
+  <script>
+    // Año
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Menú mobile
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (btn && menu){
+      btn.addEventListener('click', () => {
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!isOpen));
+        menu.hidden = isOpen;
+      });
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        btn.setAttribute('aria-expanded', 'false');
+        menu.hidden = true;
+      }));
+    }
+
+    // Guardas: si data.js no cargó
+    if (!window.CEP) {
+      console.error("No se cargó window.CEP. Revisá que data.js exista y esté en la raíz.");
+    } else {
+      // Meta
+      document.getElementById('metaDate').textContent = window.CEP.meta.fecha;
+      document.getElementById('metaCity').textContent = window.CEP.meta.ciudad;
+      document.getElementById('metaMode').textContent = window.CEP.meta.modalidad;
+
+      // Diferenciales
+      const dif = document.getElementById('diferencialesGrid');
+      dif.innerHTML = window.CEP.diferenciales.map(d => `
+        <div class="card">
+          <div class="icon" aria-hidden="true"></div>
+          <h3>${d.title}</h3>
+          <p>${d.desc}</p>
+        </div>
+      `).join('');
+
+      // Programa (Ejes)
+      const ejesList = document.getElementById('ejesList');
+      ejesList.innerHTML = window.CEP.ejes.map(e => `
+        <details>
+          <summary>${e.eje} — ${e.titulo}</summary>
+          ${e.speakers.map(s => `
+            <div class="card" style="margin-top:12px;">
+              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
+              <div style="font-weight:800; margin-top:6px;">${s.nombre}</div>
+              ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
+              <div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>
+              ${Array.isArray(s.bullets) ? `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+              ${s.extraTitle ? `
+                <div style="height:10px;"></div>
+                <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
+                <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
+              ` : ``}
+            </div>
+          `).join('')}
+        </details>
+      `).join('');
+
+      // Speakers (flatten)
+      const speakers = window.CEP.ejes.flatMap(e => e.speakers.map(s => ({...s, eje: e.eje, tema: e.titulo})));
+      const spGrid = document.getElementById('speakersGrid');
+      spGrid.innerHTML = speakers.map(s => `
+        <div class="card speaker">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje} • ${s.tema}</div>
+            <div style="font-weight:820; margin-top:6px;">${s.nombre}</div>
+            ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
+          </div>
+        </div>
+      `).join('');
+
+      // Dirigido a
+      const dir = document.getElementById('dirigidoList');
+      dir.innerHTML = window.CEP.dirigidoA.map(x => `<li>${x}</li>`).join('');
+    }
+  </script>
+  <!-- ======================
+       FIN: SCRIPTS
+       ====================== -->
 </body>
 </html>
