@@ -1,6 +1,6 @@
 /* =========================
    COMIENZO: DATA CEPATAGONIA
-   Editá acá speakers/ejes sin tocar el diseño.
+   Editá acá sin tocar el diseño.
    ========================= */
 
 window.CEP = {
@@ -17,11 +17,11 @@ window.CEP = {
     },
     {
       title: "Protocolos actuales",
-      desc: "Herramientas prácticas para llevar a tu consultorio desde el día 1: seguridad, técnica y resultados.",
+      desc: "Herramientas prácticas para aplicar desde el día 1: seguridad, técnica y resultados.",
     },
     {
       title: "Comunidad profesional",
-      desc: "Networking real entre profesionales del sector. Un espacio para crecer, compartir y actualizarse.",
+      desc: "Networking real entre profesionales. Un espacio para crecer, compartir y actualizarse.",
     },
   ],
 
