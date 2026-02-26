@@ -11,6 +11,29 @@
        COMIENZO: ESTILOS (FORMATO PREMIUM)
        ========================= -->
   <style>
+
+    /* =========================
+   COMIENZO: CSS BACKGROUND ADN
+   ========================= */
+.bg-adn{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .22;              /* control principal: subí/bajá */
+  transform: translateZ(0);
+}
+.bg-adn svg{
+  width: 100%;
+  height: 100%;
+}
+body > *{
+  position: relative;
+  z-index: 1;                /* asegura que todo quede arriba del ADN */
+}
+/* ======================
+   FIN: CSS BACKGROUND ADN
+   ====================== */
     :root{
       --bg: #070a0f;
       --panel: rgba(255,255,255,.06);
