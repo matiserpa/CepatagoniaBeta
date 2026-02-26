@@ -12,40 +12,64 @@
        ========================= -->
   <style>
     /* =========================
-       COMIENZO: ADN COMO FONDO (IMAGEN SUPER SUTIL)
+       COMIENZO: ADN COMO FONDO (IMAGEN SUPER SUTIL, ENFOQUE DERECHA)
        Requiere: assets/adn.webp
        ========================= */
     html, body { height: 100%; }
 
     body{
       position: relative;
-      isolation: isolate; /* asegura stacking correcto */
+      isolation: isolate;
     }
 
     body::before{
       content:"";
       position: fixed;
       inset: 0;
-      z-index: -1;            /* CLAVE: atrás de TODO */
+      z-index: -1;
       pointer-events: none;
 
       background-image: url("assets/adn.webp");
       background-size: cover;
-      background-position: center top;
       background-repeat: no-repeat;
-      background-attachment: fixed;
 
-      opacity: .10;           /* control principal (0.06 a 0.14 aprox) */
-      filter: blur(0.8px) saturate(1.05) contrast(1.05);
+      /* >>> CLAVE: lo empujamos a la derecha */
+      background-position: right center;
+
+      /* Ajuste de sutileza */
+      opacity: .12; /* probá entre 0.10 y 0.16 */
+      filter: blur(1px) saturate(1.08) contrast(1.06);
       transform: translateZ(0);
+
+      /* >>> CLAVE: fade hacia la izquierda para que el ADN “viva” en la derecha */
+      -webkit-mask-image: linear-gradient(to right,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.15) 35%,
+        rgba(0,0,0,1) 70%
+      );
+      mask-image: linear-gradient(to right,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.15) 35%,
+        rgba(0,0,0,1) 70%
+      );
     }
 
-    /* Mobile: aún más suave */
+    /* Mobile: un poco más arriba y aún más suave */
     @media (max-width: 920px){
       body::before{
-        opacity: .07;
-        background-position: center 10%;
-        filter: blur(1.2px) saturate(1.03) contrast(1.02);
+        opacity: .08;
+        background-position: right 20% top;
+        filter: blur(1.3px) saturate(1.05) contrast(1.03);
+        -webkit-mask-image: linear-gradient(to right,
+          rgba(0,0,0,0) 0%,
+          rgba(0,0,0,0.18) 25%,
+          rgba(0,0,0,1) 65%
+        );
+        mask-image: linear-gradient(to right,
+          rgba(0,0,0,0) 0%,
+          rgba(0,0,0,0.18) 25%,
+          rgba(0,0,0,1) 65%
+        );
       }
     }
     /* ======================
@@ -77,14 +101,11 @@
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
-
-      /* tu background original + el ADN (que va por body::before) */
       background:
         radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
         radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
         radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
         var(--bg);
-
       overflow-x:hidden;
       line-height:1.35;
     }
@@ -259,12 +280,6 @@
     }
     .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
 
-    .topo{
-      position:absolute;
-      inset:-60px -120px -60px -120px;
-      opacity:.85;
-      pointer-events:none;
-    }
     .glow{
       position:absolute;
       width: 420px; height: 420px;
@@ -493,29 +508,10 @@
         </div>
 
         <aside class="hero-card">
-          <div class="topo" aria-hidden="true">
-            <svg viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0" stop-color="rgba(82,255,214,.75)"/>
-                  <stop offset="1" stop-color="rgba(122,167,255,.60)"/>
-                </linearGradient>
-              </defs>
-              <g fill="none" stroke="url(#g)" stroke-width="1.2" opacity=".55">
-                <path d="M-50,150 C180,80 320,200 520,150 C720,100 840,40 1250,120" />
-                <path d="M-70,220 C200,140 360,270 560,220 C760,170 900,120 1280,170" />
-                <path d="M-90,290 C200,230 390,340 610,300 C830,260 960,190 1320,250" />
-                <path d="M-120,360 C160,330 430,420 660,380 C890,340 1060,280 1340,320" />
-                <path d="M-140,430 C160,450 470,520 720,480 C970,440 1120,380 1360,390" />
-                <path d="M-160,500 C160,560 520,610 780,570 C1040,530 1180,470 1380,460" />
-                <path d="M-180,570 C170,660 600,700 860,670 C1120,640 1250,590 1400,540" />
-              </g>
-              <g fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1" opacity=".35">
-                <path d="M100,90 C260,20 440,60 600,100 C760,140 980,120 1120,60" />
-                <path d="M60,640 C240,560 460,620 640,680 C820,740 1020,740 1180,660" />
-              </g>
-            </svg>
-          </div>
+          <!-- =========================
+               COMIENZO: HERO CARD (SIN LINEAS DE FONDO)
+               Antes estaba el SVG ".topo" acá. Lo quitamos para que no cargue.
+               ========================= -->
 
           <h3>Qué vas a llevarte</h3>
           <div class="big">Protocolos + criterio + actualización real</div>
@@ -539,6 +535,10 @@
 
           <div style="height:12px"></div>
           <a class="btn btn-primary" href="#entradas" style="width:100%;">Reservar lugar</a>
+
+          <!-- ======================
+               FIN: HERO CARD
+               ====================== -->
         </aside>
       </div>
     </div>
@@ -652,7 +652,6 @@
         </div>
 
         <div class="card img-card">
-          <!-- IMAGEN PRINCIPAL (usa turismo1.webp) -->
           <img src="assets/turismo1.webp" alt="San Martín de los Andes (entorno)" />
           <div class="img-overlay" aria-hidden="true"></div>
           <div class="img-caption">
