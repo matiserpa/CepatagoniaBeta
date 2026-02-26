@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>CEPATAGONIA — Congreso de Innovación Estética</title>
+  <meta name="description" content="Congreso de capacitación en estética avanzada: innovación, tecnología, protocolos y formación profesional. El primer congreso en la Patagonia." />
+
+  <style>
+    :root{
+      --bg: #070a0f;
+      --panel: rgba(255,255,255,.06);
+      --panel2: rgba(255,255,255,.09);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.70);
+      --muted2: rgba(255,255,255,.58);
+      --line: rgba(255,255,255,.12);
+
+      /* acentos (tecnología) */
+      --a1: #52ffd6;   /* verde quirúrgico */
+      --a2: #7aa7ff;   /* azul frío */
+      --a3: #c7c7c7;   /* plata */
+
+      --radius: 18px;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --shadow2: 0 10px 30px rgba(0,0,0,.35);
+
+      --max: 1160px;
+      --pad: clamp(18px, 3vw, 28px);
+    }
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
+                  radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
+                  radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
+                  var(--bg);
+      overflow-x:hidden;
+      line-height:1.35;
+    }
+
+    a{ color:inherit; text-decoration:none; }
+    a:hover{ opacity:.92; }
+    img{ max-width:100%; display:block; }
+
+    .container{
+      width: min(var(--max), calc(100% - (var(--pad) * 2)));
+      margin: 0 auto;
+    }
+
+    /* Top bar */
+    .nav{
+      position: sticky;
+      top:0;
+      z-index: 50;
+      backdrop-filter: blur(12px);
+      background: rgba(7,10,15,.55);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding: 14px 0;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 650;
+      font-size: 12px;
+    }
+    .mark{
+      width: 34px; height: 34px;
+      border-radius: 12px;
+      background:
+        radial-gradient(18px 18px at 30% 30%, rgba(82,255,214,.85), transparent 60%),
+        radial-gradient(20px 20px at 70% 65%, rgba(122,167,255,.85), transparent 65%),
+        rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .nav-links{
+      display:flex;
+      gap: 18px;
+      align-items:center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .nav-links a{
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+    }
+    .nav-links a:hover{
+      background: rgba(255,255,255,.05);
+      border-color: rgba(255,255,255,.08);
+      color: var(--text);
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      box-shadow: var(--shadow2);
+      color: var(--text);
+      font-weight: 620;
+      font-size: 13px;
+      cursor:pointer;
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.18); }
+    .btn:active{ transform: translateY(0); }
+
+    .btn-primary{
+      border-color: rgba(82,255,214,.40);
+      background: linear-gradient(135deg, rgba(82,255,214,.18), rgba(122,167,255,.12));
+    }
+    .btn-primary:hover{
+      border-color: rgba(82,255,214,.62);
+      background: linear-gradient(135deg, rgba(82,255,214,.22), rgba(122,167,255,.16));
+    }
+
+    .btn-ghost{
+      background: transparent;
+      box-shadow:none;
+      border-color: rgba(255,255,255,.12);
+      color: var(--muted);
+    }
+    .btn-ghost:hover{ color: var(--text); background: rgba(255,255,255,.05); }
+
+    /* Mobile nav */
+    .hamburger{ display:none; }
+    .mobile-drawer{
+      display:none;
+      border-top:1px solid var(--line);
+      padding: 10px 0 16px;
+    }
+    .mobile-drawer a{ display:block; padding: 10px 8px; color: var(--muted); }
+    .mobile-drawer a:hover{ color: var(--text); background: rgba(255,255,255,.05); border-radius: 12px; }
+
+    /* Hero */
+    header.hero{
+      padding: clamp(54px, 7vw, 92px) 0 44px;
+      position: relative;
+    }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: clamp(18px, 4vw, 36px);
+      align-items:start;
+    }
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+    .dot{
+      width:8px; height:8px; border-radius: 99px;
+      background: var(--a1);
+      box-shadow: 0 0 20px rgba(82,255,214,.55);
+    }
+
+    h1{
+      margin: 18px 0 10px;
+      font-size: clamp(34px, 4.8vw, 60px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .subhead{
+      color: var(--muted);
+      font-size: clamp(16px, 1.5vw, 18px);
+      max-width: 56ch;
+      margin: 12px 0 22px;
+    }
+
+    .hero-actions{
+      display:flex;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    .hero-meta{
+      display:flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+    }
+    .pill b{ color: var(--text); font-weight: 650; }
+
+    .hero-card{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      padding: 18px;
+      position: relative;
+      overflow:hidden;
+      min-height: 340px;
+    }
+    .hero-card h3{
+      margin: 6px 0 8px;
+      font-size: 14px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .hero-card .big{
+      font-size: 26px;
+      line-height:1.1;
+      margin: 0 0 10px;
+      letter-spacing: -0.01em;
+    }
+    .hero-card p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    /* Abstract topo */
+    .topo{
+      position:absolute;
+      inset:-60px -120px -60px -120px;
+      opacity:.85;
+      pointer-events:none;
+      filter: blur(.0px);
+    }
+    .topo svg{ width:100%; height:100%; }
+    .glow{
+      position:absolute;
+      width: 420px; height: 420px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(82,255,214,.20), transparent 60%);
+      right:-180px; top:-160px;
+      filter: blur(0px);
+      pointer-events:none;
+    }
+    .glow2{
+      position:absolute;
+      width: 520px; height: 520px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(122,167,255,.20), transparent 60%);
+      left:-220px; bottom:-240px;
+      pointer-events:none;
+    }
+
+    /* Sections */
+    section{
+      padding: 58px 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-head{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+    .section-head h2{
+      margin:0;
+      font-size: 18px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .section-head p{
+      margin:0;
+      color: var(--muted2);
+      max-width: 64ch;
+      font-size: 13.5px;
+    }
+
+    .grid-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .card{
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding: 18px;
+      box-shadow: var(--shadow2);
+    }
+    .card h3{
+      margin: 0 0 8px;
+      font-size: 14px;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+    .card p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .icon{
+      width: 38px; height: 38px;
+      border-radius: 14px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(16px 16px at 30% 30%, rgba(82,255,214,.45), transparent 65%),
+        radial-gradient(18px 18px at 70% 70%, rgba(122,167,255,.45), transparent 65%),
+        rgba(255,255,255,.05);
+    }
+
+    /* Agenda */
+    .agenda{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+    }
+    .row .time{
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--a3);
+      font-size: 12px;
+      min-width: 92px;
+    }
+    .row .desc{
+      flex:1;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    .row .tag{
+      font-size: 12px;
+      color: rgba(82,255,214,.92);
+      border: 1px solid rgba(82,255,214,.28);
+      background: rgba(82,255,214,.08);
+      padding: 8px 10px;
+      border-radius: 999px;
+      white-space:nowrap;
+    }
+
+    /* Speakers */
+    .speaker{
+      display:flex;
+      gap: 14px;
+      align-items:center;
+    }
+    .avatar{
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.03));
+      position: relative;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .avatar:before{
+      content:"";
+      position:absolute;
+      inset:-40px;
+      background: radial-gradient(circle at 30% 30%, rgba(82,255,214,.22), transparent 60%),
+                  radial-gradient(circle at 70% 75%, rgba(122,167,255,.22), transparent 60%);
+      transform: rotate(18deg);
+    }
+    .speaker .name{
+      font-weight: 720;
+      letter-spacing: .02em;
+      margin:0 0 4px;
+    }
+    .speaker .role{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Patagonia block (subtle) */
+    .patagonia{
+      position: relative;
+      overflow:hidden;
+      background:
+        radial-gradient(900px 520px at 20% 30%, rgba(82,255,214,.08), transparent 60%),
+        radial-gradient(820px 560px at 80% 40%, rgba(122,167,255,.08), transparent 60%),
+        rgba(255,255,255,.03);
+      border-top: 1px solid rgba(255,255,255,.10);
+      border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+    .patagonia .card{
+      background: rgba(7,10,15,.35);
+    }
+    .map-lines{
+      position:absolute;
+      inset: -80px -120px -80px -120px;
+      opacity: .35;
+      pointer-events:none;
+      mix-blend-mode: screen;
+    }
+
+    /* Pricing */
+    .price{
+      display:flex;
+      align-items:baseline;
+      gap: 10px;
+      margin: 10px 0 6px;
+    }
+    .price .amount{
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .price .note{
+      color: var(--muted2);
+      font-size: 13px;
+    }
+    ul.clean{
+      margin: 12px 0 0;
+      padding: 0;
+      list-style:none;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+    ul.clean li{
+      padding: 8px 0;
+      border-top: 1px dashed rgba(255,255,255,.14);
+    }
+    ul.clean li:first-child{ border-top: none; padding-top:0; }
+
+    /* FAQ */
+    details{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      padding: 14px 16px;
+    }
+    details + details{ margin-top: 10px; }
+    summary{
+      cursor:pointer;
+      font-weight: 700;
+      color: var(--text);
+      list-style: none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    details p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    footer{
+      padding: 28px 0 44px;
+      color: var(--muted2);
+    }
+    .foot{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 18px;
+      flex-wrap:wrap;
+    }
+    .small{
+      font-size: 12.5px;
+      color: var(--muted2);
+      max-width: 80ch;
+    }
+
+    /* Responsive */
+    @media (max-width: 920px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .hero-card{ min-height: 280px; }
+      .grid-3{ grid-template-columns: 1fr; }
+      .grid-2{ grid-template-columns: 1fr; }
+      .nav-links{ display:none; }
+      .hamburger{ display:inline-flex; }
+      .mobile-drawer{ display:block; }
+      .mobile-drawer[hidden]{ display:none; }
+      .row{ flex-direction: column; align-items:flex-start; }
+      .row .time{ min-width: auto; }
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ scroll-behavior:auto !important; transition:none !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- NAV -->
+  <div class="nav">
+    <div class="container">
+      <div class="nav-inner">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            CEPATAGONIA<br/>
+            <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO</span>
+          </div>
+        </div>
+
+        <nav class="nav-links" aria-label="Navegación principal">
+          <a href="#diferenciales">Diferenciales</a>
+          <a href="#programa">Programa</a>
+          <a href="#speakers">Speakers</a>
+          <a href="#sede">Sede</a>
+          <a href="#entradas">Entradas</a>
+          <a href="#faq">FAQ</a>
+        </nav>
+
+        <div style="display:flex; gap:10px; align-items:center;">
+          <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
+          <a class="btn btn-primary" href="#entradas">Comprar entradas</a>
+        </div>
+      </div>
+
+      <div class="mobile-drawer" id="mobileMenu" hidden>
+        <a href="#diferenciales">Diferenciales</a>
+        <a href="#programa">Programa</a>
+        <a href="#speakers">Speakers</a>
+        <a href="#sede">Sede</a>
+        <a href="#entradas">Entradas</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="glow2" aria-hidden="true"></div>
+
+    <div class="container">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span class="dot" aria-hidden="true"></span>
+            Capacitación profesional • estética avanzada
+          </div>
+
+          <h1>
+            Innovación y<br/>
+            tecnología aplicada<br/>
+            a la estética
+          </h1>
+
+          <p class="subhead">
+            Formación intensiva para cosmiatras, dermatólogos y profesionales del sector.
+            Protocolos, equipamiento y tendencias de vanguardia.
+            <b style="color:var(--text); font-weight:680;">El primer congreso en la Patagonia.</b>
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#entradas">Ver entradas</a>
+            <a class="btn" href="#programa">Ver programa</a>
+            <a class="btn btn-ghost" href="#speakers">Conocer speakers</a>
+          </div>
+
+          <div class="hero-meta" role="list">
+            <div class="pill" role="listitem"><b>Fecha:</b> <span id="metaDate">A definir</span></div>
+            <div class="pill" role="listitem"><b>Ciudad:</b> <span id="metaCity">Patagonia (AR)</span></div>
+            <div class="pill" role="listitem"><b>Modalidad:</b> Presencial</div>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Resumen del congreso">
+          <div class="topo" aria-hidden="true">
+            <!-- Topographic lines (abstract nature) -->
+            <svg viewBox="0 0 1200 800" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="rgba(82,255,214,.75)"/>
+                  <stop offset="1" stop-color="rgba(122,167,255,.60)"/>
+                </linearGradient>
+              </defs>
+              <g fill="none" stroke="url(#g)" stroke-width="1.2" opacity=".55">
+                <path d="M-50,150 C180,80 320,200 520,150 C720,100 840,40 1250,120" />
+                <path d="M-70,220 C200,140 360,270 560,220 C760,170 900,120 1280,170" />
+                <path d="M-90,290 C200,230 390,340 610,300 C830,260 960,190 1320,250" />
+                <path d="M-120,360 C160,330 430,420 660,380 C890,340 1060,280 1340,320" />
+                <path d="M-140,430 C160,450 470,520 720,480 C970,440 1120,380 1360,390" />
+                <path d="M-160,500 C160,560 520,610 780,570 C1040,530 1180,470 1380,460" />
+                <path d="M-180,570 C170,660 600,700 860,670 C1120,640 1250,590 1400,540" />
+              </g>
+              <g fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1" opacity=".35">
+                <path d="M100,90 C260,20 440,60 600,100 C760,140 980,120 1120,60" />
+                <path d="M60,640 C240,560 460,620 640,680 C820,740 1020,740 1180,660" />
+              </g>
+            </svg>
+          </div>
+
+          <h3>Qué vas a llevarte</h3>
+          <div class="big">Protocolos + criterio + actualización real</div>
+          <p>
+            Un congreso diseñado para mejorar la práctica profesional con herramientas actuales:
+            equipos, técnicas, seguridad, tendencias y aplicación clínica.
+          </p>
+
+          <div style="height:14px"></div>
+
+          <div class="grid-2">
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35);">
+              <div style="color: var(--muted); font-size:12px; letter-spacing:.16em; text-transform:uppercase;">Enfoque</div>
+              <div style="margin-top:6px; font-weight:760;">Tecnología & evidencia</div>
+            </div>
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35);">
+              <div style="color: var(--muted); font-size:12px; letter-spacing:.16em; text-transform:uppercase;">Nivel</div>
+              <div style="margin-top:6px; font-weight:760;">Profesionales</div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+          <a class="btn btn-primary" href="#entradas" style="width:100%;">Reservar lugar</a>
+        </aside>
+      </div>
+    </div>
+  </header>
+
+  <!-- DIFERENCIALES -->
+  <section id="diferenciales">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Diferenciales</h2>
+          <p>Primero tecnología y capacitación. Patagonia como marco: sutil, elegante, y con sentido.</p>
+        </div>
+        <a class="btn btn-ghost" href="#programa">Ver agenda</a>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <div class="icon" aria-hidden="true"></div>
+          <h3>Tecnología aplicada</h3>
+          <p>Equipamiento, parámetros, indicaciones y contraindicaciones. Menos promesa, más criterio.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon" aria-hidden="true"></div>
+          <h3>Protocolos actuales</h3>
+          <p>Herramientas prácticas para llevar a tu consultorio desde el día 1: seguridad, técnica y resultados.</p>
+        </div>
+
+        <div class="card">
+          <div class="icon" aria-hidden="true"></div>
+          <h3>Comunidad profesional</h3>
+          <p>Networking real entre profesionales del sector. Un espacio para crecer, compartir y actualizarse.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRAMA -->
+  <section id="programa">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Programa</h2>
+          <p>Ejemplo de estructura. Reemplazamos títulos, tracks y horarios con tu contenido real.</p>
+        </div>
+        <a class="btn btn-ghost" href="#entradas">Ver entradas</a>
+      </div>
+
+      <div class="agenda">
+        <div class="row">
+          <div class="time">09:00</div>
+          <div class="desc"><b>Keynote:</b> Innovación en estética: tendencias, evidencia y criterios de selección.</div>
+          <div class="tag">Main Stage</div>
+        </div>
+        <div class="row">
+          <div class="time">10:30</div>
+          <div class="desc"><b>Workshop:</b> Tecnología y parámetros — cómo leer equipos y decidir protocolos.</div>
+          <div class="tag">Hands-on</div>
+        </div>
+        <div class="row">
+          <div class="time">12:00</div>
+          <div class="desc"><b>Casos:</b> Antes / después con análisis clínico y discusión profesional.</div>
+          <div class="tag">Casos</div>
+        </div>
+        <div class="row">
+          <div class="time">14:00</div>
+          <div class="desc"><b>Track seguridad:</b> Indicaciones, contraindicaciones y manejo de riesgos.</div>
+          <div class="tag">Seguridad</div>
+        </div>
+        <div class="row">
+          <div class="time">16:00</div>
+          <div class="desc"><b>Panel:</b> Hacia dónde va la estética profesional: tecnología, regulación y futuro.</div>
+          <div class="tag">Panel</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEAKERS -->
+  <section id="speakers">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Speakers</h2>
+          <p>Dejá los nombres reales y especialidades, y lo dejamos impecable (fotos, roles, credenciales).</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card speaker">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <p class="name">Speaker 1 (Nombre)</p>
+            <p class="role">Dermatología • Tecnología láser • Buenos Aires</p>
+          </div>
+        </div>
+
+        <div class="card speaker">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <p class="name">Speaker 2 (Nombre)</p>
+            <p class="role">Cosmiatría • Protocolos combinados • Córdoba</p>
+          </div>
+        </div>
+
+        <div class="card speaker">
+          <div class="avatar" aria-hidden="true"></div>
+          <div>
+            <p class="name">Speaker 3 (Nombre)</p>
+            <p class="role">Medicina estética • Seguridad clínica • Chile</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEDE / PATAGONIA -->
+  <section id="sede" class="patagonia">
+    <div class="map-lines" aria-hidden="true">
+      <!-- Abstract “contour/map” lines (subtle nature cue) -->
+      <svg viewBox="0 0 1200 700" preserveAspectRatio="none">
+        <g fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1" opacity=".25">
+          <path d="M-50,110 C140,40 320,80 520,140 C720,200 980,220 1260,140" />
+          <path d="M-90,190 C160,120 360,140 580,210 C800,280 980,290 1300,220" />
+          <path d="M-140,280 C120,250 400,300 640,350 C880,400 1080,420 1380,360" />
+          <path d="M-160,390 C180,360 420,410 700,470 C980,530 1160,540 1420,480" />
+          <path d="M-120,520 C180,600 440,600 720,560 C1000,520 1180,520 1440,580" />
+        </g>
+      </svg>
+    </div>
+
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Sede</h2>
+          <p>Patagonia es diferencial por contexto, no por temática. Se comunica con elegancia, sin “folklore”.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>El primer congreso en la Patagonia</h3>
+          <p>
+            Un entorno que eleva la experiencia: foco, desconexión de la rutina y networking.
+            <br/><br/>
+            <b style="color:var(--text);">La capacitación es el centro.</b> La Patagonia es el marco.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Ubicación</h3>
+          <p>
+            Ciudad: <b style="color:var(--text);">San Martín de los Andes</b> (editable)<br/>
+            Venue: <b style="color:var(--text);">A confirmar</b><br/>
+            Cómo llegar: vuelos + traslados (sumamos link / mapa)
+          </p>
+          <div style="height:12px"></div>
+          <a class="btn" href="#" onclick="alert('Acá va el link a Google Maps / PDF de logística.'); return false;">Ver logística</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENTRADAS -->
+  <section id="entradas">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Entradas</h2>
+          <p>Dejá precios, cupos y link real de compra (Eventbrite / TiendaNube / MercadoPago / etc.).</p>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>General</h3>
+          <div class="price">
+            <div class="amount">$—</div>
+            <div class="note">ARS • + impuestos</div>
+          </div>
+          <p>Acceso a conferencias y exposición.</p>
+          <ul class="clean">
+            <li>Credencial</li>
+            <li>Acceso a main stage</li>
+            <li>Material digital</li>
+          </ul>
+          <div style="height:14px"></div>
+          <a class="btn btn-primary" href="#" onclick="alert('Acá va el link de compra.'); return false;" style="width:100%;">Comprar</a>
+        </div>
+
+        <div class="card" style="border-color: rgba(82,255,214,.30); background: linear-gradient(180deg, rgba(82,255,214,.08), rgba(255,255,255,.03));">
+          <h3>Pro</h3>
+          <div class="price">
+            <div class="amount">$—</div>
+            <div class="note">ARS • cupos limitados</div>
+          </div>
+          <p>Incluye workshops y prioridad.</p>
+          <ul class="clean">
+            <li>Todo lo de General</li>
+            <li>Workshops (hands-on)</li>
+            <li>Asientos preferenciales</li>
+          </ul>
+          <div style="height:14px"></div>
+          <a class="btn btn-primary" href="#" onclick="alert('Acá va el link de compra.'); return false;" style="width:100%;">Comprar Pro</a>
+        </div>
+
+        <div class="card">
+          <h3>VIP</h3>
+          <div class="price">
+            <div class="amount">$—</div>
+            <div class="note">ARS • ultra limitado</div>
+          </div>
+          <p>Networking + beneficios extra.</p>
+          <ul class="clean">
+            <li>Todo lo de Pro</li>
+            <li>Meet & greet</li>
+            <li>Acceso a espacio VIP</li>
+          </ul>
+          <div style="height:14px"></div>
+          <a class="btn btn-primary" href="#" onclick="alert('Acá va el link de compra.'); return false;" style="width:100%;">Comprar VIP</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Preguntas frecuentes</h2>
+          <p>Esto baja fricción. Reduce mensajes repetidos y mejora conversiones.</p>
+        </div>
+      </div>
+
+      <details>
+        <summary>¿A quién está dirigido?</summary>
+        <p>Profesionales de la estética: cosmiatras, dermatólogos, médicos estéticos y afines. Ajustamos el texto según el perfil real.</p>
+      </details>
+
+      <details>
+        <summary>¿Incluye certificación?</summary>
+        <p>Podemos agregar certificado de asistencia y/o acreditación de workshops, según lo que definan.</p>
+      </details>
+
+      <details>
+        <summary>¿Cómo es la política de devoluciones?</summary>
+        <p>Definan términos (plazos y condiciones). Lo dejamos visible y claro.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="foot">
+        <div>
+          <div class="brand" style="margin-bottom:10px;">
+            <div class="mark" aria-hidden="true"></div>
+            <div>
+              CEPATAGONIA<br/>
+              <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO</span>
+            </div>
+          </div>
+          <div class="small">
+            Innovación y tecnología aplicada a la estética, con un marco único: Patagonia.
+            <br/>© <span id="year"></span> CEPATAGONIA. Todos los derechos reservados.
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <a class="btn btn-ghost" href="#" onclick="alert('Acá van redes/links reales.'); return false;">Instagram</a>
+          <a class="btn btn-ghost" href="#" onclick="alert('Acá va mail/WhatsApp.'); return false;">Contacto</a>
+          <a class="btn" href="#entradas">Entradas</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simple mobile menu toggle
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('mobileMenu');
+    if (btn && menu){
+      btn.addEventListener('click', () => {
+        const isOpen = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!isOpen));
+        menu.hidden = isOpen;
+      });
+
+      // close menu on click
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        btn.setAttribute('aria-expanded', 'false');
+        menu.hidden = true;
+      }));
+    }
+
+    // Set year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Optional: quickly set meta placeholders
+    // Cambiá estos valores por los reales del congreso
+    document.getElementById('metaDate').textContent = "A confirmar (2026)";
+    document.getElementById('metaCity').textContent = "San Martín de los Andes";
+  </script>
+</body>
+</html>
