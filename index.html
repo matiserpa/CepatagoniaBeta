@@ -11,29 +11,47 @@
        COMIENZO: ESTILOS (FORMATO PREMIUM)
        ========================= -->
   <style>
-
     /* =========================
-   COMIENZO: CSS BACKGROUND ADN
-   ========================= */
-.bg-adn{
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  opacity: .22;              /* control principal: subí/bajá */
-  transform: translateZ(0);
-}
-.bg-adn svg{
-  width: 100%;
-  height: 100%;
-}
-body > *{
-  position: relative;
-  z-index: 1;                /* asegura que todo quede arriba del ADN */
-}
-/* ======================
-   FIN: CSS BACKGROUND ADN
-   ====================== */
+       COMIENZO: ADN COMO FONDO (IMAGEN SUPER SUTIL)
+       Requiere: assets/adn.webp
+       ========================= */
+    html, body { height: 100%; }
+
+    body{
+      position: relative;
+      isolation: isolate; /* asegura stacking correcto */
+    }
+
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      z-index: -1;            /* CLAVE: atrás de TODO */
+      pointer-events: none;
+
+      background-image: url("assets/adn.webp");
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+
+      opacity: .10;           /* control principal (0.06 a 0.14 aprox) */
+      filter: blur(0.8px) saturate(1.05) contrast(1.05);
+      transform: translateZ(0);
+    }
+
+    /* Mobile: aún más suave */
+    @media (max-width: 920px){
+      body::before{
+        opacity: .07;
+        background-position: center 10%;
+        filter: blur(1.2px) saturate(1.03) contrast(1.02);
+      }
+    }
+    /* ======================
+       FIN: ADN COMO FONDO
+       ====================== */
+
     :root{
       --bg: #070a0f;
       --panel: rgba(255,255,255,.06);
@@ -59,11 +77,14 @@ body > *{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       color: var(--text);
+
+      /* tu background original + el ADN (que va por body::before) */
       background:
         radial-gradient(1200px 700px at 15% 10%, rgba(82,255,214,.12), transparent 55%),
         radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
         radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
         var(--bg);
+
       overflow-x:hidden;
       line-height:1.35;
     }
@@ -387,73 +408,6 @@ body > *{
 </head>
 
 <body>
-
-  <!-- =========================
-     COMIENZO: BACKGROUND ADN (SVG, NO IMAGEN)
-     ========================= -->
-<div class="bg-adn" aria-hidden="true">
-  <svg viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-    <defs>
-      <linearGradient id="adnGlow" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="rgba(82,255,214,.55)"/>
-        <stop offset="1" stop-color="rgba(122,167,255,.45)"/>
-      </linearGradient>
-
-      <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur stdDeviation="6" result="blur"/>
-        <feColorMatrix in="blur" type="matrix"
-          values="
-            1 0 0 0 0
-            0 1 0 0 0
-            0 0 1 0 0
-            0 0 0 0.8 0" />
-        <feMerge>
-          <feMergeNode/>
-          <feMergeNode in="SourceGraphic"/>
-        </feMerge>
-      </filter>
-    </defs>
-
-    <!-- HÉLICE (dos curvas) -->
-    <path d="M-50,120 C180,30 380,220 600,120 C820,20 980,260 1250,140"
-          fill="none" stroke="url(#adnGlow)" stroke-width="6" opacity=".55" filter="url(#softGlow)"/>
-    <path d="M-50,220 C180,310 380,120 600,220 C820,320 980,80 1250,200"
-          fill="none" stroke="url(#adnGlow)" stroke-width="6" opacity=".40" filter="url(#softGlow)"/>
-
-    <!-- BARROTES (líneas que unen la doble hélice) -->
-    <g stroke="rgba(255,255,255,.28)" stroke-width="3" opacity=".40">
-      <line x1="40"  y1="160" x2="40"  y2="205"/>
-      <line x1="120" y1="125" x2="120" y2="240"/>
-      <line x1="200" y1="100" x2="200" y2="265"/>
-      <line x1="280" y1="125" x2="280" y2="240"/>
-      <line x1="360" y1="160" x2="360" y2="205"/>
-
-      <line x1="440" y1="200" x2="440" y2="165"/>
-      <line x1="520" y1="245" x2="520" y2="120"/>
-      <line x1="600" y1="270" x2="600" y2="95"/>
-      <line x1="680" y1="245" x2="680" y2="120"/>
-      <line x1="760" y1="200" x2="760" y2="165"/>
-
-      <line x1="840" y1="160" x2="840" y2="205"/>
-      <line x1="920" y1="125" x2="920" y2="240"/>
-      <line x1="1000" y1="100" x2="1000" y2="265"/>
-      <line x1="1080" y1="125" x2="1080" y2="240"/>
-      <line x1="1160" y1="160" x2="1160" y2="205"/>
-    </g>
-
-    <!-- “PARTÍCULAS” suaves para look biotech -->
-    <g fill="rgba(255,255,255,.18)">
-      <circle cx="180" cy="340" r="3"/>
-      <circle cx="420" cy="420" r="2.5"/>
-      <circle cx="720" cy="360" r="3"/>
-      <circle cx="980" cy="430" r="2.5"/>
-      <circle cx="1080" cy="320" r="2"/>
-    </g>
-  </svg>
-</div>
-<!-- ======================
-     FIN: BACKGROUND ADN
-     ====================== -->
 
   <!-- =========================
        COMIENZO: NAV + MENU MOBILE
