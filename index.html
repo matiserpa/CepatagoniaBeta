@@ -88,10 +88,11 @@
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
 
-      --navH: 74px;
+      /* ✅ NAV MÁS ALTA PARA ACOMODAR LOGO GRANDE */
+      --navH: 92px;
     }
     @media (max-width: 920px){
-      :root{ --navH: 70px; }
+      :root{ --navH: 88px; }
     }
 
     *{ box-sizing: border-box; }
@@ -132,17 +133,17 @@
     }
     .brand:hover{ opacity:.95; }
 
-    /* ✅ LOGO MÁS GRANDE */
+    /* ✅ LOGO MÁS GRANDE (NUEVO) */
     .brand-logo{
-      width: 74px;
-      height: 52px;
+      width: 108px;
+      height: 76px;
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
     }
     @media (max-width: 920px){
       .brand{ min-width: 170px; }
-      .brand-logo{ width: 78px; height: 54px; }
+      .brand-logo{ width: 112px; height: 78px; }
     }
 
     .nav-links{
@@ -997,7 +998,7 @@
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- FAQ (ACTUALIZADO) -->
   <section id="faq">
     <div class="container">
       <div class="section-head">
@@ -1008,16 +1009,50 @@
       </div>
 
       <details>
-        <summary>¿A quiénes está dirigido?</summary>
-        <p>Profesionales de la estética: cosmiatras, dermatólogos, médicos estéticos y afines.</p>
+        <summary>¿A quiénes está dirigido este Congreso?</summary>
+        <p>
+          El Congreso está dirigido principalmente a cosmiatras, cosmetólogas y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.
+          <br/><br/>
+          También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.
+          <br/><br/>
+          Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.
+        </p>
       </details>
+
+      <details>
+        <summary>¿Qué hace diferente a este Congreso?</summary>
+        <p>
+          Este Congreso propone un cambio de paradigma: pasar de una estética centrada únicamente en lo visible a una estética celular avanzada, donde la ciencia, la tecnología y la práctica profesional se integran.
+          <br/><br/>
+          A diferencia de otros eventos, el enfoque está puesto en:
+        </p>
+        <ul>
+          <li>Los procesos celulares que dan origen a los resultados estéticos</li>
+          <li>La validación científica aplicada al gabinete</li>
+          <li>Tecnologías no invasivas de vanguardia</li>
+          <li>Contenidos diseñados especialmente para el profesional de la estética</li>
+        </ul>
+        <p style="margin-top:10px;">
+          Es un Congreso que conecta el laboratorio con la práctica clínica, en un entorno cuidado y de alto nivel académico.
+        </p>
+      </details>
+
+      <details>
+        <summary>¿Habrá coffee break o espacio gastronómico?</summary>
+        <p>
+          Sí. El Congreso contará con espacios de coffee break y momentos pensados para el descanso y el networking entre los asistentes.
+          <br/><br/>
+          Estos espacios están diseñados como instancias de encuentro profesional, intercambio y conversación, dentro de una experiencia integral del evento.
+        </p>
+      </details>
+
       <details>
         <summary>¿Habrá certificación?</summary>
-        <p>Se puede incluir certificado/diploma de asistencia (definir formato final).</p>
-      </details>
-      <details>
-        <summary>¿Cómo será la compra de entradas?</summary>
-        <p>La venta de pases se habilitará próximamente a través de Planout (link oficial).</p>
+        <p>
+          Sí. Todos los asistentes recibirán un certificado de asistencia, que avala la participación en el Congreso y los contenidos abordados.
+          <br/><br/>
+          La certificación destaca el enfoque en estética celular avanzada y está pensada como un respaldo formativo para la práctica profesional.
+        </p>
       </details>
     </div>
   </section>
