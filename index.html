@@ -217,7 +217,11 @@
       letter-spacing: .10em;
       text-transform: uppercase;
     }
-    .dot{
+    
+.kicker--event{font-size:13.5px; letter-spacing:.12em}
+.kicker--plain{padding-left:0}
+.kicker--plain .dot{display:none}
+.dot{
       width:8px; height:8px; border-radius: 99px;
       background: var(--a1);
       box-shadow: 0 0 20px rgba(82,255,214,.55);
@@ -541,14 +545,7 @@
       border-color: rgba(255,255,255,.18);
       color: var(--text);
     }
-    .social-ic{
-      width: 18px;
-      height: 18px;
-      display:block;
-      opacity: .95;
-      /* Si tus SVG vienen negros, esto los deja blancos */
-      filter: invert(1) brightness(1.2);
-    }
+    .social-ic{width:18px; height:18px; filter:brightness(0) invert(1); opacity:.95}
   </style>
 </head>
 
@@ -632,8 +629,7 @@
 
           <div class="hero-actions">
             <!-- Menos redundancia: saco "Asesorate" de acá -->
-            <a class="btn btn-primary" href="#" id="btnPaseHero">Adquirí tu pase</a>
-            <a class="btn btn-ghost" href="#programa">Ver programa</a>
+<a class="btn btn-ghost" href="#programa">Ver programa</a>
             <a class="btn btn-ghost" href="#speakers">Conocer speakers</a>
           </div>
         </div>
@@ -916,7 +912,7 @@
                   inputmode="tel"
                   autocomplete="tel"
                   placeholder="+54 9 11 0000-0000"
-                />
+                / pattern="^[0-9+\s()\-]{6,}$" inputmode="tel" autocomplete="tel">
                 <div class="help">Solo números y símbolos válidos (+, espacios, guiones, paréntesis).</div>
               </div>
 
@@ -1112,7 +1108,7 @@
 
     // Botones pase => modal
     const paseButtons = [
-      'btnPaseNav','btnPaseMobile','btnPaseHero','btnPaseCard','btnPaseEntradas'
+      'btnPaseNav','btnPaseMobile','btnPaseCard','btnPaseEntradas'
     ].map(id => document.getElementById(id)).filter(Boolean);
 
     paseButtons.forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
