@@ -26,6 +26,9 @@
       padding-top: var(--navH);
     }
 
+    /* ✅ Anchor offsets para nav fijo (evita que se tape el título al scrollear) */
+    [id]{ scroll-margin-top: calc(var(--navH) + 14px); }
+
     body::before{
       content:"";
       position: fixed;
@@ -51,20 +54,21 @@
       );
     }
 
+    /* ✅ Performance: en mobile bajamos costo (menos blur y máscara más simple) */
     @media (max-width: 920px){
       body::before{
         opacity: .08;
         background-position: right 20% top;
-        filter: blur(1.3px) saturate(1.05) contrast(1.03);
+        filter: blur(.6px) saturate(1.05) contrast(1.03);
         -webkit-mask-image: linear-gradient(to right,
           rgba(0,0,0,0) 0%,
-          rgba(0,0,0,0.18) 25%,
-          rgba(0,0,0,1) 65%
+          rgba(0,0,0,0.10) 28%,
+          rgba(0,0,0,1) 64%
         );
         mask-image: linear-gradient(to right,
           rgba(0,0,0,0) 0%,
-          rgba(0,0,0,0.18) 25%,
-          rgba(0,0,0,1) 65%
+          rgba(0,0,0,0.10) 28%,
+          rgba(0,0,0,1) 64%
         );
       }
     }
@@ -88,7 +92,7 @@
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
 
-      /* ✅ NAV MÁS ALTA PARA ACOMODAR LOGO MÁS GRANDE (ajuste) */
+      /* ✅ NAV un toque más alta para el logo grande */
       --navH: 100px;
     }
     @media (max-width: 920px){
@@ -97,6 +101,23 @@
 
     *{ box-sizing: border-box; }
     a{ color:inherit; text-decoration:none; }
+
+    /* ✅ Accesibilidad: foco visible (premium + usable) */
+    :focus-visible{
+      outline: 2px solid rgba(82,255,214,.55);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+
+    /* ✅ Respeta usuarios con reduced motion */
+    @media (prefers-reduced-motion: reduce){
+      html, body{ scroll-behavior: auto; }
+      *, *::before, *::after{
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
 
     .container{
       width: min(var(--max), calc(100% - (var(--pad) * 2)));
@@ -124,19 +145,16 @@
     .brand{
       display:flex;
       align-items:center;
-      /* ✅ un toque más de aire entre logo y texto */
-      gap:14px;
+      gap:14px; /* ✅ un toque más de aire */
       letter-spacing: .16em;
       text-transform: uppercase;
       font-weight: 650;
       font-size: 12px;
-      /* ✅ evita que “rompa” el layout: puede encogerse si hace falta */
-      min-width: 0;
-      flex: 0 1 auto;
+      min-width: 0;       /* ✅ clave: no rompe layout */
+      flex: 0 1 auto;     /* ✅ puede encogerse */
     }
     .brand:hover{ opacity:.95; }
 
-    /* ✅ LOGO AÚN MÁS GRANDE (sin romper layout) */
     .brand-logo{
       width: 128px;
       height: 88px;
@@ -146,19 +164,22 @@
       flex: 0 0 auto;
     }
 
-    /* ✅ texto del brand con un poco más de “respiración” */
     .brand-text{
       line-height: 1.18;
       letter-spacing: .16em;
-      /* si alguna vez falta espacio, prioriza que no se aplaste feo */
       min-width: 0;
     }
-    .brand-sub{
+
+    /* ✅ si alguna vez falta aire, evita “texto apretado” feo */
+    .brand-text span{
       display:inline-block;
-      letter-spacing: .20em;
-      font-weight: 560;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 360px;
     }
-    /* ✅ 1px menos para que se vea más premium */
+
+    /* ✅ 1px menos para “CONGRESO DE ESTÉTICA” (premium) */
     .brand-sub--congreso{
       font-size: 11px;
     }
@@ -166,7 +187,8 @@
     @media (max-width: 920px){
       .brand-logo{ width: 120px; height: 82px; }
       .brand{ gap:12px; }
-      .brand-sub--congreso{ font-size: 10.5px; } /* medio punto para mantener el “premium” en mobile */
+      .brand-sub--congreso{ font-size: 10.5px; }
+      .brand-text span{ max-width: 240px; }
     }
 
     .nav-links{
@@ -274,6 +296,7 @@
       font-size: clamp(16px, 1.5vw, 18px);
       max-width: 56ch;
       margin: 12px 0 22px;
+      letter-spacing: 0; /* ✅ párrafo más editorial */
     }
     .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 10px; }
 
@@ -340,6 +363,7 @@
       color: var(--muted2);
       max-width: 64ch;
       font-size: 13.5px;
+      letter-spacing: 0; /* ✅ texto largo sin tracking alto */
     }
     .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -376,16 +400,40 @@
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.03);
-      padding: 14px 16px;
+      padding: 12px 14px; /* ✅ un poco más compacto pero pro */
     }
     details + details{ margin-top: 10px; }
+
+    /* ✅ Summary con chevron + área clickeable mejor */
     summary{
       cursor:pointer;
       font-weight: 750;
       color: var(--text);
       list-style:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 10px 6px;
     }
     summary::-webkit-details-marker{ display:none; }
+
+    /* Chevron */
+    summary::after{
+      content:"";
+      width: 10px;
+      height: 10px;
+      border-right: 2px solid rgba(255,255,255,.70);
+      border-bottom: 2px solid rgba(255,255,255,.70);
+      transform: rotate(45deg);
+      transition: transform .18s ease;
+      flex: 0 0 auto;
+      margin-left: 8px;
+    }
+    details[open] summary::after{
+      transform: rotate(-135deg);
+    }
+
     .muted{ color: var(--muted2); font-size: 13px; }
     ul{ margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
 
@@ -490,7 +538,6 @@
       line-height: 1.5;
     }
 
-    /* ✅ Botón Aceptar verde opaco (no brilloso) */
     .modal .btn-modal{
       display:inline-flex;
       align-items:center;
@@ -548,6 +595,19 @@
 
     .help{ font-size: 12px; color: var(--muted2); margin-top: 6px; }
 
+    /* ✅ Mensaje inline del form (en vez de alert) */
+    .form-notice{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--muted);
+      font-size: 13px;
+      display: none;
+    }
+    .form-notice[data-show="true"]{ display:block; }
+
     .map-wrap{
       border-radius: var(--radius);
       overflow:hidden;
@@ -585,7 +645,6 @@
       color: var(--text);
     }
 
-    /* ✅ ÍCONOS SIEMPRE BLANCOS (forzado) */
     .social-ic{
       width:18px;
       height:18px;
@@ -607,8 +666,8 @@
           <img class="brand-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
           <div class="brand-text">
             CEPATAGONIA<br/>
-            <span class="brand-sub brand-sub--congreso" style="color:var(--muted);">CONGRESO DE ESTÉTICA</span><br/>
-            <span class="brand-sub" style="color:var(--muted2);">1ra EDICION</span>
+            <span class="brand-sub--congreso" style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTÉTICA</span><br/>
+            <span style="color:var(--muted2); font-weight:560; letter-spacing:.20em;">1ra EDICION</span>
           </div>
         </a>
 
@@ -657,7 +716,6 @@
             Capacitación profesional • estética avanzada
           </div>
 
-          <!-- Fecha/ubicación fuerte -->
           <div style="margin-top:10px;" class="kicker">
             <span class="dot" aria-hidden="true"></span>
             <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
@@ -701,8 +759,6 @@
               <div style="margin-top:6px; font-weight:760;">Profesionales</div>
             </div>
           </div>
-
-          <!-- ✅ Eliminado botón repetido "Adquirí tu pase" (redundante bajo títulos) -->
         </aside>
       </div>
     </div>
@@ -1002,13 +1058,16 @@
             <div style="height:14px;"></div>
 
             <button class="btn btn-primary" type="submit">Enviar consulta</button>
+
+            <!-- ✅ notice inline (reemplaza alert) -->
+            <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
+
             <div class="help" style="margin-top:10px;">
               Al enviar, tu consulta se deriva al mail oficial: <b>infocepatagonia@gmail.com</b>.
             </div>
           </form>
         </div>
 
-        <!-- MAPA: queda SOLO acá -->
         <div class="map-wrap" aria-label="Mapa de ubicación">
           <iframe
             loading="lazy"
@@ -1021,7 +1080,7 @@
     </div>
   </section>
 
-  <!-- FAQ (ACTUALIZADO) -->
+  <!-- FAQ -->
   <section id="faq">
     <div class="container">
       <div class="section-head">
@@ -1080,7 +1139,7 @@
     </div>
   </section>
 
-  <!-- FOOTER (sin mapa duplicado) -->
+  <!-- FOOTER -->
   <footer>
     <div class="container">
       <div class="grid-2" style="align-items:start;">
@@ -1110,7 +1169,6 @@
 
         <div class="card" style="box-shadow:none; background: rgba(255,255,255,.03);">
           <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">Ficha del evento</div>
-          <!-- ✅ menos espacio vertical -->
           <div style="height:6px;"></div>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <div class="kicker kicker-meta"><b>Fecha:</b><span id="metaDateFooter">—</span></div>
@@ -1214,11 +1272,10 @@
       window.open(CEP_CONTACT.instagramUrl, '_blank', 'noopener,noreferrer');
     }));
 
-    // ===== Validaciones "en vivo" (no solo al enviar) =====
+    // ===== Validaciones "en vivo" =====
     const nombreInput = document.getElementById('nombreInput');
     if (nombreInput){
       nombreInput.addEventListener('input', () => {
-        // permite letras, espacios, apóstrofes, puntos y guiones
         nombreInput.value = nombreInput.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]/g, "");
       });
     }
@@ -1226,13 +1283,18 @@
     const telInput = document.getElementById('telInput');
     if (telInput){
       telInput.addEventListener('input', () => {
-        // permite números, espacios, +, (), -
         telInput.value = telInput.value.replace(/[^0-9+\s()\-]/g, "");
       });
     }
 
-    // Form submit checks (honeypot + endpoint)
+    // ✅ Form submit checks (honeypot + endpoint) con notice inline
     const contactForm = document.getElementById('contactForm');
+    const formNotice = document.getElementById('formNotice');
+    function showFormNotice(msg){
+      if (!formNotice) return;
+      formNotice.textContent = msg;
+      formNotice.setAttribute('data-show','true');
+    }
     if (contactForm){
       contactForm.addEventListener('submit', (e) => {
         const honey = contactForm.querySelector('input[name="website"]');
@@ -1242,7 +1304,7 @@
         }
         if (contactForm.getAttribute('action') === 'FORM_ENDPOINT'){
           e.preventDefault();
-          alert("Falta configurar el endpoint del formulario (FORM_ENDPOINT). Usá Formspree/Getform y pegá el link en el atributo action del form.");
+          showFormNotice("Falta configurar el endpoint del formulario (FORM_ENDPOINT). Usá Formspree/Getform y pegá el link en el atributo action del form.");
           return false;
         }
       });
