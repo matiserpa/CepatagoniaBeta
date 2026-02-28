@@ -8,11 +8,17 @@
   <meta name="description" content="Congreso de capacitación en estética avanzada: innovación, tecnología y formación profesional. Patagonia como marco." />
 
   <style>
+    /* =========================
+       COMIENZO: ADN COMO FONDO (IMAGEN SUPER SUTIL, ENFOQUE DERECHA)
+       Requiere: assets/adn.webp
+       ========================= */
     html, body { height: 100%; }
 
     body{
       position: relative;
       isolation: isolate;
+      /* Para nav FIXED */
+      padding-top: 76px; /* altura aproximada de la nav */
     }
 
     body::before{
@@ -25,6 +31,7 @@
       background-image: url("assets/adn.webp");
       background-size: cover;
       background-repeat: no-repeat;
+
       background-position: right center;
 
       opacity: .12;
@@ -59,7 +66,12 @@
           rgba(0,0,0,1) 65%
         );
       }
+      /* Ajuste fino para que el contenido no “corte” en mobile */
+      body{ padding-top: 74px; }
     }
+    /* ======================
+       FIN: ADN COMO FONDO
+       ====================== */
 
     :root{
       --bg: #070a0f;
@@ -79,9 +91,6 @@
 
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
-
-      /* NAV FIXED */
-      --navH: 78px;
     }
 
     *{ box-sizing: border-box; }
@@ -96,9 +105,6 @@
         var(--bg);
       overflow-x:hidden;
       line-height:1.35;
-
-      /* Compensación para NAV fixed */
-      padding-top: var(--navH);
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -109,13 +115,14 @@
 
     /* ===== NAV ===== */
     .nav{
-      position: fixed;   /* <- antes sticky */
+      /* FIXED para que nunca desaparezca */
+      position: fixed;
       top:0;
       left:0;
       right:0;
       z-index: 999;
       backdrop-filter: blur(12px);
-      background: rgba(7,10,15,.55);
+      background: rgba(7,10,15,.65);
       border-bottom: 1px solid var(--line);
     }
     .nav-inner{
@@ -124,7 +131,6 @@
       justify-content:space-between;
       gap:14px;
       padding: 14px 0;
-      min-height: var(--navH);
     }
 
     .brand{
@@ -135,16 +141,17 @@
       text-transform: uppercase;
       font-weight: 650;
       font-size: 12px;
+      min-width: 220px;
     }
+    .brand:hover{ opacity: .96; }
 
-    /* Logo real en lugar de puntos */
+    /* Logo real (reemplaza mark) */
     .brand-logo{
       width: 44px;
       height: 44px;
-      object-fit: contain;
       display:block;
-      filter: drop-shadow(0 10px 24px rgba(0,0,0,.35));
-      opacity: .98;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.35));
     }
 
     .nav-links{
@@ -225,26 +232,6 @@
       background: var(--a1);
       box-shadow: 0 0 20px rgba(82,255,214,.55);
     }
-
-    /* Fecha fuerte */
-    .date-big{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      margin-top: 14px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(82,255,214,.35);
-      background: linear-gradient(135deg, rgba(82,255,214,.14), rgba(122,167,255,.10));
-      box-shadow: var(--shadow2);
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      font-weight: 820;
-      font-size: 13px;
-      color: var(--text);
-      max-width: 100%;
-    }
-
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.8vw, 60px);
@@ -258,7 +245,29 @@
       max-width: 56ch;
       margin: 12px 0 22px;
     }
-    .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 10px; }
+
+    /* Fecha con visibilidad fuerte */
+    .date-strong{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(82,255,214,.28);
+      background: linear-gradient(135deg, rgba(82,255,214,.10), rgba(122,167,255,.08));
+      color: var(--text);
+      font-weight: 780;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin: 8px 0 0;
+    }
+    .date-strong small{
+      font-weight: 650;
+      color: var(--muted);
+      letter-spacing: .12em;
+    }
+
+    .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 12px; }
     .hero-meta{ display:flex; gap: 14px; flex-wrap: wrap; margin-top: 18px; color: var(--muted2); font-size: 13px; }
     .pill{
       display:inline-flex;
@@ -343,6 +352,7 @@
       background: rgba(255,255,255,.04);
       padding: 18px;
       box-shadow: var(--shadow2);
+      min-width: 0; /* evita desbordes en mobile */
     }
     .card h3{
       margin: 0 0 8px;
@@ -431,15 +441,19 @@
       .hamburger{ display:inline-flex; }
       .mobile-drawer{ display:block; }
       .mobile-drawer[hidden]{ display:none; }
+      .brand{ min-width: 0; }
+      .brand-logo{ width: 40px; height: 40px; }
     }
 
-    /* ===== MODAL PLANOUT ===== */
+    /* =========================
+       COMIENZO: MODAL PLANOUT
+       ========================= */
     .modal-overlay{
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(8px);
-      z-index: 2000;
+      z-index: 1200;
       display: none;
       align-items: center;
       justify-content: center;
@@ -500,12 +514,18 @@
       transform: translateY(-1px);
       background: rgba(7,10,15,.72);
     }
+    /* ======================
+       FIN: MODAL PLANOUT
+       ====================== */
 
-    /* ===== CONTACTO ===== */
+    /* =========================
+       COMIENZO: CONTACTO (inputs)
+       ========================= */
     .field{
       display:flex;
       flex-direction:column;
       gap:8px;
+      min-width: 0;
     }
     .label{
       font-size: 12px;
@@ -524,24 +544,30 @@
       outline: none;
       font-size: 14px;
       transition: border-color .15s ease, background .15s ease;
+      min-width: 0;
     }
     .textarea{ min-height: 120px; resize: vertical; }
     .input:focus, .textarea:focus, .select:focus{
       border-color: rgba(82,255,214,.35);
       background: rgba(255,255,255,.06);
     }
-
-    /* Arreglo legibilidad dropdown options (white-on-white) */
-    select.select option{
-      color: #111;
-      background: #fff;
-    }
-
     .help{
       font-size: 12px;
       color: var(--muted2);
       margin-top: 6px;
     }
+
+    /* SELECT oscuro con letras blancas (incluye menú) */
+    .select{
+      background: rgba(7,10,15,.70);
+      color: rgba(255,255,255,.92);
+      color-scheme: dark;
+    }
+    .select option{
+      background: #070a0f;
+      color: rgba(255,255,255,.92);
+    }
+
     .map-wrap{
       border-radius: var(--radius);
       overflow:hidden;
@@ -549,6 +575,7 @@
       background: rgba(255,255,255,.03);
       box-shadow: var(--shadow2);
       min-height: 320px;
+      min-width: 0;
     }
     .map-wrap iframe{
       width:100%;
@@ -588,20 +615,25 @@
       display:block;
       opacity: .92;
     }
+    /* ======================
+       FIN: CONTACTO
+       ====================== */
   </style>
 </head>
 
-<body id="top">
+<body>
+  <!-- ancla para volver arriba desde el logo -->
+  <div id="top" style="position:absolute; top:0; left:0;"></div>
 
-  <!-- NAV -->
+  <!-- =========================
+       NAV + MENU MOBILE
+       ========================= -->
   <div class="nav">
     <div class="container">
       <div class="nav-inner">
-
-        <!-- Brand clickeable al inicio -->
-        <a class="brand" href="#top" aria-label="Volver al inicio">
-          <!-- Ajustá el path si tu LogoEsteticaB.png está en otra carpeta -->
-          <img class="brand-logo" src="LogoEsteticaB.png" alt="Congreso de Estética de la Patagonia" />
+        <a class="brand" href="#top" aria-label="Ir al inicio">
+          <!-- Logo oficial (repo: /assets/logo-blanco.png) -->
+          <img class="brand-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
           <div>
             CEPATAGONIA<br/>
             <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTETICA</span>
@@ -640,7 +672,9 @@
     </div>
   </div>
 
-  <!-- HERO -->
+  <!-- =========================
+       HERO
+       ========================= -->
   <header class="hero">
     <div class="glow" aria-hidden="true"></div>
     <div class="glow2" aria-hidden="true"></div>
@@ -653,8 +687,11 @@
             Capacitación profesional • estética avanzada
           </div>
 
-          <!-- Fecha fuerte -->
-          <div class="date-big" id="heroDateBig">—</div>
+          <!-- Fecha con alta visibilidad (además de la que viene de data.js) -->
+          <div class="date-strong" aria-label="Fecha del evento destacada">
+            <span>10 y 11 de Octubre 2026</span>
+            <small>San Martín de los Andes</small>
+          </div>
 
           <h1>
             Innovación y<br/>
@@ -710,7 +747,9 @@
     </div>
   </header>
 
-  <!-- DIFERENCIALES -->
+  <!-- =========================
+       DIFERENCIALES
+       ========================= -->
   <section id="diferenciales">
     <div class="container">
       <div class="section-head">
@@ -724,7 +763,9 @@
     </div>
   </section>
 
-  <!-- PROGRAMA -->
+  <!-- =========================
+       PROGRAMA
+       ========================= -->
   <section id="programa">
     <div class="container">
       <div class="section-head">
@@ -738,7 +779,9 @@
     </div>
   </section>
 
-  <!-- SPEAKERS -->
+  <!-- =========================
+       SPEAKERS
+       ========================= -->
   <section id="speakers">
     <div class="container">
       <div class="section-head">
@@ -752,7 +795,9 @@
     </div>
   </section>
 
-  <!-- SEDE -->
+  <!-- =========================
+       SEDE
+       ========================= -->
   <section id="sede">
     <div class="container">
       <div class="section-head">
@@ -842,7 +887,9 @@
     </div>
   </section>
 
-  <!-- DIRIGIDO A -->
+  <!-- =========================
+       DIRIGIDO A
+       ========================= -->
   <section id="dirigido">
     <div class="container">
       <div class="section-head">
@@ -858,7 +905,9 @@
     </div>
   </section>
 
-  <!-- ENTRADAS -->
+  <!-- =========================
+       ENTRADAS
+       ========================= -->
   <section id="entradas">
     <div class="container">
       <div class="section-head">
@@ -880,7 +929,9 @@
     </div>
   </section>
 
-  <!-- CONTACTO -->
+  <!-- =========================
+       CONTACTO + MAPA + DATOS
+       ========================= -->
   <section id="contacto">
     <div class="container">
       <div class="section-head">
@@ -914,13 +965,13 @@
 
           <div class="socials">
             <a class="social-btn" href="#" id="btnInstagram">
-              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram"
-                   onerror="this.onerror=null;this.src='assets/icons/instagram.svg';" />
+              <!-- repo: /assets/instagram.svg -->
+              <img class="social-ic" src="assets/instagram.svg" alt="Instagram" />
               Instagram
             </a>
             <a class="social-btn" href="#" id="btnWhatsapp">
-              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp"
-                   onerror="this.onerror=null;this.src='assets/icons/whatsapp.svg';" />
+              <!-- repo: /assets/whatsapp.svg -->
+              <img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" />
               WhatsApp
             </a>
           </div>
@@ -964,13 +1015,13 @@
                 <div class="label">Teléfono</div>
                 <input
                   class="input"
-                  id="telefonoInput"
                   type="tel"
-                  inputmode="tel"
+                  inputmode="numeric"
                   name="telefono"
                   maxlength="20"
                   pattern="^[0-9+\s()-]{8,20}$"
                   placeholder="+54 9 11 0000-0000"
+                  id="telefonoInput"
                 />
                 <div class="help">Solo números y símbolos válidos (+, espacios, guiones, paréntesis).</div>
               </div>
@@ -1032,7 +1083,9 @@
     </div>
   </section>
 
-  <!-- FAQ -->
+  <!-- =========================
+       FAQ
+       ========================= -->
   <section id="faq">
     <div class="container">
       <div class="section-head">
@@ -1057,7 +1110,9 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- =========================
+       FOOTER
+       ========================= -->
   <footer>
     <div class="container">
       <div class="grid-2" style="align-items:start;">
@@ -1075,13 +1130,11 @@
 
           <div class="socials">
             <a class="social-btn" href="#" id="btnInstagramFooter">
-              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram"
-                   onerror="this.onerror=null;this.src='assets/icons/instagram.svg';" />
+              <img class="social-ic" src="assets/instagram.svg" alt="Instagram" />
               Instagram
             </a>
             <a class="social-btn" href="#" id="btnWhatsappFooter">
-              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp"
-                   onerror="this.onerror=null;this.src='assets/icons/whatsapp.svg';" />
+              <img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" />
               WhatsApp
             </a>
           </div>
@@ -1109,19 +1162,22 @@
     </div>
   </footer>
 
-  <!-- MODAL PLANOUT -->
+  <!-- =========================
+       MODAL PLANOUT
+       ========================= -->
   <div class="modal-overlay" id="planoutModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Planout - Próximamente">
     <div class="modal">
-      <img class="planout"
-           src="assets/img/planout%20logo%20negro.png"
-           alt="Planout"
-           onerror="this.onerror=null; this.src='assets/planout%20logo%20negro.png';" />
+      <!-- Logo Planout (repo: /assets/planout-logo-negro.png) -->
+      <img class="planout" src="assets/planout-logo-negro.png" alt="Planout" />
       <h3>Próximamente</h3>
       <p>La venta de pases estará disponible muy pronto.</p>
       <button class="btn-modal" id="closeModalBtn" type="button">Aceptar</button>
     </div>
   </div>
 
+  <!-- =========================
+       SCRIPTS
+       ========================= -->
   <script src="./data.js"></script>
   <script>
     // =========================
@@ -1129,7 +1185,7 @@
     // =========================
     const CEP_CONTACT = {
       email: "infocepatagonia@gmail.com",
-      phoneE164: "5491131888164",
+      phoneE164: "5491131888164", // +54 9 11 3188-8164
       address: "Gral. Roca 816, San Martín de los Andes",
       instagramUrl: "https://instagram.com/cepatagoniaoficial",
       whatsappText: "Hola! quisiera recibir información sobre el Congreso"
@@ -1214,7 +1270,7 @@
       window.open(getWhatsappUrl(), '_blank', 'noopener,noreferrer');
     }));
 
-    // Instagram
+    // Instagram (contacto/footer)
     const igButtons = ['btnInstagram', 'btnInstagramFooter']
       .map(id => document.getElementById(id))
       .filter(Boolean);
@@ -1225,12 +1281,13 @@
     }));
 
     // =========================
-    // Teléfono: bloquear letras en tipeo (no solo al enviar)
+    // Teléfono: bloquear letras en vivo
     // =========================
-    const telefonoInput = document.getElementById('telefonoInput');
-    if (telefonoInput){
-      telefonoInput.addEventListener('input', () => {
-        telefonoInput.value = telefonoInput.value.replace(/[^0-9+\s()-]/g, '');
+    const telInput = document.getElementById('telefonoInput');
+    if (telInput){
+      telInput.addEventListener('input', () => {
+        // permite: dígitos, +, espacios, (), -
+        telInput.value = telInput.value.replace(/[^0-9+\s()-]/g, '');
       });
     }
 
@@ -1259,16 +1316,10 @@
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
-      // Meta
       document.getElementById('metaDate').textContent = window.CEP.meta.fecha;
       document.getElementById('metaCity').textContent = window.CEP.meta.ciudad;
       document.getElementById('metaMode').textContent = window.CEP.meta.modalidad;
 
-      // Fecha fuerte
-      const heroDate = document.getElementById('heroDateBig');
-      if (heroDate) heroDate.textContent = window.CEP.meta.fecha;
-
-      // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
       dif.innerHTML = window.CEP.diferenciales.map(d => `
         <div class="card">
@@ -1278,7 +1329,6 @@
         </div>
       `).join('');
 
-      // Programa (Ejes)
       const ejesList = document.getElementById('ejesList');
       ejesList.innerHTML = window.CEP.ejes.map(e => `
         <details>
@@ -1300,7 +1350,6 @@
         </details>
       `).join('');
 
-      // Speakers (flatten)
       const speakers = window.CEP.ejes.flatMap(e => e.speakers.map(s => ({...s, eje: e.eje, tema: e.titulo})));
       const spGrid = document.getElementById('speakersGrid');
       spGrid.innerHTML = speakers.map(s => `
@@ -1314,7 +1363,6 @@
         </div>
       `).join('');
 
-      // Dirigido a
       const dir = document.getElementById('dirigidoList');
       dir.innerHTML = window.CEP.dirigidoA.map(x => `<li>${x}</li>`).join('');
     }
