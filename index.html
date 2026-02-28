@@ -7,14 +7,7 @@
   <title>CEPATAGONIA — Congreso de estetica</title>
   <meta name="description" content="Congreso de capacitación en estética avanzada: innovación, tecnología y formación profesional. Patagonia como marco." />
 
-  <!-- =========================
-       COMIENZO: ESTILOS (FORMATO PREMIUM)
-       ========================= -->
   <style>
-    /* =========================
-       COMIENZO: ADN COMO FONDO (IMAGEN SUPER SUTIL, ENFOQUE DERECHA)
-       Requiere: assets/adn.webp
-       ========================= */
     html, body { height: 100%; }
 
     body{
@@ -32,16 +25,12 @@
       background-image: url("assets/adn.webp");
       background-size: cover;
       background-repeat: no-repeat;
-
-      /* >>> CLAVE: lo empujamos a la derecha */
       background-position: right center;
 
-      /* Ajuste de sutileza */
-      opacity: .12; /* probá entre 0.10 y 0.16 */
+      opacity: .12;
       filter: blur(1px) saturate(1.08) contrast(1.06);
       transform: translateZ(0);
 
-      /* >>> CLAVE: fade hacia la izquierda para que el ADN “viva” en la derecha */
       -webkit-mask-image: linear-gradient(to right,
         rgba(0,0,0,0) 0%,
         rgba(0,0,0,0.15) 35%,
@@ -54,7 +43,6 @@
       );
     }
 
-    /* Mobile: un poco más arriba y aún más suave */
     @media (max-width: 920px){
       body::before{
         opacity: .08;
@@ -72,9 +60,6 @@
         );
       }
     }
-    /* ======================
-       FIN: ADN COMO FONDO
-       ====================== */
 
     :root{
       --bg: #070a0f;
@@ -94,6 +79,9 @@
 
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
+
+      /* NAV FIXED */
+      --navH: 78px;
     }
 
     *{ box-sizing: border-box; }
@@ -108,6 +96,9 @@
         var(--bg);
       overflow-x:hidden;
       line-height:1.35;
+
+      /* Compensación para NAV fixed */
+      padding-top: var(--navH);
     }
 
     a{ color:inherit; text-decoration:none; }
@@ -118,9 +109,11 @@
 
     /* ===== NAV ===== */
     .nav{
-      position: sticky;
+      position: fixed;   /* <- antes sticky */
       top:0;
-      z-index: 9999; /* MOD: siempre arriba */
+      left:0;
+      right:0;
+      z-index: 999;
       backdrop-filter: blur(12px);
       background: rgba(7,10,15,.55);
       border-bottom: 1px solid var(--line);
@@ -131,7 +124,9 @@
       justify-content:space-between;
       gap:14px;
       padding: 14px 0;
+      min-height: var(--navH);
     }
+
     .brand{
       display:flex;
       align-items:center;
@@ -141,16 +136,17 @@
       font-weight: 650;
       font-size: 12px;
     }
-    .mark{
-      width: 34px; height: 34px;
-      border-radius: 12px;
-      background:
-        radial-gradient(18px 18px at 30% 30%, rgba(82,255,214,.85), transparent 60%),
-        radial-gradient(20px 20px at 70% 65%, rgba(122,167,255,.85), transparent 65%),
-        rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.10);
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+
+    /* Logo real en lugar de puntos */
+    .brand-logo{
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      display:block;
+      filter: drop-shadow(0 10px 24px rgba(0,0,0,.35));
+      opacity: .98;
     }
+
     .nav-links{
       display:flex;
       gap: 18px;
@@ -229,6 +225,26 @@
       background: var(--a1);
       box-shadow: 0 0 20px rgba(82,255,214,.55);
     }
+
+    /* Fecha fuerte */
+    .date-big{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(82,255,214,.35);
+      background: linear-gradient(135deg, rgba(82,255,214,.14), rgba(122,167,255,.10));
+      box-shadow: var(--shadow2);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-weight: 820;
+      font-size: 13px;
+      color: var(--text);
+      max-width: 100%;
+    }
+
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.8vw, 60px);
@@ -417,15 +433,13 @@
       .mobile-drawer[hidden]{ display:none; }
     }
 
-    /* =========================
-       COMIENZO: MODAL PLANOUT (sin cambiar estética general)
-       ========================= */
+    /* ===== MODAL PLANOUT ===== */
     .modal-overlay{
       position: fixed;
       inset: 0;
       background: rgba(0,0,0,.55);
       backdrop-filter: blur(8px);
-      z-index: 80;
+      z-index: 2000;
       display: none;
       align-items: center;
       justify-content: center;
@@ -486,13 +500,8 @@
       transform: translateY(-1px);
       background: rgba(7,10,15,.72);
     }
-    /* ======================
-       FIN: MODAL PLANOUT
-       ====================== */
 
-    /* =========================
-       COMIENZO: CONTACTO (inputs sin tocar estética base)
-       ========================= */
+    /* ===== CONTACTO ===== */
     .field{
       display:flex;
       flex-direction:column;
@@ -521,6 +530,13 @@
       border-color: rgba(82,255,214,.35);
       background: rgba(255,255,255,.06);
     }
+
+    /* Arreglo legibilidad dropdown options (white-on-white) */
+    select.select option{
+      color: #111;
+      background: #fff;
+    }
+
     .help{
       font-size: 12px;
       color: var(--muted2);
@@ -572,28 +588,20 @@
       display:block;
       opacity: .92;
     }
-    /* ======================
-       FIN: CONTACTO
-       ====================== */
   </style>
-  <!-- ======================
-       FIN: ESTILOS
-       ====================== -->
 </head>
 
-<body>
-  <!-- MOD: ancla para volver arriba -->
-  <div id="top"></div>
+<body id="top">
 
-  <!-- =========================
-       COMIENZO: NAV + MENU MOBILE
-       ========================= -->
+  <!-- NAV -->
   <div class="nav">
     <div class="container">
       <div class="nav-inner">
-        <!-- MOD: brand clickeable al inicio -->
+
+        <!-- Brand clickeable al inicio -->
         <a class="brand" href="#top" aria-label="Volver al inicio">
-          <div class="mark" aria-hidden="true"></div>
+          <!-- Ajustá el path si tu LogoEsteticaB.png está en otra carpeta -->
+          <img class="brand-logo" src="LogoEsteticaB.png" alt="Congreso de Estética de la Patagonia" />
           <div>
             CEPATAGONIA<br/>
             <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTETICA</span>
@@ -631,13 +639,8 @@
       </div>
     </div>
   </div>
-  <!-- ======================
-       FIN: NAV + MENU MOBILE
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: HERO (FORMATO PREMIUM)
-       ========================= -->
+  <!-- HERO -->
   <header class="hero">
     <div class="glow" aria-hidden="true"></div>
     <div class="glow2" aria-hidden="true"></div>
@@ -649,6 +652,9 @@
             <span class="dot" aria-hidden="true"></span>
             Capacitación profesional • estética avanzada
           </div>
+
+          <!-- Fecha fuerte -->
+          <div class="date-big" id="heroDateBig">—</div>
 
           <h1>
             Innovación y<br/>
@@ -677,11 +683,6 @@
         </div>
 
         <aside class="hero-card">
-          <!-- =========================
-               COMIENZO: HERO CARD (SIN LINEAS DE FONDO)
-               Antes estaba el SVG ".topo" acá. Lo quitamos para que no cargue.
-               ========================= -->
-
           <h3>Qué vas a llevarte</h3>
           <div class="big">Protocolos + criterio + actualización real</div>
           <p>
@@ -704,21 +705,12 @@
 
           <div style="height:12px"></div>
           <a class="btn btn-primary" href="#" id="btnPaseCard" style="width:100%;">Adquirí tu pase</a>
-
-          <!-- ======================
-               FIN: HERO CARD
-               ====================== -->
         </aside>
       </div>
     </div>
   </header>
-  <!-- ======================
-       FIN: HERO
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: DIFERENCIALES
-       ========================= -->
+  <!-- DIFERENCIALES -->
   <section id="diferenciales">
     <div class="container">
       <div class="section-head">
@@ -731,13 +723,8 @@
       <div class="grid-3" id="diferencialesGrid"></div>
     </div>
   </section>
-  <!-- ======================
-       FIN: DIFERENCIALES
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: PROGRAMA (EJES DINÁMICOS)
-       ========================= -->
+  <!-- PROGRAMA -->
   <section id="programa">
     <div class="container">
       <div class="section-head">
@@ -750,13 +737,8 @@
       <div id="ejesList"></div>
     </div>
   </section>
-  <!-- ======================
-       FIN: PROGRAMA
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: SPEAKERS (GRID)
-       ========================= -->
+  <!-- SPEAKERS -->
   <section id="speakers">
     <div class="container">
       <div class="section-head">
@@ -769,13 +751,8 @@
       <div class="grid-2" id="speakersGrid"></div>
     </div>
   </section>
-  <!-- ======================
-       FIN: SPEAKERS
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: SEDE (SAN MARTÍN DE LOS ANDES + IMÁGENES)
-       ========================= -->
+  <!-- SEDE -->
   <section id="sede">
     <div class="container">
       <div class="section-head">
@@ -864,13 +841,8 @@
 
     </div>
   </section>
-  <!-- ======================
-       FIN: SEDE
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: DIRIGIDO A
-       ========================= -->
+  <!-- DIRIGIDO A -->
   <section id="dirigido">
     <div class="container">
       <div class="section-head">
@@ -885,13 +857,8 @@
       </div>
     </div>
   </section>
-  <!-- ======================
-       FIN: DIRIGIDO A
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: ENTRADAS
-       ========================= -->
+  <!-- ENTRADAS -->
   <section id="entradas">
     <div class="container">
       <div class="section-head">
@@ -912,13 +879,8 @@
       </div>
     </div>
   </section>
-  <!-- ======================
-       FIN: ENTRADAS
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: CONTACTO + MAPA + DATOS OFICIALES
-       ========================= -->
+  <!-- CONTACTO -->
   <section id="contacto">
     <div class="container">
       <div class="section-head">
@@ -952,18 +914,19 @@
 
           <div class="socials">
             <a class="social-btn" href="#" id="btnInstagram">
-              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram" />
+              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram"
+                   onerror="this.onerror=null;this.src='assets/icons/instagram.svg';" />
               Instagram
             </a>
             <a class="social-btn" href="#" id="btnWhatsapp">
-              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp" />
+              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp"
+                   onerror="this.onerror=null;this.src='assets/icons/whatsapp.svg';" />
               WhatsApp
             </a>
           </div>
 
           <div style="height:16px;"></div>
 
-          <!-- Formulario (sitio estático): reemplazá FORM_ENDPOINT por tu endpoint real (Formspree/Getform/etc.) -->
           <form id="contactForm" method="POST" action="FORM_ENDPOINT">
             <div class="grid-2">
               <div class="field">
@@ -1001,28 +964,29 @@
                 <div class="label">Teléfono</div>
                 <input
                   class="input"
+                  id="telefonoInput"
                   type="tel"
+                  inputmode="tel"
                   name="telefono"
                   maxlength="20"
                   pattern="^[0-9+\s()-]{8,20}$"
                   placeholder="+54 9 11 0000-0000"
                 />
+                <div class="help">Solo números y símbolos válidos (+, espacios, guiones, paréntesis).</div>
               </div>
 
               <div class="field">
                 <div class="label">Asunto</div>
-                <!-- MOD: opciones específicas -->
                 <select class="select" name="asunto" required>
                   <option value="" selected disabled>Seleccioná una opción</option>
-                  <option value="Entradas y pases">Entradas y pases</option>
-                  <option value="Programa y cronograma">Programa y cronograma</option>
-                  <option value="Speakers y disertaciones">Speakers y disertaciones</option>
-                  <option value="Acreditacion y certificados">Acreditación y certificados</option>
-                  <option value="Ubicacion y alojamiento">Ubicación, hotelería y traslados</option>
-                  <option value="Sponsors y stands">Sponsors / Stands comerciales</option>
-                  <option value="Prensa y comunicacion">Prensa y comunicación</option>
-                  <option value="Soporte tecnico">Soporte técnico (web / inscripciones)</option>
-                  <option value="Otras consultas">Otras consultas</option>
+                  <option>Programa y cronograma</option>
+                  <option>Entradas y pases (Planout)</option>
+                  <option>Acreditación y certificación</option>
+                  <option>Speakers y contenidos</option>
+                  <option>Hospedaje, turismo y logística</option>
+                  <option>Sponsors, stands y alianzas</option>
+                  <option>Prensa y medios</option>
+                  <option>Soporte / otros</option>
                 </select>
               </div>
             </div>
@@ -1042,7 +1006,6 @@
               <div class="help">Mínimo 10 caracteres.</div>
             </div>
 
-            <!-- Campo “honey pot” anti-spam (oculto) -->
             <div style="position:absolute; left:-9999px; opacity:0;" aria-hidden="true">
               <label>Dejá este campo vacío</label>
               <input type="text" name="website" tabindex="-1" autocomplete="off" />
@@ -1068,13 +1031,8 @@
       </div>
     </div>
   </section>
-  <!-- ======================
-       FIN: CONTACTO
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: FAQ
-       ========================= -->
+  <!-- FAQ -->
   <section id="faq">
     <div class="container">
       <div class="section-head">
@@ -1098,13 +1056,8 @@
       </details>
     </div>
   </section>
-  <!-- ======================
-       FIN: FAQ
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: FOOTER (completo, datos + redes)
-       ========================= -->
+  <!-- FOOTER -->
   <footer>
     <div class="container">
       <div class="grid-2" style="align-items:start;">
@@ -1122,11 +1075,13 @@
 
           <div class="socials">
             <a class="social-btn" href="#" id="btnInstagramFooter">
-              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram" />
+              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram"
+                   onerror="this.onerror=null;this.src='assets/icons/instagram.svg';" />
               Instagram
             </a>
             <a class="social-btn" href="#" id="btnWhatsappFooter">
-              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp" />
+              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp"
+                   onerror="this.onerror=null;this.src='assets/icons/whatsapp.svg';" />
               WhatsApp
             </a>
           </div>
@@ -1153,29 +1108,20 @@
       </div>
     </div>
   </footer>
-  <!-- ======================
-       FIN: FOOTER
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: MODAL PLANOUT
-       ========================= -->
+  <!-- MODAL PLANOUT -->
   <div class="modal-overlay" id="planoutModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Planout - Próximamente">
     <div class="modal">
-      <!-- Logo Planout (archivo con espacios: usar %20) -->
-      <img class="planout" src="assets/img/planout%20logo%20negro.png" alt="Planout" />
+      <img class="planout"
+           src="assets/img/planout%20logo%20negro.png"
+           alt="Planout"
+           onerror="this.onerror=null; this.src='assets/planout%20logo%20negro.png';" />
       <h3>Próximamente</h3>
       <p>La venta de pases estará disponible muy pronto.</p>
       <button class="btn-modal" id="closeModalBtn" type="button">Aceptar</button>
     </div>
   </div>
-  <!-- ======================
-       FIN: MODAL PLANOUT
-       ====================== -->
 
-  <!-- =========================
-       COMIENZO: SCRIPTS (DATA + RENDER)
-       ========================= -->
   <script src="./data.js"></script>
   <script>
     // =========================
@@ -1183,11 +1129,9 @@
     // =========================
     const CEP_CONTACT = {
       email: "infocepatagonia@gmail.com",
-      phoneE164: "5491131888164", // +54 9 11 3188-8164 -> wa.me usa 549...
+      phoneE164: "5491131888164",
       address: "Gral. Roca 816, San Martín de los Andes",
-      // Reemplazá por tu URL real de Instagram cuando la quieras fijar:
       instagramUrl: "https://instagram.com/cepatagoniaoficial",
-      // Mensaje pre-cargado
       whatsappText: "Hola! quisiera recibir información sobre el Congreso"
     };
 
@@ -1215,7 +1159,7 @@
     }
 
     // =========================
-    // MODAL PLANOUT (Próximamente)
+    // MODAL PLANOUT
     // =========================
     const modalOverlay = document.getElementById('planoutModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
@@ -1223,7 +1167,6 @@
     function openModal(){
       modalOverlay.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
-      // foco al botón
       setTimeout(() => closeModalBtn && closeModalBtn.focus(), 50);
     }
 
@@ -1232,12 +1175,10 @@
       document.body.style.overflow = '';
     }
 
-    // Click fuera del modal
     modalOverlay.addEventListener('click', (e) => {
       if (e.target === modalOverlay) closeModal();
     });
 
-    // ESC
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal();
     });
@@ -1273,7 +1214,7 @@
       window.open(getWhatsappUrl(), '_blank', 'noopener,noreferrer');
     }));
 
-    // Instagram (header/footer)
+    // Instagram
     const igButtons = ['btnInstagram', 'btnInstagramFooter']
       .map(id => document.getElementById(id))
       .filter(Boolean);
@@ -1284,18 +1225,26 @@
     }));
 
     // =========================
-    // Formulario: validación extra (sin romper HTML5)
+    // Teléfono: bloquear letras en tipeo (no solo al enviar)
+    // =========================
+    const telefonoInput = document.getElementById('telefonoInput');
+    if (telefonoInput){
+      telefonoInput.addEventListener('input', () => {
+        telefonoInput.value = telefonoInput.value.replace(/[^0-9+\s()-]/g, '');
+      });
+    }
+
+    // =========================
+    // Formulario: validación extra
     // =========================
     const contactForm = document.getElementById('contactForm');
     if (contactForm){
       contactForm.addEventListener('submit', (e) => {
-        // Anti-spam: si el honeypot se llenó, cancelamos
         const honey = contactForm.querySelector('input[name="website"]');
         if (honey && honey.value.trim().length > 0){
           e.preventDefault();
           return false;
         }
-        // Si no configuraron endpoint aún, bloquea envío (para que no rompa)
         if (contactForm.getAttribute('action') === 'FORM_ENDPOINT'){
           e.preventDefault();
           alert("Falta configurar el endpoint del formulario (FORM_ENDPOINT). Usá Formspree/Getform y pegá el link en el atributo action del form.");
@@ -1305,7 +1254,7 @@
     }
 
     // =========================
-    // DATA.JS render (sin cambios)
+    // DATA.JS render
     // =========================
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
@@ -1314,6 +1263,10 @@
       document.getElementById('metaDate').textContent = window.CEP.meta.fecha;
       document.getElementById('metaCity').textContent = window.CEP.meta.ciudad;
       document.getElementById('metaMode').textContent = window.CEP.meta.modalidad;
+
+      // Fecha fuerte
+      const heroDate = document.getElementById('heroDateBig');
+      if (heroDate) heroDate.textContent = window.CEP.meta.fecha;
 
       // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
@@ -1366,8 +1319,5 @@
       dir.innerHTML = window.CEP.dirigidoA.map(x => `<li>${x}</li>`).join('');
     }
   </script>
-  <!-- ======================
-       FIN: SCRIPTS
-       ====================== -->
 </body>
 </html>
