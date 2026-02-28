@@ -88,11 +88,11 @@
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
 
-      /* ✅ NAV MÁS ALTA PARA ACOMODAR LOGO GRANDE */
-      --navH: 92px;
+      /* ✅ NAV MÁS ALTA PARA ACOMODAR LOGO MÁS GRANDE (ajuste) */
+      --navH: 100px;
     }
     @media (max-width: 920px){
-      :root{ --navH: 88px; }
+      :root{ --navH: 92px; }
     }
 
     *{ box-sizing: border-box; }
@@ -124,26 +124,49 @@
     .brand{
       display:flex;
       align-items:center;
-      gap:12px;
+      /* ✅ un toque más de aire entre logo y texto */
+      gap:14px;
       letter-spacing: .16em;
       text-transform: uppercase;
       font-weight: 650;
       font-size: 12px;
-      min-width: 220px;
+      /* ✅ evita que “rompa” el layout: puede encogerse si hace falta */
+      min-width: 0;
+      flex: 0 1 auto;
     }
     .brand:hover{ opacity:.95; }
 
-    /* ✅ LOGO MÁS GRANDE (NUEVO) */
+    /* ✅ LOGO AÚN MÁS GRANDE (sin romper layout) */
     .brand-logo{
-      width: 108px;
-      height: 76px;
+      width: 128px;
+      height: 88px;
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
+      flex: 0 0 auto;
     }
+
+    /* ✅ texto del brand con un poco más de “respiración” */
+    .brand-text{
+      line-height: 1.18;
+      letter-spacing: .16em;
+      /* si alguna vez falta espacio, prioriza que no se aplaste feo */
+      min-width: 0;
+    }
+    .brand-sub{
+      display:inline-block;
+      letter-spacing: .20em;
+      font-weight: 560;
+    }
+    /* ✅ 1px menos para que se vea más premium */
+    .brand-sub--congreso{
+      font-size: 11px;
+    }
+
     @media (max-width: 920px){
-      .brand{ min-width: 170px; }
-      .brand-logo{ width: 112px; height: 78px; }
+      .brand-logo{ width: 120px; height: 82px; }
+      .brand{ gap:12px; }
+      .brand-sub--congreso{ font-size: 10.5px; } /* medio punto para mantener el “premium” en mobile */
     }
 
     .nav-links{
@@ -582,10 +605,10 @@
       <div class="nav-inner">
         <a class="brand" href="#top" aria-label="Volver al inicio">
           <img class="brand-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
-          <div>
+          <div class="brand-text">
             CEPATAGONIA<br/>
-            <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTÉTICA</span><br/>
-            <span style="color:var(--muted2); font-weight:560; letter-spacing:.20em;">1ra EDICION</span>
+            <span class="brand-sub brand-sub--congreso" style="color:var(--muted);">CONGRESO DE ESTÉTICA</span><br/>
+            <span class="brand-sub" style="color:var(--muted2);">1ra EDICION</span>
           </div>
         </a>
 
