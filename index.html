@@ -9,7 +9,7 @@
 
   <style>
     html, body { height: 100%; scroll-behavior: smooth; }
-    html { overflow-x: clip; } /* ✅ evita scroll lateral por elementos fijos */
+    html { overflow-x: clip; }
     body{
       position: relative;
       isolation: isolate;
@@ -21,12 +21,11 @@
         radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
         radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
         #070a0f;
-      overflow-x: clip; /* ✅ más estricto que hidden */
+      overflow-x: clip;
       line-height:1.35;
       padding-top: var(--navH);
     }
 
-    /* ✅ Anchor offsets para nav fijo */
     [id]{ scroll-margin-top: calc(var(--navH) + 14px); }
 
     body::before{
@@ -54,7 +53,6 @@
       );
     }
 
-    /* ✅ Performance: mobile */
     @media (max-width: 920px){
       body::before{
         opacity: .08;
@@ -92,7 +90,6 @@
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
 
-      /* ✅ NAV más baja (antes 100px) */
       --navH: 86px;
     }
     @media (max-width: 920px){
@@ -133,15 +130,13 @@
       backdrop-filter: blur(12px);
       background: rgba(7,10,15,.72);
       border-bottom: 1px solid var(--line);
-      overflow-x: clip; /* ✅ evita scroll lateral por contenido interno */
+      overflow-x: clip;
     }
     .nav-inner{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-
-      /* ✅ menos padding => nav menos alta */
       padding: 10px 0;
       min-height: var(--navH);
     }
@@ -155,11 +150,10 @@
       font-weight: 650;
       font-size: 12px;
       min-width: 0;
-      flex: 0 1 auto;
+      flex: 1 1 auto; /* ✅ clave: puede encogerse */
     }
     .brand:hover{ opacity:.95; }
 
-    /* ✅ Logo un toque más chico para que nav no “comande” el layout */
     .brand-logo{
       width: 118px;
       height: 78px;
@@ -169,20 +163,26 @@
       flex: 0 0 auto;
     }
 
+    /* ✅ brand-text ahora es truncable de verdad */
     .brand-text{
-      line-height: 1.18;
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      line-height: 1.12;
       letter-spacing: .16em;
       min-width: 0;
+      max-width: 360px;
     }
     .brand-text span{
-      display:inline-block;
+      display:block;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 360px;
+      min-width: 0;
     }
-    .brand-sub--congreso{ font-size: 11px; }
-    .brand-sub--edition{ font-size: 11px; }
+    .brand-title{ font-weight: 760; }
+    .brand-sub--congreso{ font-size: 11px; font-weight:560; color: var(--muted); letter-spacing:.20em; }
+    .brand-sub--edition{ font-size: 11px; font-weight:560; color: var(--muted2); letter-spacing:.20em; }
 
     .nav-links{
       display:flex;
@@ -207,7 +207,7 @@
       align-items:center;
       justify-content:center;
       gap:10px;
-      padding: 11px 13px; /* ✅ levemente más compacto */
+      padding: 11px 13px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -265,12 +265,25 @@
       font-size: 12px;
       letter-spacing: .10em;
       text-transform: uppercase;
+      max-width: 100%;
     }
 
     .dot{
       width:8px; height:8px; border-radius: 99px;
       background: var(--a1);
       box-shadow: 0 0 20px rgba(82,255,214,.55);
+      flex: 0 0 auto;
+    }
+
+    /* ✅ chip meta en una línea (sin partir) */
+    .kicker--metaInline{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
+    }
+    #metaDateStrong, #metaCityStrong{
+      white-space: nowrap;
     }
 
     .kicker.kicker-meta{
@@ -365,9 +378,6 @@
 
     .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-
-    /* ✅ clave para el “margen vacío” del mapa:
-       evitamos que el grid estire items (y si estira, igual el iframe llena) */
     .grid-2{ align-items: start; }
 
     .card{
@@ -376,7 +386,7 @@
       background: rgba(255,255,255,.04);
       padding: 18px;
       box-shadow: var(--shadow2);
-      min-width: 0; /* ✅ ayuda a evitar overflow horizontal */
+      min-width: 0;
     }
     .card h3{
       margin: 0 0 8px;
@@ -591,7 +601,6 @@
     }
     .form-notice[data-show="true"]{ display:block; }
 
-    /* ✅ MAPA: sin “margen vacío” (iframe llena el contenedor) */
     .map-wrap{
       border-radius: var(--radius);
       overflow:hidden;
@@ -599,8 +608,8 @@
       background: rgba(255,255,255,.03);
       box-shadow: var(--shadow2);
       min-height: 320px;
-      display: flex;         /* ✅ */
-      flex-direction: column;/* ✅ */
+      display: flex;
+      flex-direction: column;
     }
     .map-wrap iframe{
       width:100%;
@@ -608,9 +617,9 @@
       display:block;
       filter: saturate(.95) contrast(1.05);
       opacity: .92;
-      flex: 1 1 auto;        /* ✅ llena alto */
-      height: 100%;          /* ✅ */
-      min-height: 320px;     /* ✅ mantiene presencia */
+      flex: 1 1 auto;
+      height: 100%;
+      min-height: 320px;
     }
 
     .socials{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
@@ -651,18 +660,27 @@
       .mobile-drawer[hidden]{ display:none; }
 
       .brand-logo{ width: 112px; height: 74px; }
-      .brand-text span{ max-width: 240px; }
+      .brand-text{ max-width: 260px; }
       .btn{ padding: 10px 12px; }
     }
 
-    /* ✅ Mobile “chico”: elimina overflow horizontal del header */
     @media (max-width: 520px){
-      .brand-logo{ width: 92px; height: 62px; }
-      .brand-sub--edition{ display:none; }     /* ✅ se va a drawer / contenido, no rompe nav */
-      #btnAsesorateNav{ display:none; }        /* ✅ clave: evita scroll lateral */
-      .btn{ padding: 10px 10px; font-size: 12px; }
-      .nav-inner{ gap:10px; }
-      .brand-text span{ max-width: 180px; }
+      .brand-logo{ width: 86px; height: 58px; }
+      .brand-text{ max-width: 190px; } /* ✅ evita choque con acciones */
+      .brand-sub--congreso,
+      .brand-sub--edition{ display:none; } /* ✅ no se superpone con Menú */
+
+      #btnAsesorateNav{ display:none; }
+
+      .btn{ padding: 9px 10px; font-size: 12px; }
+      .nav-actions{ gap:8px; }
+
+      /* ✅ chips meta más compactos y siempre 1 línea */
+      .kicker--metaInline{
+        font-size: 11px;
+        padding: 7px 10px;
+        letter-spacing: .08em;
+      }
     }
   </style>
 </head>
@@ -677,9 +695,9 @@
         <a class="brand" href="#top" aria-label="Volver al inicio">
           <img class="brand-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
           <div class="brand-text">
-            CEPATAGONIA<br/>
-            <span class="brand-sub--congreso" style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTÉTICA</span><br/>
-            <span class="brand-sub--edition" style="color:var(--muted2); font-weight:560; letter-spacing:.20em;">1ra EDICION</span>
+            <span class="brand-title">CEPATAGONIA</span>
+            <span class="brand-sub--congreso">CONGRESO DE ESTÉTICA</span>
+            <span class="brand-sub--edition">1ra EDICION</span>
           </div>
         </a>
 
@@ -728,7 +746,7 @@
             Capacitación profesional • estética avanzada
           </div>
 
-          <div style="margin-top:10px;" class="kicker">
+          <div style="margin-top:10px;" class="kicker kicker--metaInline">
             <span class="dot" aria-hidden="true"></span>
             <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
           </div>
@@ -983,32 +1001,15 @@
             <div class="grid-2">
               <div class="field">
                 <div class="label">Nombre y apellido</div>
-                <input
-                  class="input"
-                  id="nombreInput"
-                  type="text"
-                  name="nombre"
-                  required
-                  minlength="2"
-                  maxlength="60"
-                  inputmode="text"
-                  autocomplete="name"
-                  placeholder="Tu nombre y apellido"
-                />
+                <input class="input" id="nombreInput" type="text" name="nombre" required minlength="2" maxlength="60"
+                  inputmode="text" autocomplete="name" placeholder="Tu nombre y apellido" />
                 <div class="help">Solo letras (sin números).</div>
               </div>
 
               <div class="field">
                 <div class="label">Email</div>
-                <input
-                  class="input"
-                  type="email"
-                  name="email"
-                  required
-                  maxlength="80"
-                  autocomplete="email"
-                  placeholder="tu@email.com"
-                />
+                <input class="input" type="email" name="email" required maxlength="80"
+                  autocomplete="email" placeholder="tu@email.com" />
               </div>
             </div>
 
@@ -1017,17 +1018,8 @@
             <div class="grid-2">
               <div class="field">
                 <div class="label">Teléfono</div>
-                <input
-                  class="input"
-                  id="telInput"
-                  type="tel"
-                  name="telefono"
-                  maxlength="20"
-                  inputmode="tel"
-                  autocomplete="tel"
-                  placeholder="+54 9 11 0000-0000"
-                  pattern="^[0-9+\s()\-]{6,}$"
-                />
+                <input class="input" id="telInput" type="tel" name="telefono" maxlength="20"
+                  inputmode="tel" autocomplete="tel" placeholder="+54 9 11 0000-0000" pattern="^[0-9+\s()\-]{6,}$" />
                 <div class="help">Solo números y símbolos válidos (+, espacios, guiones, paréntesis).</div>
               </div>
 
@@ -1051,14 +1043,8 @@
 
             <div class="field">
               <div class="label">Mensaje</div>
-              <textarea
-                class="textarea"
-                name="mensaje"
-                required
-                minlength="10"
-                maxlength="1200"
-                placeholder="Escribí tu consulta..."
-              ></textarea>
+              <textarea class="textarea" name="mensaje" required minlength="10" maxlength="1200"
+                placeholder="Escribí tu consulta..."></textarea>
               <div class="help">Mínimo 10 caracteres.</div>
             </div>
 
@@ -1080,12 +1066,9 @@
         </div>
 
         <div class="map-wrap" aria-label="Mapa de ubicación">
-          <iframe
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
+          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Gral.%20Roca%20816%2C%20San%20Mart%C3%ADn%20de%20los%20Andes&output=embed"
-            title="Mapa — Gral. Roca 816, San Martín de los Andes">
-          </iframe>
+            title="Mapa — Gral. Roca 816, San Martín de los Andes"></iframe>
         </div>
       </div>
     </div>
