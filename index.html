@@ -416,6 +416,165 @@
       .mobile-drawer{ display:block; }
       .mobile-drawer[hidden]{ display:none; }
     }
+
+    /* =========================
+       COMIENZO: MODAL PLANOUT (sin cambiar estética general)
+       ========================= */
+    .modal-overlay{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(8px);
+      z-index: 80;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+    }
+    .modal-overlay[aria-hidden="false"]{ display:flex; }
+
+    .modal{
+      width: min(520px, 100%);
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.96);
+      box-shadow: 0 30px 90px rgba(0,0,0,.55);
+      color: #111;
+      padding: 28px 26px;
+      position: relative;
+      text-align: center;
+    }
+    .modal .planout{
+      width: 160px;
+      max-width: 55%;
+      height: auto;
+      display:block;
+      margin: 4px auto 10px;
+      filter: saturate(1.02) contrast(1.02);
+    }
+    .modal h3{
+      margin: 16px 0 8px;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+      font-weight: 720;
+      color:#111;
+    }
+    .modal p{
+      margin: 0 0 18px;
+      color: rgba(0,0,0,.70);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .modal .btn-modal{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 12px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(7,10,15,.15);
+      background: rgba(7,10,15,.62);
+      color:#fff;
+      font-weight: 720;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-size: 12px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .15s ease, background .15s ease;
+    }
+    .modal .btn-modal:hover{
+      transform: translateY(-1px);
+      background: rgba(7,10,15,.72);
+    }
+    /* ======================
+       FIN: MODAL PLANOUT
+       ====================== */
+
+    /* =========================
+       COMIENZO: CONTACTO (inputs sin tocar estética base)
+       ========================= */
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    .label{
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted2);
+      font-weight: 720;
+    }
+    .input, .textarea, .select{
+      width:100%;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color: var(--text);
+      padding: 12px 12px;
+      outline: none;
+      font-size: 14px;
+      transition: border-color .15s ease, background .15s ease;
+    }
+    .textarea{ min-height: 120px; resize: vertical; }
+    .input:focus, .textarea:focus, .select:focus{
+      border-color: rgba(82,255,214,.35);
+      background: rgba(255,255,255,.06);
+    }
+    .help{
+      font-size: 12px;
+      color: var(--muted2);
+      margin-top: 6px;
+    }
+    .map-wrap{
+      border-radius: var(--radius);
+      overflow:hidden;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.03);
+      box-shadow: var(--shadow2);
+      min-height: 320px;
+    }
+    .map-wrap iframe{
+      width:100%;
+      height: 320px;
+      border: 0;
+      display:block;
+      filter: saturate(.95) contrast(1.05);
+      opacity: .92;
+    }
+    .socials{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 12px;
+    }
+    .social-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+      box-shadow:none;
+    }
+    .social-btn:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.18);
+      color: var(--text);
+    }
+    .social-ic{
+      width: 18px;
+      height: 18px;
+      display:block;
+      opacity: .92;
+    }
+    /* ======================
+       FIN: CONTACTO
+       ====================== */
   </style>
   <!-- ======================
        FIN: ESTILOS
@@ -444,12 +603,14 @@
           <a href="#speakers">Speakers</a>
           <a href="#sede">Sede</a>
           <a href="#entradas">Entradas</a>
+          <a href="#contacto">Contacto</a>
           <a href="#faq">FAQ</a>
         </nav>
 
         <div style="display:flex; gap:10px; align-items:center;">
           <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
-          <a class="btn btn-primary" href="#entradas">Comprar entradas</a>
+          <a class="btn btn-ghost" href="#" id="btnAsesorateNav">Asesorate</a>
+          <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
         </div>
       </div>
 
@@ -459,7 +620,11 @@
         <a href="#speakers">Speakers</a>
         <a href="#sede">Sede</a>
         <a href="#entradas">Entradas</a>
+        <a href="#contacto">Contacto</a>
         <a href="#faq">FAQ</a>
+        <div style="height:10px"></div>
+        <a href="#" id="btnAsesorateMobile">Asesorate</a>
+        <a href="#" id="btnPaseMobile">Adquirí tu pase</a>
       </div>
     </div>
   </div>
@@ -495,8 +660,9 @@
           </p>
 
           <div class="hero-actions">
-            <a class="btn btn-primary" href="#entradas">Ver entradas</a>
-            <a class="btn" href="#programa">Ver programa</a>
+            <a class="btn btn-primary" href="#" id="btnPaseHero">Adquirí tu pase</a>
+            <a class="btn" href="#" id="btnAsesorateHero">Asesorate</a>
+            <a class="btn btn-ghost" href="#programa">Ver programa</a>
             <a class="btn btn-ghost" href="#speakers">Conocer speakers</a>
           </div>
 
@@ -534,7 +700,7 @@
           </div>
 
           <div style="height:12px"></div>
-          <a class="btn btn-primary" href="#entradas" style="width:100%;">Reservar lugar</a>
+          <a class="btn btn-primary" href="#" id="btnPaseCard" style="width:100%;">Adquirí tu pase</a>
 
           <!-- ======================
                FIN: HERO CARD
@@ -648,7 +814,7 @@
           </div>
 
           <div style="height:12px;"></div>
-          <a class="btn" href="#" onclick="alert('Acá va link a mapa/logística cuando lo tengas'); return false;">Ver cómo llegar</a>
+          <a class="btn" href="#contacto">Ver ubicación y contacto</a>
         </div>
 
         <div class="card img-card">
@@ -728,19 +894,174 @@
       <div class="section-head">
         <div>
           <h2>Entradas</h2>
-          <p>Reemplazá el link cuando lo tengas.</p>
+          <p>Adquirí tu pase (próximamente disponible).</p>
         </div>
       </div>
 
       <div class="card">
-        <p class="muted">Link de compra: <b>pendiente</b></p>
+        <p class="muted">Venta de pases: <b>próximamente</b> (Planout)</p>
         <div style="height:12px;"></div>
-        <a class="btn btn-primary" href="#" onclick="alert('Pegá tu link de compra en el href del botón.'); return false;">Comprar</a>
+        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+          <a class="btn btn-primary" href="#" id="btnPaseEntradas">Adquirí tu pase</a>
+          <a class="btn" href="#" id="btnAsesorateEntradas">Asesorate</a>
+        </div>
+        <div class="help">Cuando Planout esté listo, este botón puede redirigir al link de compra oficial.</div>
       </div>
     </div>
   </section>
   <!-- ======================
        FIN: ENTRADAS
+       ====================== -->
+
+  <!-- =========================
+       COMIENZO: CONTACTO + MAPA + DATOS OFICIALES
+       ========================= -->
+  <section id="contacto">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Contacto</h2>
+          <p>Consultas, acreditación, información general y soporte.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="kicker" style="margin-bottom:12px;">
+            <span class="dot" aria-hidden="true"></span>
+            Datos oficiales
+          </div>
+
+          <div style="display:grid; gap:10px;">
+            <div class="pill" style="justify-content:space-between;">
+              <b>Email</b>
+              <a href="mailto:infocepatagonia@gmail.com" style="color:var(--text); font-weight:720;">infocepatagonia@gmail.com</a>
+            </div>
+            <div class="pill" style="justify-content:space-between;">
+              <b>Tel</b>
+              <a href="tel:+5491131888164" style="color:var(--text); font-weight:720;">+54 9 11 3188-8164</a>
+            </div>
+            <div class="pill" style="justify-content:space-between;">
+              <b>Dirección</b>
+              <span style="color:var(--text); font-weight:720;">Gral. Roca 816, San Martín de los Andes</span>
+            </div>
+          </div>
+
+          <div class="socials">
+            <a class="social-btn" href="#" id="btnInstagram">
+              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram" />
+              Instagram
+            </a>
+            <a class="social-btn" href="#" id="btnWhatsapp">
+              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp" />
+              WhatsApp
+            </a>
+          </div>
+
+          <div style="height:16px;"></div>
+
+          <!-- Formulario (sitio estático): reemplazá FORM_ENDPOINT por tu endpoint real (Formspree/Getform/etc.) -->
+          <form id="contactForm" method="POST" action="FORM_ENDPOINT">
+            <div class="grid-2">
+              <div class="field">
+                <div class="label">Nombre y apellido</div>
+                <input
+                  class="input"
+                  type="text"
+                  name="nombre"
+                  required
+                  minlength="2"
+                  maxlength="60"
+                  pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]{2,60}$"
+                  placeholder="Tu nombre y apellido"
+                />
+                <div class="help">Solo letras (sin números).</div>
+              </div>
+
+              <div class="field">
+                <div class="label">Email</div>
+                <input
+                  class="input"
+                  type="email"
+                  name="email"
+                  required
+                  maxlength="80"
+                  placeholder="tu@email.com"
+                />
+              </div>
+            </div>
+
+            <div style="height:12px;"></div>
+
+            <div class="grid-2">
+              <div class="field">
+                <div class="label">Teléfono</div>
+                <input
+                  class="input"
+                  type="tel"
+                  name="telefono"
+                  maxlength="20"
+                  pattern="^[0-9+\s()-]{8,20}$"
+                  placeholder="+54 9 11 0000-0000"
+                />
+              </div>
+
+              <div class="field">
+                <div class="label">Asunto</div>
+                <select class="select" name="asunto" required>
+                  <option value="" selected disabled>Seleccioná una opción</option>
+                  <option>Información general</option>
+                  <option>Entradas / Pases</option>
+                  <option>Acreditación</option>
+                  <option>Speakers / Programa</option>
+                  <option>Prensa / Sponsors</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="height:12px;"></div>
+
+            <div class="field">
+              <div class="label">Mensaje</div>
+              <textarea
+                class="textarea"
+                name="mensaje"
+                required
+                minlength="10"
+                maxlength="1200"
+                placeholder="Escribí tu consulta..."
+              ></textarea>
+              <div class="help">Mínimo 10 caracteres.</div>
+            </div>
+
+            <!-- Campo “honey pot” anti-spam (oculto) -->
+            <div style="position:absolute; left:-9999px; opacity:0;" aria-hidden="true">
+              <label>Dejá este campo vacío</label>
+              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div style="height:14px;"></div>
+
+            <button class="btn btn-primary" type="submit">Enviar consulta</button>
+            <div class="help" style="margin-top:10px;">
+              Al enviar, tu consulta se deriva al mail oficial: <b>infocepatagonia@gmail.com</b>.
+            </div>
+          </form>
+        </div>
+
+        <div class="map-wrap" aria-label="Mapa de ubicación">
+          <iframe
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://www.google.com/maps?q=Gral.%20Roca%20816%2C%20San%20Mart%C3%ADn%20de%20los%20Andes&output=embed"
+            title="Mapa — Gral. Roca 816, San Martín de los Andes">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ======================
+       FIN: CONTACTO
        ====================== -->
 
   <!-- =========================
@@ -765,7 +1086,7 @@
       </details>
       <details>
         <summary>¿Cómo será la compra de entradas?</summary>
-        <p>Se publicará un link oficial de compra (Eventbrite / MercadoPago / etc.).</p>
+        <p>La venta de pases se habilitará próximamente a través de Planout (link oficial).</p>
       </details>
     </div>
   </section>
@@ -774,11 +1095,54 @@
        ====================== -->
 
   <!-- =========================
-       COMIENZO: FOOTER
+       COMIENZO: FOOTER (completo, datos + redes)
        ========================= -->
   <footer>
     <div class="container">
-      © <span id="year"></span> CEPATAGONIA.
+      <div class="grid-2" style="align-items:start;">
+        <div class="card" style="box-shadow:none; background: rgba(255,255,255,.03);">
+          <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">CEPATAGONIA</div>
+          <div class="muted" style="margin-top:8px;">Congreso de Estética — Ciencia, innovación y estética.</div>
+
+          <div style="height:14px;"></div>
+
+          <div style="display:grid; gap:10px;">
+            <div class="muted"><b style="color:var(--text); font-weight:720;">Email:</b> <a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></div>
+            <div class="muted"><b style="color:var(--text); font-weight:720;">Tel:</b> <a href="tel:+5491131888164">+54 9 11 3188-8164</a></div>
+            <div class="muted"><b style="color:var(--text); font-weight:720;">Dirección:</b> Gral. Roca 816, San Martín de los Andes</div>
+          </div>
+
+          <div class="socials">
+            <a class="social-btn" href="#" id="btnInstagramFooter">
+              <img class="social-ic" src="assets/img/icons/instagram.svg" alt="Instagram" />
+              Instagram
+            </a>
+            <a class="social-btn" href="#" id="btnWhatsappFooter">
+              <img class="social-ic" src="assets/img/icons/whatsapp.svg" alt="WhatsApp" />
+              WhatsApp
+            </a>
+          </div>
+        </div>
+
+        <div class="card" style="box-shadow:none; background: rgba(255,255,255,.03);">
+          <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">Ubicación</div>
+          <div class="muted" style="margin-top:8px;">San Martín de los Andes, Neuquén — Patagonia Argentina.</div>
+          <div style="height:12px;"></div>
+          <div class="map-wrap" style="min-height:auto;">
+            <iframe
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Gral.%20Roca%20816%2C%20San%20Mart%C3%ADn%20de%20los%20Andes&output=embed"
+              title="Mapa — Gral. Roca 816, San Martín de los Andes">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:18px;"></div>
+      <div style="border-top:1px solid var(--line); padding-top:14px;" class="muted">
+        © <span id="year"></span> CEPATAGONIA. Todos los derechos reservados.
+      </div>
     </div>
   </footer>
   <!-- ======================
@@ -786,10 +1150,44 @@
        ====================== -->
 
   <!-- =========================
+       COMIENZO: MODAL PLANOUT
+       ========================= -->
+  <div class="modal-overlay" id="planoutModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Planout - Próximamente">
+    <div class="modal">
+      <!-- Logo Planout (archivo con espacios: usar %20) -->
+      <img class="planout" src="assets/img/planout%20logo%20negro.png" alt="Planout" />
+      <h3>Próximamente</h3>
+      <p>La venta de pases estará disponible muy pronto.</p>
+      <button class="btn-modal" id="closeModalBtn" type="button">Aceptar</button>
+    </div>
+  </div>
+  <!-- ======================
+       FIN: MODAL PLANOUT
+       ====================== -->
+
+  <!-- =========================
        COMIENZO: SCRIPTS (DATA + RENDER)
        ========================= -->
   <script src="./data.js"></script>
   <script>
+    // =========================
+    // CONFIG OFICIAL
+    // =========================
+    const CEP_CONTACT = {
+      email: "infocepatagonia@gmail.com",
+      phoneE164: "5491131888164", // +54 9 11 3188-8164 -> wa.me usa 549...
+      address: "Gral. Roca 816, San Martín de los Andes",
+      // Reemplazá por tu URL real de Instagram cuando la quieras fijar:
+      instagramUrl: "https://instagram.com/cepatagoniaoficial",
+      // Mensaje pre-cargado
+      whatsappText: "Hola! quisiera recibir información sobre el Congreso"
+    };
+
+    function getWhatsappUrl(){
+      const text = encodeURIComponent(CEP_CONTACT.whatsappText);
+      return `https://wa.me/${CEP_CONTACT.phoneE164}?text=${text}`;
+    }
+
     // Año
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -808,7 +1206,99 @@
       }));
     }
 
-    // Guardas
+    // =========================
+    // MODAL PLANOUT (Próximamente)
+    // =========================
+    const modalOverlay = document.getElementById('planoutModal');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    function openModal(){
+      modalOverlay.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+      // foco al botón
+      setTimeout(() => closeModalBtn && closeModalBtn.focus(), 50);
+    }
+
+    function closeModal(){
+      modalOverlay.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    // Click fuera del modal
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) closeModal();
+    });
+
+    // ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal();
+    });
+
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+
+    // Botones "Adquirí tu pase" => modal
+    const paseButtons = [
+      'btnPaseNav',
+      'btnPaseMobile',
+      'btnPaseHero',
+      'btnPaseCard',
+      'btnPaseEntradas'
+    ].map(id => document.getElementById(id)).filter(Boolean);
+
+    paseButtons.forEach(b => b.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
+    }));
+
+    // Botones "Asesorate" => WhatsApp
+    const asesorateButtons = [
+      'btnAsesorateNav',
+      'btnAsesorateMobile',
+      'btnAsesorateHero',
+      'btnAsesorateEntradas',
+      'btnWhatsapp',
+      'btnWhatsappFooter'
+    ].map(id => document.getElementById(id)).filter(Boolean);
+
+    asesorateButtons.forEach(b => b.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open(getWhatsappUrl(), '_blank', 'noopener,noreferrer');
+    }));
+
+    // Instagram (header/footer)
+    const igButtons = ['btnInstagram', 'btnInstagramFooter']
+      .map(id => document.getElementById(id))
+      .filter(Boolean);
+
+    igButtons.forEach(b => b.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.open(CEP_CONTACT.instagramUrl, '_blank', 'noopener,noreferrer');
+    }));
+
+    // =========================
+    // Formulario: validación extra (sin romper HTML5)
+    // =========================
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm){
+      contactForm.addEventListener('submit', (e) => {
+        // Anti-spam: si el honeypot se llenó, cancelamos
+        const honey = contactForm.querySelector('input[name="website"]');
+        if (honey && honey.value.trim().length > 0){
+          e.preventDefault();
+          return false;
+        }
+        // Si no configuraron endpoint aún, bloquea envío (para que no rompa)
+        if (contactForm.getAttribute('action') === 'FORM_ENDPOINT'){
+          e.preventDefault();
+          alert("Falta configurar el endpoint del formulario (FORM_ENDPOINT). Usá Formspree/Getform y pegá el link en el atributo action del form.");
+          return false;
+        }
+      });
+    }
+
+    // =========================
+    // DATA.JS render (sin cambios)
+    // =========================
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
