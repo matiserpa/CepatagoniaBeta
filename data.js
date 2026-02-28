@@ -22,49 +22,33 @@ window.CEP = {
 
   ejes: [
     {
-      eje: "Eje 1",
+      eje: "EJE 1",
       titulo: "Regeneración Celular & Wellaging",
       speakers: [
         {
           nombre: "Speaker a confirmar",
-          credenciales: "Especialidad / institución (a confirmar)",
-          disertacion: "Bases y protocolos actuales en regeneración celular y enfoque wellaging.",
+          credenciales: "",
+          disertacion: "Tendencias actuales en regeneración celular y enfoque wellaging.",
           bullets: [
-            "Criterio clínico y seguridad",
-            "Indicaciones y contraindicaciones",
-            "Protocolos combinados"
+            "Evidencia y criterios de aplicación",
+            "Protocolos y combinaciones",
+            "Seguridad y buenas prácticas"
           ]
         }
       ]
     },
     {
-      eje: "Eje 2",
-      titulo: "Tecnologías: láser, radiofrecuencia y aparatología",
+      eje: "EJE 2",
+      titulo: "Tecnologías y Equipamiento",
       speakers: [
         {
           nombre: "Speaker a confirmar",
-          credenciales: "Especialidad / institución (a confirmar)",
-          disertacion: "Parámetros y aplicaciones reales: cómo elegir tecnología según objetivos.",
+          credenciales: "",
+          disertacion: "Lectura de parámetros, indicaciones y contraindicaciones en equipos clave.",
           bullets: [
-            "Parámetros clave",
-            "Errores frecuentes",
-            "Casos y estrategias"
-          ]
-        }
-      ]
-    },
-    {
-      eje: "Eje 3",
-      titulo: "Piel, diagnóstico y planificación de tratamientos",
-      speakers: [
-        {
-          nombre: "Speaker a confirmar",
-          credenciales: "Especialidad / institución (a confirmar)",
-          disertacion: "Diagnóstico + planificación: orden, progresión y criterio en tratamientos.",
-          bullets: [
-            "Evaluación inicial",
-            "Plan por objetivos",
-            "Seguimiento y ajustes"
+            "Protocolos basados en diagnóstico",
+            "Errores comunes y cómo evitarlos",
+            "Resultados medibles"
           ]
         }
       ]
@@ -72,10 +56,10 @@ window.CEP = {
   ],
 
   dirigidoA: [
-    "Cosmiatras y cosmetólogos",
-    "Dermatólogos y médicos estéticos",
-    "Kinesiólogos y profesionales afines",
-    "Estudiantes avanzados del sector (según cupo/condiciones)",
-    "Centros de estética y operadores de aparatología"
+    "Cosmiatras",
+    "Dermatólogos",
+    "Médicos estéticos",
+    "Kinesiólogos / fisioterapeutas (áreas afines)",
+    "Profesionales del sector estética avanzada"
   ]
 };
