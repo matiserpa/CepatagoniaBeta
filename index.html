@@ -150,7 +150,7 @@
       font-weight: 650;
       font-size: 12px;
       min-width: 0;
-      flex: 1 1 auto; /* ✅ clave: puede encogerse */
+      flex: 1 1 auto;
     }
     .brand:hover{ opacity:.95; }
 
@@ -163,7 +163,6 @@
       flex: 0 0 auto;
     }
 
-    /* ✅ brand-text ahora es truncable de verdad */
     .brand-text{
       display:flex;
       flex-direction:column;
@@ -275,7 +274,6 @@
       flex: 0 0 auto;
     }
 
-    /* ✅ chip meta en una línea (sin partir) */
     .kicker--metaInline{
       white-space: nowrap;
       overflow: hidden;
@@ -666,16 +664,15 @@
 
     @media (max-width: 520px){
       .brand-logo{ width: 86px; height: 58px; }
-      .brand-text{ max-width: 190px; } /* ✅ evita choque con acciones */
+      .brand-text{ max-width: 190px; }
       .brand-sub--congreso,
-      .brand-sub--edition{ display:none; } /* ✅ no se superpone con Menú */
+      .brand-sub--edition{ display:none; }
 
       #btnAsesorateNav{ display:none; }
 
       .btn{ padding: 9px 10px; font-size: 12px; }
       .nav-actions{ gap:8px; }
 
-      /* ✅ chips meta más compactos y siempre 1 línea */
       .kicker--metaInline{
         font-size: 11px;
         padding: 7px 10px;
@@ -702,6 +699,7 @@
         </a>
 
         <nav class="nav-links" aria-label="Navegación principal">
+          <a href="#vision">Visión</a>
           <a href="#diferenciales">Diferenciales</a>
           <a href="#programa">Programa</a>
           <a href="#speakers">Speakers</a>
@@ -719,6 +717,7 @@
       </div>
 
       <div class="mobile-drawer" id="mobileMenu" hidden>
+        <a href="#vision">Visión</a>
         <a href="#diferenciales">Diferenciales</a>
         <a href="#programa">Programa</a>
         <a href="#speakers">Speakers</a>
@@ -793,6 +792,62 @@
       </div>
     </div>
   </header>
+
+  <!-- VISIÓN / OBJETIVOS (nuevo, sin tocar lo anterior) -->
+  <section id="vision">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <h2>Visión & objetivos</h2>
+          <p>El marco conceptual del Congreso: ciencia, innovación biotecnológica y proyección profesional.</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card" style="background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));">
+          <div class="kicker" style="margin-bottom:12px;">
+            <span class="dot" aria-hidden="true"></span>
+            Visión
+          </div>
+          <p id="visionText" class="muted" style="font-size:14px; line-height:1.6;"></p>
+
+          <div style="height:14px;"></div>
+
+          <div class="kicker" style="margin-bottom:12px;">
+            <span class="dot" aria-hidden="true"></span>
+            Manifiesto
+          </div>
+          <p id="manifestoText" class="muted" style="font-size:14px; line-height:1.6;"></p>
+        </div>
+
+        <div class="card">
+          <div class="kicker" style="margin-bottom:12px;">
+            <span class="dot" aria-hidden="true"></span>
+            Objetivos generales
+          </div>
+          <ul id="objetivosList"></ul>
+
+          <div style="height:14px;"></div>
+
+          <div class="kicker" style="margin-bottom:12px;">
+            <span class="dot" aria-hidden="true"></span>
+            Posicionamiento
+          </div>
+          <div class="grid-2">
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
+              <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Lema</div>
+              <div style="margin-top:6px; font-weight:760;" id="taglineText">—</div>
+            </div>
+            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
+              <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Eje conceptual</div>
+              <div style="margin-top:6px; font-weight:760;">Estética regenerativa & biotecnología aplicada</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <!-- DIFERENCIALES -->
   <section id="diferenciales">
@@ -1301,11 +1356,203 @@
       });
     }
 
+    /* =========================================================
+      DATA: Merge seguro para “sumar todo lo del PDF”
+      - No rompe tu data.js actual
+      - Completa/inyecta si faltan campos
+      - Agrega soporte: bullets por eje + múltiples extras por speaker
+    ========================================================= */
+
+    const CEP_PDF = {
+      manifesto: [
+        "La nueva estética ya no se limita a corregir signos visibles.",
+        "Regenera, estimula, optimiza y gestiona.",
+        "Un encuentro diseñado para quienes buscan posicionarse en la vanguardia de la estética regenerativa.",
+        "Ciencia. Innovación. Naturaleza."
+      ].join(" "),
+      vision: "Convertirnos en el epicentro patagónico de la estética celular avanzada, donde la regeneración tisular, la biotecnología y la inteligencia aplicada redefinen los límites de la práctica profesional. Impulsar una nueva era en la estética, basada en evidencia científica, personalización terapéutica y tecnología no invasiva, posicionando al Congreso como un espacio de referencia internacional en innovación regenerativa.",
+      objetivos: [
+        "Integrar la estética celular avanzada al ejercicio profesional cotidiano.",
+        "Actualizar conocimientos en regeneración tisular, bioestimulación y biotecnología aplicada.",
+        "Elevar el nivel científico de la práctica cosmiátrica y dermatocosmiátrica.",
+        "Incorporar herramientas de gestión y marketing estratégico para fortalecer la rentabilidad del gabinete.",
+        "Fomentar el networking profesional y las alianzas con la industria."
+      ],
+      tagline: "Ciencia. Innovación. Naturaleza.",
+      diferenciales: [
+        { title: "🔬 Ciencia de vanguardia", desc: "Enfoque centrado en la regeneración celular y la biología cutánea profunda." },
+        { title: "🧬 Inteligencia celular aplicada", desc: "Exploración de medicina regenerativa, bioestimulación y tecnologías innovadoras." },
+        { title: "⚡ Tecnologías no invasivas", desc: "Combinaciones terapéuticas actuales que maximizan resultados con seguridad." },
+        { title: "📈 Visión empresarial", desc: "Integración de marketing, ventas y gerenciamiento de SPA como parte del crecimiento profesional." },
+        { title: "🌿 Experiencia Patagonia", desc: "Un entorno natural que potencia el aprendizaje, el networking y la proyección estratégica." }
+      ],
+      dirigidoA: [
+        "Cosmiatras",
+        "Dermatocosmiatras",
+        "Médicos estéticos",
+        "Profesionales en estética corporal",
+        "Directores de SPA",
+        "Estudiantes avanzados"
+      ],
+      ejes: [
+        {
+          eje: "EJE 1",
+          titulo: "REGENERACIÓN CELULAR & WELLAGING",
+          speakers: [{
+            nombre: "Adriana Sardot",
+            credenciales: "Cosmetóloga y dermocosmiatra con más de 30 años de trayectoria. Diplomada en Cosmiatría Avanzada y formación continua en congresos nacionales e internacionales. Referente en actualización científica y profesionalización estética.",
+            disertacion: "Estética Personalizada & Wellaging - El rol de las células madre y los telómeros en la longevidad cutánea.",
+            bullets: [
+              "Bases biológicas del wellaging",
+              "Senescencia celular y longevidad funcional",
+              "Impacto de los telómeros en el envejecimiento cutáneo",
+              "Células madre como herramienta regenerativa",
+              "Protocolos personalizados basados en biología celular"
+            ]
+          }]
+        },
+        {
+          eje: "EJE 2",
+          titulo: "TERAPIAS MANUALES AVANZADAS & MODELADO CORPORAL",
+          speakers: [{
+            nombre: "Ana Paula Travattoni",
+            credenciales: "APM (UAI) | Especialista en cosmiatría y dermatocosmiatría | Drenaje linfático Método Renata França | Peeling y fibrosis postoperatoria. Directora Académica AnaPau Estética.",
+            disertacion: "Drenaje Linfático, Maderoterapia y Lipodrenaje Integrado",
+            bullets: [
+              "Técnica correcta de drenaje linfático corporal",
+              "Beneficios clínicos y optimización post procedimientos",
+              "Maderoterapia en celulitis, fibrosis y lipedema",
+              "Precauciones y criterios profesionales",
+              "Integración del Método AnaPau en protocolos combinados",
+              "Lipodrenaje modelador y reducción de contornos"
+            ]
+          }]
+        },
+        {
+          eje: "EJE 3",
+          titulo: "BIOTECNOLOGÍA & SKIN QUALITY",
+          speakers: [{
+            nombre: "Dra. Carolina Laxague",
+            credenciales: "Médica (UBA). Especialista en Dermatología. Formación en Medicina Estética (AMA) y perfeccionamiento hospitalario en Ramos Mejía y Hospital Houssay.",
+            disertacion: "Inside Out Glow - Nutracéuticos como potenciadores de la calidad cutánea.",
+            bullets: [
+              "Concepto de Skin Quality 360°",
+              "Suplementación estratégica",
+              "Sinergia con procedimientos estéticos",
+              "Optimización de resultados clínicos",
+              "Evidencia y seguridad"
+            ]
+          }]
+        },
+        {
+          eje: "EJE 4",
+          titulo: "INNOVACIÓN EN EXOSOMAS & MICROBIOTA CUTÁNEA",
+          bullets: ["Microbiota y regeneración", "Desarrollo biotecnológico", "Innovación en formulación"],
+          speakers: [
+            {
+              nombre: "Laboratorio UDERM — Pablo González",
+              credenciales: "Docente y CEO de U-DERM",
+              disertacion: "La revolución del mercado con Exosomas Exodermal",
+              bullets: ["Aplicación clínica real", "Bioestimulación avanzada", "Impacto en la práctica profesional"]
+            },
+            {
+              nombre: "Ing. Sandra Molinzavez",
+              credenciales: "CEO Laboratorio SEM",
+              disertacion: "Lanzamiento Exclusivo 2026 — Máscara con Exosomas + Pre y Probióticos",
+              bullets: []
+            }
+          ]
+        },
+        {
+          eje: "EJE 5",
+          titulo: "ESTÉTICA REPARADORA & ESTIMULACIÓN FOLICULAR",
+          speakers: [{
+            nombre: "Laura Varela",
+            credenciales: "Dermatocosmiatra Hospitalaria – Especialista en Estética Integral y Cosmiatría Avanzada. Instructora Internacional | Speaker | Fundadora de Dalí Global International Training.",
+            disertacion: "Recuperación Regenerativa sin Tintas",
+            bullets: [
+              "Tratamiento innovador de estrías y cicatrices atróficas",
+              "Estimulación dérmica controlada",
+              "Recuperación rápida de volumen en cejas y barba",
+              "Técnica avanzada de activación folicular",
+              "Alternativas regenerativas sin pigmentación"
+            ]
+          }]
+        },
+        {
+          eje: "EJE 6",
+          titulo: "GESTIÓN, MARKETING & RENTABILIDAD DEL GABINETE",
+          speakers: [{
+            nombre: "Eduardo Finci",
+            credenciales: "Presidente de la Asociación Americana de Spa. Presidente de la American Wellness Association. Embajador Emérito del World Wellness Weekend para Latinoamérica.",
+            disertacion: "Ventas Aplicadas al Gabinete",
+            bullets: ["Estrategias éticas y efectivas", "Experiencia del paciente", "Conversión y fidelización"],
+            extras: [
+              {
+                title: "Marketing Aplicado al Profesional Estético",
+                bullets: ["Posicionamiento estratégico", "Comunicación de valor", "Autoridad en el mercado"]
+              },
+              {
+                title: "Post Congreso Exclusivo — Gerenciamiento Estratégico de SPA",
+                bullets: ["Organización operativa", "Rentabilidad", "Escalabilidad del negocio"]
+              }
+            ]
+          }]
+        }
+      ]
+    };
+
+    // Merge helper (sin pisar lo existente)
+    function mergeCEP(base, patch){
+      const out = base && typeof base === 'object' ? base : {};
+      out.meta = out.meta || { fecha: "—", ciudad: "—", modalidad: "—" };
+
+      // agrega/concat diferenciales sin duplicar por title
+      out.diferenciales = Array.isArray(out.diferenciales) ? out.diferenciales : [];
+      const seenDif = new Set(out.diferenciales.map(d => (d && d.title) ? d.title.trim() : ""));
+      (patch.diferenciales || []).forEach(d => {
+        const key = (d && d.title) ? d.title.trim() : "";
+        if (key && !seenDif.has(key)){
+          out.diferenciales.push(d);
+          seenDif.add(key);
+        }
+      });
+
+      // ejes: si ya hay ejes, sumamos los del PDF que no estén por eje+título
+      out.ejes = Array.isArray(out.ejes) ? out.ejes : [];
+      const seenEjes = new Set(out.ejes.map(e => `${(e.eje||"").trim()}|${(e.titulo||"").trim()}`));
+      (patch.ejes || []).forEach(e => {
+        const key = `${(e.eje||"").trim()}|${(e.titulo||"").trim()}`;
+        if (!seenEjes.has(key)){
+          out.ejes.push(e);
+          seenEjes.add(key);
+        }
+      });
+
+      // dirigidoA: si no existe o está vacío => lo del PDF
+      if (!Array.isArray(out.dirigidoA) || out.dirigidoA.length === 0){
+        out.dirigidoA = patch.dirigidoA || [];
+      }
+
+      // textos extra (para sección visión)
+      out.copy = out.copy || {};
+      out.copy.vision = out.copy.vision || patch.vision;
+      out.copy.manifesto = out.copy.manifesto || patch.manifesto;
+      out.copy.objetivos = Array.isArray(out.copy.objetivos) && out.copy.objetivos.length ? out.copy.objetivos : (patch.objetivos || []);
+      out.copy.tagline = out.copy.tagline || patch.tagline;
+
+      return out;
+    }
+
     // DATA render
+    const baseCEP = (window.CEP && typeof window.CEP === 'object') ? window.CEP : null;
+    window.CEP = mergeCEP(baseCEP, CEP_PDF);
+
+    // Render seguro
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
-      const { fecha, ciudad, modalidad } = window.CEP.meta;
+      const { fecha, ciudad, modalidad } = window.CEP.meta || { fecha:"—", ciudad:"—", modalidad:"—" };
       document.getElementById('metaDateStrong').textContent = fecha;
       document.getElementById('metaCityStrong').textContent = ciudad;
 
@@ -1313,8 +1560,24 @@
       document.getElementById('metaCityFooter').textContent = ciudad;
       document.getElementById('metaModeFooter').textContent = modalidad;
 
+      // Sección visión (nuevo)
+      const visionText = document.getElementById('visionText');
+      const manifestoText = document.getElementById('manifestoText');
+      const objetivosList = document.getElementById('objetivosList');
+      const taglineText = document.getElementById('taglineText');
+
+      const copy = window.CEP.copy || {};
+      if (visionText) visionText.textContent = copy.vision || "";
+      if (manifestoText) manifestoText.textContent = copy.manifesto || "";
+      if (taglineText) taglineText.textContent = copy.tagline || "—";
+      if (objetivosList){
+        const objetivos = Array.isArray(copy.objetivos) ? copy.objetivos : [];
+        objetivosList.innerHTML = objetivos.map(x => `<li>${x}</li>`).join('');
+      }
+
+      // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
-      dif.innerHTML = window.CEP.diferenciales.map(d => `
+      dif.innerHTML = (window.CEP.diferenciales || []).map(d => `
         <div class="card">
           <div class="icon" aria-hidden="true"></div>
           <h3>${d.title}</h3>
@@ -1322,28 +1585,60 @@
         </div>
       `).join('');
 
+      // Programa / ejes
       const ejesList = document.getElementById('ejesList');
-      ejesList.innerHTML = window.CEP.ejes.map(e => `
+
+      function renderSpeakerExtras(s){
+        // compat: soporta s.extraTitle/s.extraBullets y también s.extras[]
+        const blocks = [];
+
+        if (s.extraTitle){
+          blocks.push(`
+            <div style="height:10px;"></div>
+            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
+            <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
+          `);
+        }
+
+        if (Array.isArray(s.extras)){
+          s.extras.forEach(ex => {
+            blocks.push(`
+              <div style="height:10px;"></div>
+              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>
+              ${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+            `);
+          });
+        }
+
+        return blocks.join('');
+      }
+
+      ejesList.innerHTML = (window.CEP.ejes || []).map(e => `
         <details>
           <summary>${e.eje} — ${e.titulo}</summary>
-          ${e.speakers.map(s => `
+
+          ${Array.isArray(e.bullets) && e.bullets.length ? `
+            <div class="card" style="margin-top:12px; background: rgba(7,10,15,.35); box-shadow:none;">
+              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Puntos clave</div>
+              <ul>${e.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+            </div>
+          ` : ``}
+
+          ${(e.speakers || []).map(s => `
             <div class="card" style="margin-top:12px;">
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
               <div style="font-weight:800; margin-top:6px;">${s.nombre}</div>
               ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
               <div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>
-              ${Array.isArray(s.bullets) ? `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
-              ${s.extraTitle ? `
-                <div style="height:10px;"></div>
-                <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
-                <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
-              ` : ``}
+              ${Array.isArray(s.bullets) && s.bullets.length ? `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+              ${renderSpeakerExtras(s)}
             </div>
           `).join('')}
         </details>
       `).join('');
 
-      const speakers = window.CEP.ejes.flatMap(e => e.speakers.map(s => ({...s, eje: e.eje, tema: e.titulo})));
+      // Speakers (vista rápida)
+      const speakers = (window.CEP.ejes || []).flatMap(e => (e.speakers || []).map(s => ({...s, eje: e.eje, tema: e.titulo})));
       const spGrid = document.getElementById('speakersGrid');
       spGrid.innerHTML = speakers.map(s => `
         <div class="card speaker">
@@ -1356,8 +1651,9 @@
         </div>
       `).join('');
 
+      // Dirigido a
       const dir = document.getElementById('dirigidoList');
-      dir.innerHTML = window.CEP.dirigidoA.map(x => `<li>${x}</li>`).join('');
+      dir.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
     }
   </script>
 </body>
