@@ -1,3 +1,4 @@
+// data.js
 window.CEP = {
   meta: {
     fecha: "10 y 11 de Octubre 2026",
@@ -27,28 +28,28 @@ window.CEP = {
       speakers: [
         {
           nombre: "Speaker a confirmar",
-          credenciales: "",
-          disertacion: "Tendencias actuales en regeneración celular y enfoque wellaging.",
+          credenciales: "Credenciales a definir",
+          disertacion: "Tendencias, evidencia y aplicaciones en estética avanzada.",
           bullets: [
-            "Evidencia y criterios de aplicación",
+            "Marco teórico y criterios",
             "Protocolos y combinaciones",
-            "Seguridad y buenas prácticas"
+            "Buenas prácticas y seguridad"
           ]
         }
       ]
     },
     {
       eje: "EJE 2",
-      titulo: "Tecnologías y Equipamiento",
+      titulo: "Tecnología & Equipamiento",
       speakers: [
         {
           nombre: "Speaker a confirmar",
-          credenciales: "",
-          disertacion: "Lectura de parámetros, indicaciones y contraindicaciones en equipos clave.",
+          credenciales: "Credenciales a definir",
+          disertacion: "Parámetros, indicaciones y contraindicaciones por tecnología.",
           bullets: [
-            "Protocolos basados en diagnóstico",
-            "Errores comunes y cómo evitarlos",
-            "Resultados medibles"
+            "Cómo elegir tecnología según objetivo",
+            "Parámetros, tiempos y secuencias",
+            "Errores comunes y cómo evitarlos"
           ]
         }
       ]
@@ -56,10 +57,9 @@ window.CEP = {
   ],
 
   dirigidoA: [
-    "Cosmiatras",
-    "Dermatólogos",
-    "Médicos estéticos",
-    "Kinesiólogos / fisioterapeutas (áreas afines)",
-    "Profesionales del sector estética avanzada"
+    "Cosmiatras y cosmetólogos/as",
+    "Dermatólogos/as y médicos/as estéticos",
+    "Profesionales de estética avanzada",
+    "Clínicas, centros y equipos de trabajo del sector"
   ]
 };
