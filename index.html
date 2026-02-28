@@ -9,7 +9,7 @@
 
   <style>
     html, body { height: 100%; scroll-behavior: smooth; }
-
+    html { overflow-x: clip; } /* ✅ evita scroll lateral por elementos fijos */
     body{
       position: relative;
       isolation: isolate;
@@ -21,12 +21,12 @@
         radial-gradient(900px 650px at 85% 15%, rgba(122,167,255,.12), transparent 55%),
         radial-gradient(900px 650px at 50% 90%, rgba(255,255,255,.06), transparent 60%),
         #070a0f;
-      overflow-x:hidden;
+      overflow-x: clip; /* ✅ más estricto que hidden */
       line-height:1.35;
       padding-top: var(--navH);
     }
 
-    /* ✅ Anchor offsets para nav fijo (evita que se tape el título al scrollear) */
+    /* ✅ Anchor offsets para nav fijo */
     [id]{ scroll-margin-top: calc(var(--navH) + 14px); }
 
     body::before{
@@ -54,7 +54,7 @@
       );
     }
 
-    /* ✅ Performance: en mobile bajamos costo (menos blur y máscara más simple) */
+    /* ✅ Performance: mobile */
     @media (max-width: 920px){
       body::before{
         opacity: .08;
@@ -92,24 +92,25 @@
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
 
-      /* ✅ NAV un toque más alta para el logo grande */
-      --navH: 100px;
+      /* ✅ NAV más baja (antes 100px) */
+      --navH: 86px;
     }
     @media (max-width: 920px){
-      :root{ --navH: 92px; }
+      :root{ --navH: 82px; }
+    }
+    @media (max-width: 520px){
+      :root{ --navH: 78px; }
     }
 
     *{ box-sizing: border-box; }
     a{ color:inherit; text-decoration:none; }
 
-    /* ✅ Accesibilidad: foco visible (premium + usable) */
     :focus-visible{
       outline: 2px solid rgba(82,255,214,.55);
       outline-offset: 3px;
       border-radius: 12px;
     }
 
-    /* ✅ Respeta usuarios con reduced motion */
     @media (prefers-reduced-motion: reduce){
       html, body{ scroll-behavior: auto; }
       *, *::before, *::after{
@@ -124,7 +125,7 @@
       margin: 0 auto;
     }
 
-    /* ===== NAV (FIXED REAL) ===== */
+    /* ===== NAV ===== */
     .nav{
       position: fixed;
       left:0; right:0; top:0;
@@ -132,32 +133,36 @@
       backdrop-filter: blur(12px);
       background: rgba(7,10,15,.72);
       border-bottom: 1px solid var(--line);
+      overflow-x: clip; /* ✅ evita scroll lateral por contenido interno */
     }
     .nav-inner{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap:14px;
-      padding: 14px 0;
+      gap:12px;
+
+      /* ✅ menos padding => nav menos alta */
+      padding: 10px 0;
       min-height: var(--navH);
     }
 
     .brand{
       display:flex;
       align-items:center;
-      gap:14px; /* ✅ un toque más de aire */
+      gap:12px;
       letter-spacing: .16em;
       text-transform: uppercase;
       font-weight: 650;
       font-size: 12px;
-      min-width: 0;       /* ✅ clave: no rompe layout */
-      flex: 0 1 auto;     /* ✅ puede encogerse */
+      min-width: 0;
+      flex: 0 1 auto;
     }
     .brand:hover{ opacity:.95; }
 
+    /* ✅ Logo un toque más chico para que nav no “comande” el layout */
     .brand-logo{
-      width: 128px;
-      height: 88px;
+      width: 118px;
+      height: 78px;
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
@@ -169,8 +174,6 @@
       letter-spacing: .16em;
       min-width: 0;
     }
-
-    /* ✅ si alguna vez falta aire, evita “texto apretado” feo */
     .brand-text span{
       display:inline-block;
       white-space: nowrap;
@@ -178,18 +181,8 @@
       text-overflow: ellipsis;
       max-width: 360px;
     }
-
-    /* ✅ 1px menos para “CONGRESO DE ESTÉTICA” (premium) */
-    .brand-sub--congreso{
-      font-size: 11px;
-    }
-
-    @media (max-width: 920px){
-      .brand-logo{ width: 120px; height: 82px; }
-      .brand{ gap:12px; }
-      .brand-sub--congreso{ font-size: 10.5px; }
-      .brand-text span{ max-width: 240px; }
-    }
+    .brand-sub--congreso{ font-size: 11px; }
+    .brand-sub--edition{ font-size: 11px; }
 
     .nav-links{
       display:flex;
@@ -214,7 +207,7 @@
       align-items:center;
       justify-content:center;
       gap:10px;
-      padding: 12px 14px;
+      padding: 11px 13px; /* ✅ levemente más compacto */
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.06);
@@ -235,6 +228,15 @@
     .btn-ghost{ background: transparent; box-shadow:none; border-color: rgba(255,255,255,.12); color: var(--muted); }
 
     .hamburger{ display:none; }
+
+    .nav-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+
     .mobile-drawer{
       display:none;
       border-top:1px solid var(--line);
@@ -265,17 +267,12 @@
       text-transform: uppercase;
     }
 
-    .kicker--event{font-size:13.5px; letter-spacing:.12em}
-    .kicker--plain{padding-left:0}
-    .kicker--plain .dot{display:none}
-
     .dot{
       width:8px; height:8px; border-radius: 99px;
       background: var(--a1);
       box-shadow: 0 0 20px rgba(82,255,214,.55);
     }
 
-    /* ✅ Chips del footer (Ficha del evento) más pegados */
     .kicker.kicker-meta{
       letter-spacing:0;
       text-transform:none;
@@ -296,7 +293,7 @@
       font-size: clamp(16px, 1.5vw, 18px);
       max-width: 56ch;
       margin: 12px 0 22px;
-      letter-spacing: 0; /* ✅ párrafo más editorial */
+      letter-spacing: 0;
     }
     .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 10px; }
 
@@ -363,10 +360,15 @@
       color: var(--muted2);
       max-width: 64ch;
       font-size: 13.5px;
-      letter-spacing: 0; /* ✅ texto largo sin tracking alto */
+      letter-spacing: 0;
     }
+
     .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+    /* ✅ clave para el “margen vacío” del mapa:
+       evitamos que el grid estire items (y si estira, igual el iframe llena) */
+    .grid-2{ align-items: start; }
 
     .card{
       border-radius: var(--radius);
@@ -374,6 +376,7 @@
       background: rgba(255,255,255,.04);
       padding: 18px;
       box-shadow: var(--shadow2);
+      min-width: 0; /* ✅ ayuda a evitar overflow horizontal */
     }
     .card h3{
       margin: 0 0 8px;
@@ -383,7 +386,6 @@
     }
     .card p{ margin:0; color: var(--muted); font-size: 13.5px; }
 
-    /* Diferenciales icono: DNA (en vez del punto verde/azul) */
     .icon{
       width: 38px; height: 38px;
       border-radius: 14px;
@@ -400,11 +402,10 @@
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.03);
-      padding: 12px 14px; /* ✅ un poco más compacto pero pro */
+      padding: 12px 14px;
     }
     details + details{ margin-top: 10px; }
 
-    /* ✅ Summary con chevron + área clickeable mejor */
     summary{
       cursor:pointer;
       font-weight: 750;
@@ -417,8 +418,6 @@
       padding: 10px 6px;
     }
     summary::-webkit-details-marker{ display:none; }
-
-    /* Chevron */
     summary::after{
       content:"";
       width: 10px;
@@ -430,9 +429,7 @@
       flex: 0 0 auto;
       margin-left: 8px;
     }
-    details[open] summary::after{
-      transform: rotate(-135deg);
-    }
+    details[open] summary::after{ transform: rotate(-135deg); }
 
     .muted{ color: var(--muted2); font-size: 13px; }
     ul{ margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
@@ -481,16 +478,6 @@
 
     footer{ padding: 28px 0 44px; color: var(--muted2); }
 
-    @media (max-width: 920px){
-      .hero-grid{ grid-template-columns: 1fr; }
-      .grid-3{ grid-template-columns: 1fr; }
-      .grid-2{ grid-template-columns: 1fr; }
-      .nav-links{ display:none; }
-      .hamburger{ display:inline-flex; }
-      .mobile-drawer{ display:block; }
-      .mobile-drawer[hidden]{ display:none; }
-    }
-
     /* ===== MODAL PLANOUT ===== */
     .modal-overlay{
       position: fixed;
@@ -537,7 +524,6 @@
       font-size: 15px;
       line-height: 1.5;
     }
-
     .modal .btn-modal{
       display:inline-flex;
       align-items:center;
@@ -580,22 +566,19 @@
       outline: none;
       font-size: 14px;
       transition: border-color .15s ease, background .15s ease;
+      min-width: 0;
     }
     .textarea{ min-height: 120px; resize: vertical; }
     .input:focus, .textarea:focus, .select:focus{
       border-color: rgba(82,255,214,.35);
       background: rgba(255,255,255,.06);
     }
-
-    /* Dropdown oscuro con letras blancas */
     .select option{
       background: #0b0f14;
       color: #ffffff;
     }
-
     .help{ font-size: 12px; color: var(--muted2); margin-top: 6px; }
 
-    /* ✅ Mensaje inline del form (en vez de alert) */
     .form-notice{
       margin-top: 10px;
       padding: 10px 12px;
@@ -608,6 +591,7 @@
     }
     .form-notice[data-show="true"]{ display:block; }
 
+    /* ✅ MAPA: sin “margen vacío” (iframe llena el contenedor) */
     .map-wrap{
       border-radius: var(--radius);
       overflow:hidden;
@@ -615,14 +599,18 @@
       background: rgba(255,255,255,.03);
       box-shadow: var(--shadow2);
       min-height: 320px;
+      display: flex;         /* ✅ */
+      flex-direction: column;/* ✅ */
     }
     .map-wrap iframe{
       width:100%;
-      height: 320px;
       border: 0;
       display:block;
       filter: saturate(.95) contrast(1.05);
       opacity: .92;
+      flex: 1 1 auto;        /* ✅ llena alto */
+      height: 100%;          /* ✅ */
+      min-height: 320px;     /* ✅ mantiene presencia */
     }
 
     .socials{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
@@ -644,13 +632,37 @@
       border-color: rgba(255,255,255,.18);
       color: var(--text);
     }
-
     .social-ic{
       width:18px;
       height:18px;
       opacity:.95;
       filter: brightness(0) invert(1) !important;
       -webkit-filter: brightness(0) invert(1) !important;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 920px){
+      .hero-grid{ grid-template-columns: 1fr; }
+      .grid-3{ grid-template-columns: 1fr; }
+      .grid-2{ grid-template-columns: 1fr; }
+      .nav-links{ display:none; }
+      .hamburger{ display:inline-flex; }
+      .mobile-drawer{ display:block; }
+      .mobile-drawer[hidden]{ display:none; }
+
+      .brand-logo{ width: 112px; height: 74px; }
+      .brand-text span{ max-width: 240px; }
+      .btn{ padding: 10px 12px; }
+    }
+
+    /* ✅ Mobile “chico”: elimina overflow horizontal del header */
+    @media (max-width: 520px){
+      .brand-logo{ width: 92px; height: 62px; }
+      .brand-sub--edition{ display:none; }     /* ✅ se va a drawer / contenido, no rompe nav */
+      #btnAsesorateNav{ display:none; }        /* ✅ clave: evita scroll lateral */
+      .btn{ padding: 10px 10px; font-size: 12px; }
+      .nav-inner{ gap:10px; }
+      .brand-text span{ max-width: 180px; }
     }
   </style>
 </head>
@@ -667,7 +679,7 @@
           <div class="brand-text">
             CEPATAGONIA<br/>
             <span class="brand-sub--congreso" style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTÉTICA</span><br/>
-            <span style="color:var(--muted2); font-weight:560; letter-spacing:.20em;">1ra EDICION</span>
+            <span class="brand-sub--edition" style="color:var(--muted2); font-weight:560; letter-spacing:.20em;">1ra EDICION</span>
           </div>
         </a>
 
@@ -681,7 +693,7 @@
           <a href="#faq">FAQ</a>
         </nav>
 
-        <div style="display:flex; gap:10px; align-items:center;">
+        <div class="nav-actions">
           <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
           <a class="btn btn-ghost" href="#" id="btnAsesorateNav">Asesorate</a>
           <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
@@ -1059,7 +1071,6 @@
 
             <button class="btn btn-primary" type="submit">Enviar consulta</button>
 
-            <!-- ✅ notice inline (reemplaza alert) -->
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
 
             <div class="help" style="margin-top:10px;">
@@ -1250,14 +1261,12 @@
     const paseButtons = [
       'btnPaseNav','btnPaseMobile','btnPaseEntradas'
     ].map(id => document.getElementById(id)).filter(Boolean);
-
     paseButtons.forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
 
     // Botones asesorate => WhatsApp
     const asesorateButtons = [
       'btnAsesorateNav','btnAsesorateMobile','btnAsesorateEntradas','btnWhatsapp','btnWhatsappFooter'
     ].map(id => document.getElementById(id)).filter(Boolean);
-
     asesorateButtons.forEach(b => b.addEventListener('click', (e) => {
       e.preventDefault();
       window.open(getWhatsappUrl(), '_blank', 'noopener,noreferrer');
@@ -1266,13 +1275,12 @@
     // Instagram
     const igButtons = ['btnInstagram','btnInstagramFooter']
       .map(id => document.getElementById(id)).filter(Boolean);
-
     igButtons.forEach(b => b.addEventListener('click', (e) => {
       e.preventDefault();
       window.open(CEP_CONTACT.instagramUrl, '_blank', 'noopener,noreferrer');
     }));
 
-    // ===== Validaciones "en vivo" =====
+    // Validaciones "en vivo"
     const nombreInput = document.getElementById('nombreInput');
     if (nombreInput){
       nombreInput.addEventListener('input', () => {
@@ -1287,7 +1295,7 @@
       });
     }
 
-    // ✅ Form submit checks (honeypot + endpoint) con notice inline
+    // Form submit checks (honeypot + endpoint) con notice inline
     const contactForm = document.getElementById('contactForm');
     const formNotice = document.getElementById('formNotice');
     function showFormNotice(msg){
@@ -1310,11 +1318,10 @@
       });
     }
 
-    // ===== DATA render =====
+    // DATA render
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
-      // Meta
       const { fecha, ciudad, modalidad } = window.CEP.meta;
       document.getElementById('metaDateStrong').textContent = fecha;
       document.getElementById('metaCityStrong').textContent = ciudad;
@@ -1323,7 +1330,6 @@
       document.getElementById('metaCityFooter').textContent = ciudad;
       document.getElementById('metaModeFooter').textContent = modalidad;
 
-      // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
       dif.innerHTML = window.CEP.diferenciales.map(d => `
         <div class="card">
@@ -1333,7 +1339,6 @@
         </div>
       `).join('');
 
-      // Programa (Ejes)
       const ejesList = document.getElementById('ejesList');
       ejesList.innerHTML = window.CEP.ejes.map(e => `
         <details>
@@ -1355,7 +1360,6 @@
         </details>
       `).join('');
 
-      // Speakers
       const speakers = window.CEP.ejes.flatMap(e => e.speakers.map(s => ({...s, eje: e.eje, tema: e.titulo})));
       const spGrid = document.getElementById('speakersGrid');
       spGrid.innerHTML = speakers.map(s => `
@@ -1369,7 +1373,6 @@
         </div>
       `).join('');
 
-      // Dirigido a
       const dir = document.getElementById('dirigidoList');
       dir.innerHTML = window.CEP.dirigidoA.map(x => `<li>${x}</li>`).join('');
     }
