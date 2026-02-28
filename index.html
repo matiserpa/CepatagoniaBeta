@@ -120,7 +120,7 @@
     .nav{
       position: sticky;
       top:0;
-      z-index: 50;
+      z-index: 9999; /* MOD: siempre arriba */
       backdrop-filter: blur(12px);
       background: rgba(7,10,15,.55);
       border-bottom: 1px solid var(--line);
@@ -582,6 +582,8 @@
 </head>
 
 <body>
+  <!-- MOD: ancla para volver arriba -->
+  <div id="top"></div>
 
   <!-- =========================
        COMIENZO: NAV + MENU MOBILE
@@ -589,13 +591,14 @@
   <div class="nav">
     <div class="container">
       <div class="nav-inner">
-        <div class="brand">
+        <!-- MOD: brand clickeable al inicio -->
+        <a class="brand" href="#top" aria-label="Volver al inicio">
           <div class="mark" aria-hidden="true"></div>
           <div>
             CEPATAGONIA<br/>
             <span style="color:var(--muted); font-weight:560; letter-spacing:.20em;">CONGRESO DE ESTETICA</span>
           </div>
-        </div>
+        </a>
 
         <nav class="nav-links" aria-label="Navegación principal">
           <a href="#diferenciales">Diferenciales</a>
@@ -1008,13 +1011,18 @@
 
               <div class="field">
                 <div class="label">Asunto</div>
+                <!-- MOD: opciones específicas -->
                 <select class="select" name="asunto" required>
                   <option value="" selected disabled>Seleccioná una opción</option>
-                  <option>Información general</option>
-                  <option>Entradas / Pases</option>
-                  <option>Acreditación</option>
-                  <option>Speakers / Programa</option>
-                  <option>Prensa / Sponsors</option>
+                  <option value="Entradas y pases">Entradas y pases</option>
+                  <option value="Programa y cronograma">Programa y cronograma</option>
+                  <option value="Speakers y disertaciones">Speakers y disertaciones</option>
+                  <option value="Acreditacion y certificados">Acreditación y certificados</option>
+                  <option value="Ubicacion y alojamiento">Ubicación, hotelería y traslados</option>
+                  <option value="Sponsors y stands">Sponsors / Stands comerciales</option>
+                  <option value="Prensa y comunicacion">Prensa y comunicación</option>
+                  <option value="Soporte tecnico">Soporte técnico (web / inscripciones)</option>
+                  <option value="Otras consultas">Otras consultas</option>
                 </select>
               </div>
             </div>
