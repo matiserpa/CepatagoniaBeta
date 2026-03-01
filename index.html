@@ -110,7 +110,7 @@
       :root{ --navH: 82px; }
     }
     @media (max-width: 520px){
-      :root{ --navH: 72px; } /* ✅ un toque más compacto en mobile */
+      :root{ --navH: 72px; }
     }
 
     *{ box-sizing: border-box; }
@@ -367,39 +367,36 @@
     }
     .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
 
-    /* ✅ NUEVO: meta + logo dentro del hero-card (sin cargar el hero izquierdo) */
+    /* ✅ Alternativa B: logo centrado, pero meta alineada a la izquierda */
     .hero-card .card-meta{
       display:flex;
       flex-direction:column;
       gap:10px;
       margin-bottom: 12px;
 
-      /* ✅ Ajuste A1: centrado real + lectura más “intencional” */
-      align-items: center;
-      text-align: center;
-
-      /* ✅ Ajuste A3: un poco de aire arriba para que el logo “respire” */
+      /* base */
       padding-top: 4px;
+      align-items: stretch;   /* ✅ los kickers ocupan el ancho (mejor lectura) */
+      text-align: left;       /* ✅ lectura editorial */
     }
 
     .hero-card .card-logo{
-      /* ✅ Ajuste A2: más protagónico + escala elegante */
+      /* ✅ logo centrado y más protagónico */
       width: clamp(170px, 18vw, 210px);
       max-width: 92%;
       height: auto;
       object-fit: contain;
       opacity: .96;
-
-      /* ✅ presencia (sin volverse “pesado”) */
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.42));
-      margin: 2px auto 2px;
+      margin: 2px auto 2px;   /* ✅ centrado */
     }
 
-    /* ✅ Cuando el meta está centrado, los kickers quedan mejor como “pill centradas” */
     .hero-card .kicker.kicker-meta{
-      justify-content: center;
+      /* ✅ pill a la izquierda, consistente */
+      justify-content: flex-start;
       background: rgba(255,255,255,.04);
       border-color: rgba(255,255,255,.12);
+      width: 100%;
     }
 
     .glow{
@@ -740,7 +737,7 @@
         overflow: auto;
       }
       .mobile-drawer[hidden]{ display:none; }
-      .mobile-drawer .container{ padding: 0; } /* no-op (por si) */
+      .mobile-drawer .container{ padding: 0; }
 
       .brand-logo{ width: 112px; height: 74px; }
       .brand-text{ max-width: 260px; }
@@ -748,22 +745,18 @@
     }
 
     @media (max-width: 520px){
-      /* ✅ Header minimal: CTA fuera del header */
       #btnPaseNav{ display:none; }
 
-      .nav-inner{
-        padding: 8px 0; /* más premium y menos alto */
-      }
+      .nav-inner{ padding: 8px 0; }
 
       .brand-logo{ width: 86px; height: 58px; }
-      .brand-text{ max-width: 230px; } /* ✅ más aire para “CEPATAGONIA” */
+      .brand-text{ max-width: 230px; }
       .brand-sub--congreso,
       .brand-sub--edition{ display:none; }
 
       .btn{ padding: 9px 10px; font-size: 12px; }
       .nav-actions{ gap:8px; }
 
-      /* ✅ hamburguesa como ícono (no “botón texto”) */
       .hamburger{
         padding: 10px 11px;
         border-radius: 999px;
@@ -777,7 +770,7 @@
         letter-spacing: .08em;
       }
 
-      /* ✅ Mobile: logo protagonista pero sin “comerse” el contenido */
+      /* ✅ mobile: logo protagonista sin saturar */
       .hero-card .card-logo{
         width: clamp(160px, 54vw, 200px);
         max-width: 88%;
@@ -871,7 +864,6 @@
         </div>
 
         <aside class="hero-card">
-          <!-- ✅ NUEVO: meta + logo dentro del card -->
           <div class="card-meta">
             <img class="card-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
 
