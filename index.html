@@ -149,7 +149,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding: 10px 0;
+      padding: 6px 0;              /* ✅ menos padding para agrandar logo SIN subir la barra */
       min-height: var(--navH);
     }
 
@@ -166,9 +166,11 @@
     }
     .brand:hover{ opacity:.95; }
 
+    /* ✅ Logo NAV: más grande pero atado a la altura del nav */
     .brand-logo{
-      width: 118px;
-      height: 78px;
+      height: calc(var(--navH) - 14px); /* 👈 crece, pero no puede “empujar” la barra */
+      width: auto;
+      max-width: 210px;                /* evita que se coma todo el nav en desktop */
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
@@ -378,16 +380,15 @@
       line-height: 1;     /* ✅ evita “altura fantasma” */
     }
 
+    /* ✅ Logo HERO: un toque más grande + menos aire */
     .hero-card .card-logo{
-      width: clamp(170px, 18vw, 210px);
-      max-width: 92%;
+      width: clamp(190px, 20vw, 238px); /* 👈 un poco más grande */
+      max-width: 94%;
       height: auto;
       object-fit: contain;
       opacity: .96;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.42));
-
-      /* ✅ “pega” el logo arriba y reduce el colchón visual */
-      margin: -10px auto 0; /* 👈 clave para sacar el aire superior */
+      margin: -12px auto 0; /* 👈 pega más arriba */
       display:block;
     }
 
@@ -395,7 +396,7 @@
       justify-content: center;
       background: rgba(255,255,255,.04);
       border-color: rgba(255,255,255,.12);
-      margin-top: -2px; /* ✅ pega más la fecha al logo */
+      margin-top: -3px; /* ✅ pega más la fecha al logo */
     }
 
     .glow{
@@ -737,7 +738,11 @@
       .mobile-drawer[hidden]{ display:none; }
       .mobile-drawer .container{ padding: 0; } /* no-op (por si) */
 
-      .brand-logo{ width: 112px; height: 74px; }
+      /* ✅ sigue grande, pero controlado */
+      .brand-logo{
+        height: calc(var(--navH) - 16px);
+        max-width: 190px;
+      }
       .brand-text{ max-width: 260px; }
       .btn{ padding: 10px 12px; }
     }
@@ -746,10 +751,13 @@
       #btnPaseNav{ display:none; }
 
       .nav-inner{
-        padding: 8px 0;
+        padding: 6px 0;
       }
 
-      .brand-logo{ width: 86px; height: 58px; }
+      .brand-logo{
+        height: calc(var(--navH) - 14px);
+        max-width: 150px;
+      }
       .brand-text{ max-width: 230px; }
       .brand-sub--congreso,
       .brand-sub--edition{ display:none; }
@@ -771,9 +779,9 @@
       }
 
       .hero-card .card-logo{
-        width: clamp(160px, 54vw, 200px);
-        max-width: 88%;
-        margin: -10px auto 0; /* ✅ mantiene el “pegado” también en mobile */
+        width: clamp(180px, 58vw, 230px);
+        max-width: 92%;
+        margin: -12px auto 0;
       }
     }
   </style>
@@ -787,7 +795,8 @@
     <div class="container">
       <div class="nav-inner">
         <a class="brand" href="#top" aria-label="Volver al inicio">
-          <img class="brand-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
+          <!-- ✅ NUEVO LOGO -->
+          <img class="brand-logo" src="assets/logo-blanco-cropped-transparent.png" alt="CEPATAGONIA" />
           <div class="brand-text">
             <span class="brand-title">CEPATAGONIA</span>
             <span class="brand-sub--congreso">CONGRESO DE ESTÉTICA</span>
@@ -862,7 +871,8 @@
 
         <aside class="hero-card">
           <div class="card-meta">
-            <img class="card-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
+            <!-- ✅ NUEVO LOGO -->
+            <img class="card-logo" src="assets/logo-blanco-cropped-transparent.png" alt="CEPATAGONIA" />
 
             <div class="kicker kicker--metaInline kicker-meta">
               <span class="dot" aria-hidden="true"></span>
