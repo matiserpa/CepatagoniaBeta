@@ -52,12 +52,10 @@
         rgba(0,0,0,1) 70%
       );
 
-      /* ✅ ADN con desplazamiento lento (sutil, en TODO el fondo) */
       will-change: background-position;
       animation: adn-drift 26s ease-in-out infinite alternate;
     }
 
-    /* ✅ Animación súper suave (no “carga” ni distrae) */
     @keyframes adn-drift{
       0%   { background-position: 60% 45%; }
       100% { background-position: 72% 55%; }
@@ -110,7 +108,7 @@
       :root{ --navH: 82px; }
     }
     @media (max-width: 520px){
-      :root{ --navH: 72px; } /* ✅ un toque más compacto en mobile */
+      :root{ --navH: 72px; }
     }
 
     *{ box-sizing: border-box; }
@@ -250,7 +248,6 @@
       min-width: 0;
     }
 
-    /* ✅ Icono hamburguesa (premium, sin texto) */
     .hamb-ic{
       width: 18px;
       height: 12px;
@@ -269,7 +266,6 @@
     .hamb-ic::before{ top:0; box-shadow: 0 5px 0 rgba(255,255,255,.86); }
     .hamb-ic::after{ bottom:0; }
 
-    /* ✅ Drawer como overlay (no empuja el layout) */
     .mobile-drawer{
       display:none;
       border-top:1px solid var(--line);
@@ -279,11 +275,16 @@
     .mobile-drawer a:hover{ color: var(--text); background: rgba(255,255,255,.05); border-radius: 12px; }
 
     /* ===== HERO ===== */
-    header.hero{ padding: clamp(54px, 7vw, 92px) 0 44px; position: relative; }
+    /* ✅ ULTRA COMPACT: antes clamp(54px, 7vw, 92px) 0 44px */
+    header.hero{
+      padding: clamp(18px, 3.2vw, 42px) 0 26px;
+      position: relative;
+    }
+
     .hero-grid{
       display:grid;
       grid-template-columns: 1.25fr .75fr;
-      gap: clamp(18px, 4vw, 36px);
+      gap: clamp(14px, 2.8vw, 26px);
       align-items:start;
     }
     .kicker{
@@ -314,20 +315,19 @@
       text-overflow: ellipsis;
       min-width: 0;
     }
-    #metaDateStrong, #metaCityStrong{
-      white-space: nowrap;
-    }
+    #metaDateStrong, #metaCityStrong{ white-space: nowrap; }
 
     .kicker.kicker-meta{
       letter-spacing:0;
       text-transform:none;
       gap:6px;
-      padding: 8px 10px;
+      padding: 7px 10px; /* ✅ un poco más apretado */
     }
     .kicker.kicker-meta b{ font-weight: 760; }
 
+    /* ✅ ULTRA COMPACT */
     h1{
-      margin: 18px 0 10px;
+      margin: 10px 0 8px;
       font-size: clamp(34px, 4.8vw, 60px);
       line-height: 1.02;
       letter-spacing: -0.02em;
@@ -337,23 +337,28 @@
       color: var(--muted);
       font-size: clamp(16px, 1.5vw, 18px);
       max-width: 56ch;
-      margin: 12px 0 22px;
+      margin: 8px 0 14px;
       letter-spacing: 0;
     }
-    .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 10px; }
+    .hero-actions{
+      display:flex;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
 
     .hero-card{
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
       box-shadow: var(--shadow);
-      padding: 18px;
+      padding: 14px; /* ✅ antes 18 */
       position: relative;
       overflow:hidden;
       min-height: unset;
     }
     .hero-card h3{
-      margin: 6px 0 8px;
+      margin: 4px 0 6px;
       font-size: 14px;
       letter-spacing: .14em;
       text-transform: uppercase;
@@ -362,34 +367,29 @@
     .hero-card .big{
       font-size: 26px;
       line-height:1.1;
-      margin: 0 0 10px;
+      margin: 0 0 8px; /* ✅ antes 10 */
       letter-spacing: -0.01em;
     }
     .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
 
-    /* ✅ AJUSTE: menos aire arriba + bloque más compacto */
+    /* ✅ ULTRA COMPACT: meta */
     .hero-card .card-meta{
       display:flex;
       flex-direction:column;
-
-      /* antes: gap 10 / margin-bottom 12 / padding-top 4 */
-      gap: 8px;
-      margin-bottom: 10px;
+      gap: 6px;          /* ✅ antes 8 */
+      margin-bottom: 8px;/* ✅ antes 10 */
       padding-top: 0;
-
       align-items: center;
       text-align: center;
     }
 
     .hero-card .card-logo{
-      width: clamp(170px, 18vw, 210px);
+      width: clamp(160px, 17vw, 200px); /* ✅ levemente más compacto */
       max-width: 92%;
       height: auto;
       object-fit: contain;
       opacity: .96;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.42));
-
-      /* ✅ sin aire extra arriba/abajo */
       margin: 0 auto;
     }
 
@@ -721,7 +721,6 @@
       .nav-links{ display:none; }
       .hamburger{ display:inline-flex; }
 
-      /* ✅ drawer overlay en mobile/tablet */
       .mobile-drawer{
         display:block;
         position: fixed;
@@ -737,7 +736,7 @@
         overflow: auto;
       }
       .mobile-drawer[hidden]{ display:none; }
-      .mobile-drawer .container{ padding: 0; } /* no-op (por si) */
+      .mobile-drawer .container{ padding: 0; }
 
       .brand-logo{ width: 112px; height: 74px; }
       .brand-text{ max-width: 260px; }
@@ -745,22 +744,18 @@
     }
 
     @media (max-width: 520px){
-      /* ✅ Header minimal: CTA fuera del header */
       #btnPaseNav{ display:none; }
 
-      .nav-inner{
-        padding: 8px 0; /* más premium y menos alto */
-      }
+      .nav-inner{ padding: 8px 0; }
 
       .brand-logo{ width: 86px; height: 58px; }
-      .brand-text{ max-width: 230px; } /* ✅ más aire para “CEPATAGONIA” */
+      .brand-text{ max-width: 230px; }
       .brand-sub--congreso,
       .brand-sub--edition{ display:none; }
 
       .btn{ padding: 9px 10px; font-size: 12px; }
       .nav-actions{ gap:8px; }
 
-      /* ✅ hamburguesa como ícono (no “botón texto”) */
       .hamburger{
         padding: 10px 11px;
         border-radius: 999px;
@@ -774,9 +769,8 @@
         letter-spacing: .08em;
       }
 
-      /* ✅ Mobile: logo protagonista pero sin “comerse” el contenido */
       .hero-card .card-logo{
-        width: clamp(160px, 54vw, 200px);
+        width: clamp(150px, 52vw, 190px); /* ✅ un toque más compacto */
         max-width: 88%;
         margin-bottom: 0;
       }
@@ -812,12 +806,10 @@
         </nav>
 
         <div class="nav-actions">
-          <!-- ✅ Menú minimal: sin texto -->
           <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Abrir menú">
             <span class="hamb-ic" aria-hidden="true"></span>
           </button>
 
-          <!-- CTA en desktop / tablet, oculto en mobile -->
           <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
         </div>
       </div>
@@ -868,11 +860,8 @@
         </div>
 
         <aside class="hero-card">
-          <!-- ✅ meta + logo dentro del card (solo fecha/lugar) -->
           <div class="card-meta">
             <img class="card-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
-
-            <!-- ❌ removido: “Capacitación profesional • estética avanzada” -->
 
             <div class="kicker kicker--metaInline kicker-meta">
               <span class="dot" aria-hidden="true"></span>
@@ -886,16 +875,17 @@
             equipos, técnicas, seguridad, tendencias y aplicación clínica.
           </p>
 
-          <div style="height:14px"></div>
+          <!-- ✅ antes 14px -->
+          <div style="height:8px"></div>
 
           <div class="grid-2">
-            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
+            <div class="card" style="padding:12px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Enfoque</div>
-              <div style="margin-top:6px; font-weight:760;">Tecnología & evidencia</div>
+              <div style="margin-top:5px; font-weight:760;">Tecnología & evidencia</div>
             </div>
-            <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
+            <div class="card" style="padding:12px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Nivel</div>
-              <div style="margin-top:6px; font-weight:760;">Profesionales</div>
+              <div style="margin-top:5px; font-weight:760;">Profesionales</div>
             </div>
           </div>
         </aside>
@@ -1371,7 +1361,6 @@
 
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Menú mobile (mejor UX + accesible)
     const btn = document.getElementById('menuBtn');
     const menu = document.getElementById('mobileMenu');
     if (btn && menu){
@@ -1387,7 +1376,6 @@
         }
       });
 
-      // cerrar solo cuando es navegación interna
       menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
         const href = a.getAttribute('href') || '';
         if (href.startsWith('#')){
@@ -1398,7 +1386,6 @@
       }));
     }
 
-    // Modal Planout
     const modalOverlay = document.getElementById('planoutModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
 
@@ -1417,7 +1404,6 @@
     });
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
-    // Botones pase => modal
     const paseButtons = ['btnPaseNav','btnPaseMobile','btnPaseEntradas']
       .map(id => document.getElementById(id)).filter(Boolean);
 
@@ -1426,7 +1412,6 @@
       openModal();
     }));
 
-    // WhatsApp / Instagram (sin window.open)
     const waUrl = getWhatsappUrl();
     setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);
     setExternalLink(document.getElementById('btnAsesorateEntradas'), waUrl);
@@ -1436,7 +1421,6 @@
     setExternalLink(document.getElementById('btnInstagram'), CEP_CONTACT.instagramUrl);
     setExternalLink(document.getElementById('btnInstagramFooter'), CEP_CONTACT.instagramUrl);
 
-    // Validaciones "en vivo"
     const nombreInput = document.getElementById('nombreInput');
     if (nombreInput){
       nombreInput.addEventListener('input', () => {
@@ -1451,7 +1435,6 @@
       });
     }
 
-    // Form submit checks (honeypot + endpoint) con notice inline
     const contactForm = document.getElementById('contactForm');
     const formNotice = document.getElementById('formNotice');
     function showFormNotice(msg){
@@ -1474,7 +1457,6 @@
       });
     }
 
-    // DATA render (todo viene desde data.js)
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
@@ -1492,7 +1474,6 @@
       if (metaCityFooter) metaCityFooter.textContent = ciudad;
       if (metaModeFooter) metaModeFooter.textContent = modalidad;
 
-      // Sección visión
       const visionText = document.getElementById('visionText');
       const manifestoText = document.getElementById('manifestoText');
       const objetivosList = document.getElementById('objetivosList');
@@ -1507,7 +1488,6 @@
         objetivosList.innerHTML = objetivos.map(x => `<li>${x}</li>`).join('');
       }
 
-      // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
       if (dif){
         dif.innerHTML = (window.CEP.diferenciales || []).map(d => `
@@ -1519,7 +1499,6 @@
         `).join('');
       }
 
-      // Programa / ejes
       const ejesList = document.getElementById('ejesList');
 
       function renderSpeakerExtras(s){
@@ -1572,7 +1551,6 @@
         `).join('');
       }
 
-      // Speakers (vista rápida)
       const speakers = (window.CEP.ejes || []).flatMap(e =>
         (e.speakers || []).map(s => ({...s, eje: e.eje, tema: e.titulo}))
       );
@@ -1590,7 +1568,6 @@
         `).join('');
       }
 
-      // Dirigido a
       const dir = document.getElementById('dirigidoList');
       if (dir){
         dir.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
