@@ -325,6 +325,16 @@
     }
     .kicker.kicker-meta b{ font-weight: 760; }
 
+    /* ✅ META arriba del H1 (más grande, mismo formato) */
+    .hero-metaTop{
+      font-size: 13.5px;
+      padding: 10px 14px;
+      background: rgba(255,255,255,.06);
+      border-color: rgba(255,255,255,.16);
+      margin-bottom: 14px;
+      max-width: fit-content;
+    }
+
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.8vw, 60px);
@@ -346,7 +356,7 @@
       border: 1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
       box-shadow: var(--shadow);
-      padding: 10px; /* ✅ antes 18 (reduce aire general interno) */
+      padding: 18px; /* ✅ vuelve a un padding más “natural” ahora que no hay logo/meta */
       position: relative;
       overflow:hidden;
       min-height: unset;
@@ -365,39 +375,6 @@
       letter-spacing: -0.01em;
     }
     .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
-
-    /* ✅ ULTRA: saca aire arriba / entre logo y fecha */
-    .hero-card .card-meta{
-      display:flex;
-      flex-direction:column;
-
-      gap: 2px;           /* ✅ antes 8 */
-      margin-bottom: 6px; /* ✅ antes 10 */
-      padding-top: 0;
-
-      align-items: center;
-      text-align: center;
-      line-height: 1;     /* ✅ evita “altura fantasma” */
-    }
-
-    /* ✅ Logo HERO: un toque más grande + menos aire */
-    .hero-card .card-logo{
-      width: clamp(190px, 20vw, 238px); /* 👈 un poco más grande */
-      max-width: 94%;
-      height: auto;
-      object-fit: contain;
-      opacity: .96;
-      filter: drop-shadow(0 14px 28px rgba(0,0,0,.42));
-      margin: -12px auto 0; /* 👈 pega más arriba */
-      display:block;
-    }
-
-    .hero-card .kicker.kicker-meta{
-      justify-content: center;
-      background: rgba(255,255,255,.04);
-      border-color: rgba(255,255,255,.12);
-      margin-top: -3px; /* ✅ pega más la fecha al logo */
-    }
 
     .glow{
       position:absolute;
@@ -745,6 +722,11 @@
       }
       .brand-text{ max-width: 260px; }
       .btn{ padding: 10px 12px; }
+
+      .hero-metaTop{
+        font-size: 13px;
+        padding: 9px 12px;
+      }
     }
 
     @media (max-width: 520px){
@@ -778,10 +760,10 @@
         letter-spacing: .08em;
       }
 
-      .hero-card .card-logo{
-        width: clamp(180px, 58vw, 230px);
-        max-width: 92%;
-        margin: -12px auto 0;
+      .hero-metaTop{
+        font-size: 12px;
+        padding: 9px 12px;
+        margin-bottom: 12px;
       }
     }
   </style>
@@ -850,6 +832,12 @@
     <div class="container">
       <div class="hero-grid">
         <div>
+          <!-- ✅ FECHA + CIUDAD arriba del H1 -->
+          <div class="kicker kicker--metaInline kicker-meta hero-metaTop">
+            <span class="dot" aria-hidden="true"></span>
+            <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
+          </div>
+
           <h1>
             Innovación y<br/>
             tecnología aplicada<br/>
@@ -870,24 +858,13 @@
         </div>
 
         <aside class="hero-card">
-          <div class="card-meta">
-            <!-- ✅ NUEVO LOGO -->
-            <img class="card-logo" src="assets/logo-blanco-cropped-transparent.png" alt="CEPATAGONIA" />
-
-            <div class="kicker kicker--metaInline kicker-meta">
-              <span class="dot" aria-hidden="true"></span>
-              <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
-            </div>
-          </div>
-
           <div class="big">Protocolos + criterio + actualización real</div>
           <p>
             Un congreso diseñado para mejorar la práctica profesional con herramientas actuales:
             equipos, técnicas, seguridad, tendencias y aplicación clínica.
           </p>
 
-          <!-- ✅ reduce aire antes del bloque enfoque/nivel -->
-          <div style="height:4px"></div>
+          <div style="height:10px"></div>
 
           <div class="grid-2">
             <div class="card" style="padding:12px; background: rgba(7,10,15,.35); box-shadow:none;">
