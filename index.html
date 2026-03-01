@@ -373,16 +373,31 @@
       flex-direction:column;
       gap:10px;
       margin-bottom: 12px;
+
+      /* ✅ Ajuste A1: centrado real + lectura más “intencional” */
+      align-items: center;
+      text-align: center;
+
+      /* ✅ Ajuste A3: un poco de aire arriba para que el logo “respire” */
+      padding-top: 4px;
     }
+
     .hero-card .card-logo{
-      width: 150px;
-      max-width: 60%;
+      /* ✅ Ajuste A2: más protagónico + escala elegante */
+      width: clamp(170px, 18vw, 210px);
+      max-width: 92%;
       height: auto;
       object-fit: contain;
-      opacity: .92;
-      filter: drop-shadow(0 10px 22px rgba(0,0,0,.38));
+      opacity: .96;
+
+      /* ✅ presencia (sin volverse “pesado”) */
+      filter: drop-shadow(0 14px 28px rgba(0,0,0,.42));
+      margin: 2px auto 2px;
     }
+
+    /* ✅ Cuando el meta está centrado, los kickers quedan mejor como “pill centradas” */
     .hero-card .kicker.kicker-meta{
+      justify-content: center;
       background: rgba(255,255,255,.04);
       border-color: rgba(255,255,255,.12);
     }
@@ -762,10 +777,11 @@
         letter-spacing: .08em;
       }
 
-      /* logo dentro del card, un poco más chico en mobile */
+      /* ✅ Mobile: logo protagonista pero sin “comerse” el contenido */
       .hero-card .card-logo{
-        width: 138px;
-        max-width: 64%;
+        width: clamp(160px, 54vw, 200px);
+        max-width: 88%;
+        margin-bottom: 0;
       }
     }
   </style>
