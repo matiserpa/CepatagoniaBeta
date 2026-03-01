@@ -316,7 +316,8 @@
       padding: 18px;
       position: relative;
       overflow:hidden;
-      /* min-height removido para que no quede “aire” abajo */
+      /* Ajuste: sin min-height fijo para que no quede aire abajo */
+      min-height: unset;
     }
     .hero-card h3{
       margin: 6px 0 8px;
@@ -709,7 +710,7 @@
 
         <div class="nav-actions">
           <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
-          <!-- btnAsesorateNav removido del nav-actions -->
+          <!-- Asesorate removido del nav-actions -->
           <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
         </div>
       </div>
@@ -724,7 +725,7 @@
         <a href="#contacto">Contacto</a>
         <a href="#faq">FAQ</a>
         <div style="height:10px"></div>
-        <!-- btnAsesorateMobile removido del drawer -->
+        <!-- Asesorate removido del drawer para simplificar -->
         <a href="#" id="btnPaseMobile">Adquirí tu pase</a>
       </div>
     </div>
@@ -774,7 +775,7 @@
             equipos, técnicas, seguridad, tendencias y aplicación clínica.
           </p>
 
-          <div style="height:10px"></div>
+          <div style="height:14px"></div>
 
           <div class="grid-2">
             <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
@@ -791,7 +792,7 @@
     </div>
   </header>
 
-  <!-- VISIÓN / OBJETIVOS (nuevo, sin tocar lo anterior) -->
+  <!-- VISIÓN / OBJETIVOS -->
   <section id="vision">
     <div class="container">
       <div class="section-head">
@@ -876,7 +877,7 @@
       <div class="section-head">
         <div>
           <h2>Speakers</h2>
-         </div>
+        </div>
       </div>
       <div class="grid-2" id="speakersGrid"></div>
     </div>
@@ -888,7 +889,7 @@
       <div class="section-head">
         <div>
           <h2>Sede</h2>
-            </div>
+        </div>
         <a class="btn btn-ghost" href="#entradas">Ver entradas</a>
       </div>
 
@@ -1127,7 +1128,7 @@
       <div class="section-head">
         <div>
           <h2>FAQ</h2>
-                 </div>
+        </div>
       </div>
 
       <details>
@@ -1247,27 +1248,46 @@
 
     function getWhatsappUrl(){
       const text = encodeURIComponent(CEP_CONTACT.whatsappText);
-      return "https://wa.me/" + CEP_CONTACT.phoneE164 + "?text=" + text;
+      return `https://wa.me/${CEP_CONTACT.phoneE164}?text=${text}`;
+    }
+
+    function setExternalLink(el, href){
+      if (!el) return;
+      el.setAttribute('href', href);
+      el.setAttribute('target', '_blank');
+      el.setAttribute('rel', 'noopener noreferrer');
     }
 
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Menú mobile
+    // Menú mobile (mejor UX + accesible)
     const btn = document.getElementById('menuBtn');
     const menu = document.getElementById('mobileMenu');
     if (btn && menu){
       btn.addEventListener('click', () => {
         const isOpen = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!isOpen));
-        menu.hidden = isOpen;
+        const nextOpen = !isOpen;
+        btn.setAttribute('aria-expanded', String(nextOpen));
+        menu.hidden = !nextOpen;
+
+        if (nextOpen){
+          const firstLink = menu.querySelector('a[href^="#"]') || menu.querySelector('a');
+          setTimeout(() => firstLink && firstLink.focus(), 0);
+        }
       });
+
+      // cerrar solo cuando es navegación interna
       menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-        btn.setAttribute('aria-expanded', 'false');
-        menu.hidden = true;
+        const href = a.getAttribute('href') || '';
+        if (href.startsWith('#')){
+          btn.setAttribute('aria-expanded', 'false');
+          menu.hidden = true;
+          btn.focus();
+        }
       }));
     }
 
-    // Modal
+    // Modal Planout
     const modalOverlay = document.getElementById('planoutModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
 
@@ -1287,30 +1307,23 @@
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
     // Botones pase => modal
-    const paseButtons = [
-      'btnPaseNav','btnPaseMobile','btnPaseEntradas'
-    ].map(id => document.getElementById(id)).filter(Boolean);
-    paseButtons.forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
-
-    // Botones asesorate => WhatsApp
-    const asesorateButtons = [
-      'btnAsesorateHero',
-      'btnAsesorateEntradas',
-      'btnWhatsapp',
-      'btnWhatsappFooter'
-    ].map(id => document.getElementById(id)).filter(Boolean);
-    asesorateButtons.forEach(b => b.addEventListener('click', (e) => {
-      e.preventDefault();
-      window.open(getWhatsappUrl(), '_blank', 'noopener,noreferrer');
-    }));
-
-    // Instagram
-    const igButtons = ['btnInstagram','btnInstagramFooter']
+    const paseButtons = ['btnPaseNav','btnPaseMobile','btnPaseEntradas']
       .map(id => document.getElementById(id)).filter(Boolean);
-    igButtons.forEach(b => b.addEventListener('click', (e) => {
+
+    paseButtons.forEach(b => b.addEventListener('click', (e) => {
       e.preventDefault();
-      window.open(CEP_CONTACT.instagramUrl, '_blank', 'noopener,noreferrer');
+      openModal();
     }));
+
+    // WhatsApp / Instagram (sin window.open)
+    const waUrl = getWhatsappUrl();
+    setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);
+    setExternalLink(document.getElementById('btnAsesorateEntradas'), waUrl);
+    setExternalLink(document.getElementById('btnWhatsapp'), waUrl);
+    setExternalLink(document.getElementById('btnWhatsappFooter'), waUrl);
+
+    setExternalLink(document.getElementById('btnInstagram'), CEP_CONTACT.instagramUrl);
+    setExternalLink(document.getElementById('btnInstagramFooter'), CEP_CONTACT.instagramUrl);
 
     // Validaciones "en vivo"
     const nombreInput = document.getElementById('nombreInput');
@@ -1350,17 +1363,23 @@
       });
     }
 
-    // DATA render (sin merge: todo viene desde data.js)
+    // DATA render (todo viene desde data.js)
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
       const { fecha, ciudad, modalidad } = window.CEP.meta || { fecha:"—", ciudad:"—", modalidad:"—" };
-      document.getElementById('metaDateStrong').textContent = fecha;
-      document.getElementById('metaCityStrong').textContent = ciudad;
 
-      document.getElementById('metaDateFooter').textContent = fecha;
-      document.getElementById('metaCityFooter').textContent = ciudad;
-      document.getElementById('metaModeFooter').textContent = modalidad;
+      const metaDateStrong = document.getElementById('metaDateStrong');
+      const metaCityStrong = document.getElementById('metaCityStrong');
+      const metaDateFooter = document.getElementById('metaDateFooter');
+      const metaCityFooter = document.getElementById('metaCityFooter');
+      const metaModeFooter = document.getElementById('metaModeFooter');
+
+      if (metaDateStrong) metaDateStrong.textContent = fecha;
+      if (metaCityStrong) metaCityStrong.textContent = ciudad;
+      if (metaDateFooter) metaDateFooter.textContent = fecha;
+      if (metaCityFooter) metaCityFooter.textContent = ciudad;
+      if (metaModeFooter) metaModeFooter.textContent = modalidad;
 
       // Sección visión
       const visionText = document.getElementById('visionText');
@@ -1374,88 +1393,97 @@
       if (taglineText) taglineText.textContent = copy.tagline || "—";
       if (objetivosList){
         const objetivos = Array.isArray(copy.objetivos) ? copy.objetivos : [];
-        objetivosList.innerHTML = objetivos.map(x => <li>${x}</li>).join('');
+        objetivosList.innerHTML = objetivos.map(x => `<li>${x}</li>`).join('');
       }
 
       // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
-      dif.innerHTML = (window.CEP.diferenciales || []).map(d =>
-        <div class="card">
-          <div class="icon" aria-hidden="true"></div>
-          <h3>${d.title}</h3>
-          <p>${d.desc}</p>
-        </div>
-      ).join('');
+      if (dif){
+        dif.innerHTML = (window.CEP.diferenciales || []).map(d => `
+          <div class="card">
+            <div class="icon" aria-hidden="true"></div>
+            <h3>${d.title}</h3>
+            <p>${d.desc}</p>
+          </div>
+        `).join('');
+      }
 
       // Programa / ejes
       const ejesList = document.getElementById('ejesList');
 
       function renderSpeakerExtras(s){
-        // compat: soporta s.extraTitle/s.extraBullets y también s.extras[]
         const blocks = [];
 
         if (s.extraTitle){
-          blocks.push(
+          blocks.push(`
             <div style="height:10px;"></div>
             <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
-            <ul>${(s.extraBullets||[]).map(b => <li>${b}</li>).join('')}</ul>
-          );
+            <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
+          `);
         }
 
         if (Array.isArray(s.extras)){
           s.extras.forEach(ex => {
-            blocks.push(
+            blocks.push(`
               <div style="height:10px;"></div>
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>
-              ${Array.isArray(ex.bullets) && ex.bullets.length ? <ul>${ex.bullets.map(b => <li>${b}</li>).join('')}</ul> : `}
-            );
+              ${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+            `);
           });
         }
 
         return blocks.join('');
       }
 
-      ejesList.innerHTML = (window.CEP.ejes || []).map(e =>
-        <details>
-          <summary>${e.eje} — ${e.titulo}</summary>
+      if (ejesList){
+        ejesList.innerHTML = (window.CEP.ejes || []).map(e => `
+          <details>
+            <summary>${e.eje} — ${e.titulo}</summary>
 
-          ${Array.isArray(e.bullets) && e.bullets.length ?
-            <div class="card" style="margin-top:12px; background: rgba(7,10,15,.35); box-shadow:none;">
-              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Puntos clave</div>
-              <ul>${e.bullets.map(b => <li>${b}</li>).join('')}</ul>
-            </div>
-           : }
+            ${Array.isArray(e.bullets) && e.bullets.length ? `
+              <div class="card" style="margin-top:12px; background: rgba(7,10,15,.35); box-shadow:none;">
+                <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Puntos clave</div>
+                <ul>${e.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+              </div>
+            ` : ``}
 
-          ${(e.speakers || []).map(s =>
-            <div class="card" style="margin-top:12px;">
-              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
-              <div style="font-weight:800; margin-top:6px;">${s.nombre}</div>
-              ${s.credenciales ? <div class="muted" style="margin-top:6px;">${s.credenciales}</div> : `}
-              <div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>
-              ${Array.isArray(s.bullets) && s.bullets.length ? <ul>${s.bullets.map(b => <li>${b}</li>).join('')}</ul> : `}
-              ${renderSpeakerExtras(s)}
-            </div>
-          ).join('')}
-        </details>
-      ).join('');
+            ${(e.speakers || []).map(s => `
+              <div class="card" style="margin-top:12px;">
+                <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
+                <div style="font-weight:800; margin-top:6px;">${s.nombre}</div>
+                ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
+                <div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>
+                ${Array.isArray(s.bullets) && s.bullets.length ? `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+                ${renderSpeakerExtras(s)}
+              </div>
+            `).join('')}
+          </details>
+        `).join('');
+      }
 
       // Speakers (vista rápida)
-      const speakers = (window.CEP.ejes || []).flatMap(e => (e.speakers || []).map(s => ({...s, eje: e.eje, tema: e.titulo})));
+      const speakers = (window.CEP.ejes || []).flatMap(e =>
+        (e.speakers || []).map(s => ({...s, eje: e.eje, tema: e.titulo}))
+      );
       const spGrid = document.getElementById('speakersGrid');
-      spGrid.innerHTML = speakers.map(s =>
-        <div class="card speaker">
-          <div class="avatar" aria-hidden="true"></div>
-          <div>
-            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje} • ${s.tema}</div>
-            <div style="font-weight:820; margin-top:6px;">${s.nombre}</div>
-            ${s.credenciales ? <div class="muted" style="margin-top:6px;">${s.credenciales}</div> : `}
+      if (spGrid){
+        spGrid.innerHTML = speakers.map(s => `
+          <div class="card speaker">
+            <div class="avatar" aria-hidden="true"></div>
+            <div>
+              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje} • ${s.tema}</div>
+              <div style="font-weight:820; margin-top:6px;">${s.nombre}</div>
+              ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
+            </div>
           </div>
-        </div>
-      ).join('');
+        `).join('');
+      }
 
       // Dirigido a
       const dir = document.getElementById('dirigidoList');
-      dir.innerHTML = (window.CEP.dirigidoA || []).map(x => <li>${x}</li>).join('');
+      if (dir){
+        dir.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
+      }
     }
   </script>
 </body>
