@@ -316,7 +316,7 @@
       padding: 18px;
       position: relative;
       overflow:hidden;
-      min-height: 340px;
+      /* min-height removido para que no quede “aire” abajo */
     }
     .hero-card h3{
       margin: 6px 0 8px;
@@ -668,8 +668,6 @@
       .brand-sub--congreso,
       .brand-sub--edition{ display:none; }
 
-      #btnAsesorateNav{ display:none; }
-
       .btn{ padding: 9px 10px; font-size: 12px; }
       .nav-actions{ gap:8px; }
 
@@ -711,7 +709,7 @@
 
         <div class="nav-actions">
           <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
-          <a class="btn btn-ghost" href="#" id="btnAsesorateNav">Asesorate</a>
+          <!-- btnAsesorateNav removido del nav-actions -->
           <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
         </div>
       </div>
@@ -726,7 +724,7 @@
         <a href="#contacto">Contacto</a>
         <a href="#faq">FAQ</a>
         <div style="height:10px"></div>
-        <a href="#" id="btnAsesorateMobile">Asesorate</a>
+        <!-- btnAsesorateMobile removido del drawer -->
         <a href="#" id="btnPaseMobile">Adquirí tu pase</a>
       </div>
     </div>
@@ -763,19 +761,20 @@
           </p>
 
           <div class="hero-actions">
+            <a class="btn btn-primary" href="#" id="btnAsesorateHero">Asesorate</a>
             <a class="btn btn-ghost" href="#programa">Ver programa</a>
             <a class="btn btn-ghost" href="#speakers">Conocer speakers</a>
           </div>
         </div>
 
-        <aside class="hero-card">        
+        <aside class="hero-card">
           <div class="big">Protocolos + criterio + actualización real</div>
           <p>
             Un congreso diseñado para mejorar la práctica profesional con herramientas actuales:
             equipos, técnicas, seguridad, tendencias y aplicación clínica.
           </p>
 
-          <div style="height:14px"></div>
+          <div style="height:10px"></div>
 
           <div class="grid-2">
             <div class="card" style="padding:14px; background: rgba(7,10,15,.35); box-shadow:none;">
@@ -797,7 +796,7 @@
     <div class="container">
       <div class="section-head">
         <div>
-          <h2>Visión & objetivos</h2>          
+          <h2>Visión & objetivos</h2>
         </div>
       </div>
 
@@ -1248,7 +1247,7 @@
 
     function getWhatsappUrl(){
       const text = encodeURIComponent(CEP_CONTACT.whatsappText);
-      return `https://wa.me/${CEP_CONTACT.phoneE164}?text=${text}`;
+      return "https://wa.me/" + CEP_CONTACT.phoneE164 + "?text=" + text;
     }
 
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -1295,7 +1294,10 @@
 
     // Botones asesorate => WhatsApp
     const asesorateButtons = [
-      'btnAsesorateNav','btnAsesorateMobile','btnAsesorateEntradas','btnWhatsapp','btnWhatsappFooter'
+      'btnAsesorateHero',
+      'btnAsesorateEntradas',
+      'btnWhatsapp',
+      'btnWhatsappFooter'
     ].map(id => document.getElementById(id)).filter(Boolean);
     asesorateButtons.forEach(b => b.addEventListener('click', (e) => {
       e.preventDefault();
@@ -1372,18 +1374,18 @@
       if (taglineText) taglineText.textContent = copy.tagline || "—";
       if (objetivosList){
         const objetivos = Array.isArray(copy.objetivos) ? copy.objetivos : [];
-        objetivosList.innerHTML = objetivos.map(x => `<li>${x}</li>`).join('');
+        objetivosList.innerHTML = objetivos.map(x => <li>${x}</li>).join('');
       }
 
       // Diferenciales
       const dif = document.getElementById('diferencialesGrid');
-      dif.innerHTML = (window.CEP.diferenciales || []).map(d => `
+      dif.innerHTML = (window.CEP.diferenciales || []).map(d =>
         <div class="card">
           <div class="icon" aria-hidden="true"></div>
           <h3>${d.title}</h3>
           <p>${d.desc}</p>
         </div>
-      `).join('');
+      ).join('');
 
       // Programa / ejes
       const ejesList = document.getElementById('ejesList');
@@ -1393,67 +1395,67 @@
         const blocks = [];
 
         if (s.extraTitle){
-          blocks.push(`
+          blocks.push(
             <div style="height:10px;"></div>
             <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
-            <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
-          `);
+            <ul>${(s.extraBullets||[]).map(b => <li>${b}</li>).join('')}</ul>
+          );
         }
 
         if (Array.isArray(s.extras)){
           s.extras.forEach(ex => {
-            blocks.push(`
+            blocks.push(
               <div style="height:10px;"></div>
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>
-              ${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
-            `);
+              ${Array.isArray(ex.bullets) && ex.bullets.length ? <ul>${ex.bullets.map(b => <li>${b}</li>).join('')}</ul> : `}
+            );
           });
         }
 
         return blocks.join('');
       }
 
-      ejesList.innerHTML = (window.CEP.ejes || []).map(e => `
+      ejesList.innerHTML = (window.CEP.ejes || []).map(e =>
         <details>
           <summary>${e.eje} — ${e.titulo}</summary>
 
-          ${Array.isArray(e.bullets) && e.bullets.length ? `
+          ${Array.isArray(e.bullets) && e.bullets.length ?
             <div class="card" style="margin-top:12px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Puntos clave</div>
-              <ul>${e.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+              <ul>${e.bullets.map(b => <li>${b}</li>).join('')}</ul>
             </div>
-          ` : ``}
+           : }
 
-          ${(e.speakers || []).map(s => `
+          ${(e.speakers || []).map(s =>
             <div class="card" style="margin-top:12px;">
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
               <div style="font-weight:800; margin-top:6px;">${s.nombre}</div>
-              ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
+              ${s.credenciales ? <div class="muted" style="margin-top:6px;">${s.credenciales}</div> : `}
               <div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>
-              ${Array.isArray(s.bullets) && s.bullets.length ? `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+              ${Array.isArray(s.bullets) && s.bullets.length ? <ul>${s.bullets.map(b => <li>${b}</li>).join('')}</ul> : `}
               ${renderSpeakerExtras(s)}
             </div>
-          `).join('')}
+          ).join('')}
         </details>
-      `).join('');
+      ).join('');
 
       // Speakers (vista rápida)
       const speakers = (window.CEP.ejes || []).flatMap(e => (e.speakers || []).map(s => ({...s, eje: e.eje, tema: e.titulo})));
       const spGrid = document.getElementById('speakersGrid');
-      spGrid.innerHTML = speakers.map(s => `
+      spGrid.innerHTML = speakers.map(s =>
         <div class="card speaker">
           <div class="avatar" aria-hidden="true"></div>
           <div>
             <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje} • ${s.tema}</div>
             <div style="font-weight:820; margin-top:6px;">${s.nombre}</div>
-            ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
+            ${s.credenciales ? <div class="muted" style="margin-top:6px;">${s.credenciales}</div> : `}
           </div>
         </div>
-      `).join('');
+      ).join('');
 
       // Dirigido a
       const dir = document.getElementById('dirigidoList');
-      dir.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
+      dir.innerHTML = (window.CEP.dirigidoA || []).map(x => <li>${x}</li>).join('');
     }
   </script>
 </body>
