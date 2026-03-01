@@ -326,6 +326,23 @@
     }
     .kicker.kicker-meta b{ font-weight: 760; }
 
+    /* ✅ NUEVO: logo en hero, alineado a la izquierda y con medidas “plug & play” */
+    .hero-logo{
+      display:block;
+      width: clamp(140px, 18vw, 220px);
+      height: auto;
+      margin: 16px 0 6px;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 28px rgba(0,0,0,.45));
+      opacity: .96;
+    }
+    @media (max-width: 520px){
+      .hero-logo{
+        width: clamp(120px, 42vw, 170px);
+        margin: 14px 0 6px;
+      }
+    }
+
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.8vw, 60px);
@@ -818,6 +835,9 @@
             <span class="dot" aria-hidden="true"></span>
             <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
           </div>
+
+          <!-- ✅ NUEVO: logo integrado al hero (left-aligned) -->
+          <img class="hero-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
 
           <h1>
             Innovación y<br/>
