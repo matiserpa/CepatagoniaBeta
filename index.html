@@ -326,23 +326,6 @@
     }
     .kicker.kicker-meta b{ font-weight: 760; }
 
-    /* ✅ NUEVO: logo en hero, alineado a la izquierda y con medidas “plug & play” */
-    .hero-logo{
-      display:block;
-      width: clamp(140px, 18vw, 220px);
-      height: auto;
-      margin: 16px 0 6px;
-      object-fit: contain;
-      filter: drop-shadow(0 12px 28px rgba(0,0,0,.45));
-      opacity: .96;
-    }
-    @media (max-width: 520px){
-      .hero-logo{
-        width: clamp(120px, 42vw, 170px);
-        margin: 14px 0 6px;
-      }
-    }
-
     h1{
       margin: 18px 0 10px;
       font-size: clamp(34px, 4.8vw, 60px);
@@ -383,6 +366,26 @@
       letter-spacing: -0.01em;
     }
     .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
+
+    /* ✅ NUEVO: meta + logo dentro del hero-card (sin cargar el hero izquierdo) */
+    .hero-card .card-meta{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-bottom: 12px;
+    }
+    .hero-card .card-logo{
+      width: 150px;
+      max-width: 60%;
+      height: auto;
+      object-fit: contain;
+      opacity: .92;
+      filter: drop-shadow(0 10px 22px rgba(0,0,0,.38));
+    }
+    .hero-card .kicker.kicker-meta{
+      background: rgba(255,255,255,.04);
+      border-color: rgba(255,255,255,.12);
+    }
 
     .glow{
       position:absolute;
@@ -758,6 +761,12 @@
         padding: 7px 10px;
         letter-spacing: .08em;
       }
+
+      /* logo dentro del card, un poco más chico en mobile */
+      .hero-card .card-logo{
+        width: 138px;
+        max-width: 64%;
+      }
     }
   </style>
 </head>
@@ -826,19 +835,6 @@
     <div class="container">
       <div class="hero-grid">
         <div>
-          <div class="kicker">
-            <span class="dot" aria-hidden="true"></span>
-            Capacitación profesional • estética avanzada
-          </div>
-
-          <div style="margin-top:10px;" class="kicker kicker--metaInline">
-            <span class="dot" aria-hidden="true"></span>
-            <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
-          </div>
-
-          <!-- ✅ NUEVO: logo integrado al hero (left-aligned) -->
-          <img class="hero-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
-
           <h1>
             Innovación y<br/>
             tecnología aplicada<br/>
@@ -859,6 +855,21 @@
         </div>
 
         <aside class="hero-card">
+          <!-- ✅ NUEVO: meta + logo dentro del card -->
+          <div class="card-meta">
+            <img class="card-logo" src="assets/logo-blanco.png" alt="CEPATAGONIA" />
+
+            <div class="kicker kicker--metaInline kicker-meta">
+              <span class="dot" aria-hidden="true"></span>
+              <span style="white-space:nowrap;">Capacitación profesional • estética avanzada</span>
+            </div>
+
+            <div class="kicker kicker--metaInline kicker-meta">
+              <span class="dot" aria-hidden="true"></span>
+              <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
+            </div>
+          </div>
+
           <div class="big">Protocolos + criterio + actualización real</div>
           <p>
             Un congreso diseñado para mejorar la práctica profesional con herramientas actuales:
