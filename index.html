@@ -51,6 +51,20 @@
         rgba(0,0,0,0.15) 35%,
         rgba(0,0,0,1) 70%
       );
+
+      /* ✅ ADN con desplazamiento lento (sutil, en TODO el fondo) */
+      will-change: background-position;
+      animation: adn-drift 26s ease-in-out infinite alternate;
+    }
+
+    /* ✅ Animación súper suave (no “carga” ni distrae) */
+    @keyframes adn-drift{
+      0%   { background-position: 60% 45%; }
+      100% { background-position: 72% 55%; }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      body::before{ animation: none !important; }
     }
 
     @media (max-width: 920px){
