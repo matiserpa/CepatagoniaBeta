@@ -108,7 +108,7 @@
       :root{ --navH: 82px; }
     }
     @media (max-width: 520px){
-      :root{ --navH: 72px; }
+      :root{ --navH: 72px; } /* ✅ un toque más compacto en mobile */
     }
 
     *{ box-sizing: border-box; }
@@ -275,16 +275,11 @@
     .mobile-drawer a:hover{ color: var(--text); background: rgba(255,255,255,.05); border-radius: 12px; }
 
     /* ===== HERO ===== */
-    /* ✅ ULTRA COMPACT: antes clamp(54px, 7vw, 92px) 0 44px */
-    header.hero{
-      padding: clamp(18px, 3.2vw, 42px) 0 26px;
-      position: relative;
-    }
-
+    header.hero{ padding: clamp(54px, 7vw, 92px) 0 44px; position: relative; }
     .hero-grid{
       display:grid;
       grid-template-columns: 1.25fr .75fr;
-      gap: clamp(14px, 2.8vw, 26px);
+      gap: clamp(18px, 4vw, 36px);
       align-items:start;
     }
     .kicker{
@@ -315,19 +310,21 @@
       text-overflow: ellipsis;
       min-width: 0;
     }
-    #metaDateStrong, #metaCityStrong{ white-space: nowrap; }
+    #metaDateStrong, #metaCityStrong{
+      white-space: nowrap;
+    }
 
     .kicker.kicker-meta{
       letter-spacing:0;
       text-transform:none;
       gap:6px;
-      padding: 7px 10px; /* ✅ un poco más apretado */
+      padding: 8px 10px;
+      line-height: 1; /* ✅ compacta el alto del bloque fecha */
     }
     .kicker.kicker-meta b{ font-weight: 760; }
 
-    /* ✅ ULTRA COMPACT */
     h1{
-      margin: 10px 0 8px;
+      margin: 18px 0 10px;
       font-size: clamp(34px, 4.8vw, 60px);
       line-height: 1.02;
       letter-spacing: -0.02em;
@@ -337,28 +334,23 @@
       color: var(--muted);
       font-size: clamp(16px, 1.5vw, 18px);
       max-width: 56ch;
-      margin: 8px 0 14px;
+      margin: 12px 0 22px;
       letter-spacing: 0;
     }
-    .hero-actions{
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-      margin-top: 6px;
-    }
+    .hero-actions{ display:flex; gap: 12px; flex-wrap:wrap; margin-top: 10px; }
 
     .hero-card{
       border-radius: var(--radius);
       border: 1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
       box-shadow: var(--shadow);
-      padding: 14px; /* ✅ antes 18 */
+      padding: 10px; /* ✅ antes 18 (reduce aire general interno) */
       position: relative;
       overflow:hidden;
       min-height: unset;
     }
     .hero-card h3{
-      margin: 4px 0 6px;
+      margin: 6px 0 8px;
       font-size: 14px;
       letter-spacing: .14em;
       text-transform: uppercase;
@@ -367,36 +359,43 @@
     .hero-card .big{
       font-size: 26px;
       line-height:1.1;
-      margin: 0 0 8px; /* ✅ antes 10 */
+      margin: 0 0 8px;
       letter-spacing: -0.01em;
     }
     .hero-card p{ margin:0; color: var(--muted); font-size: 13.5px; }
 
-    /* ✅ ULTRA COMPACT: meta */
+    /* ✅ ULTRA: saca aire arriba / entre logo y fecha */
     .hero-card .card-meta{
       display:flex;
       flex-direction:column;
-      gap: 6px;          /* ✅ antes 8 */
-      margin-bottom: 8px;/* ✅ antes 10 */
+
+      gap: 2px;           /* ✅ antes 8 */
+      margin-bottom: 6px; /* ✅ antes 10 */
       padding-top: 0;
+
       align-items: center;
       text-align: center;
+      line-height: 1;     /* ✅ evita “altura fantasma” */
     }
 
     .hero-card .card-logo{
-      width: clamp(160px, 17vw, 200px); /* ✅ levemente más compacto */
+      width: clamp(170px, 18vw, 210px);
       max-width: 92%;
       height: auto;
       object-fit: contain;
       opacity: .96;
       filter: drop-shadow(0 14px 28px rgba(0,0,0,.42));
-      margin: 0 auto;
+
+      /* ✅ “pega” el logo arriba y reduce el colchón visual */
+      margin: -10px auto 0; /* 👈 clave para sacar el aire superior */
+      display:block;
     }
 
     .hero-card .kicker.kicker-meta{
       justify-content: center;
       background: rgba(255,255,255,.04);
       border-color: rgba(255,255,255,.12);
+      margin-top: -2px; /* ✅ pega más la fecha al logo */
     }
 
     .glow{
@@ -736,7 +735,7 @@
         overflow: auto;
       }
       .mobile-drawer[hidden]{ display:none; }
-      .mobile-drawer .container{ padding: 0; }
+      .mobile-drawer .container{ padding: 0; } /* no-op (por si) */
 
       .brand-logo{ width: 112px; height: 74px; }
       .brand-text{ max-width: 260px; }
@@ -746,7 +745,9 @@
     @media (max-width: 520px){
       #btnPaseNav{ display:none; }
 
-      .nav-inner{ padding: 8px 0; }
+      .nav-inner{
+        padding: 8px 0;
+      }
 
       .brand-logo{ width: 86px; height: 58px; }
       .brand-text{ max-width: 230px; }
@@ -770,9 +771,9 @@
       }
 
       .hero-card .card-logo{
-        width: clamp(150px, 52vw, 190px); /* ✅ un toque más compacto */
+        width: clamp(160px, 54vw, 200px);
         max-width: 88%;
-        margin-bottom: 0;
+        margin: -10px auto 0; /* ✅ mantiene el “pegado” también en mobile */
       }
     }
   </style>
@@ -875,17 +876,17 @@
             equipos, técnicas, seguridad, tendencias y aplicación clínica.
           </p>
 
-          <!-- ✅ antes 14px -->
-          <div style="height:8px"></div>
+          <!-- ✅ reduce aire antes del bloque enfoque/nivel -->
+          <div style="height:4px"></div>
 
           <div class="grid-2">
             <div class="card" style="padding:12px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Enfoque</div>
-              <div style="margin-top:5px; font-weight:760;">Tecnología & evidencia</div>
+              <div style="margin-top:6px; font-weight:760;">Tecnología & evidencia</div>
             </div>
             <div class="card" style="padding:12px; background: rgba(7,10,15,.35); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Nivel</div>
-              <div style="margin-top:5px; font-weight:760;">Profesionales</div>
+              <div style="margin-top:6px; font-weight:760;">Profesionales</div>
             </div>
           </div>
         </aside>
