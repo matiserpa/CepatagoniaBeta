@@ -96,7 +96,7 @@
       :root{ --navH: 82px; }
     }
     @media (max-width: 520px){
-      :root{ --navH: 78px; }
+      :root{ --navH: 72px; } /* ✅ un toque más compacto en mobile */
     }
 
     *{ box-sizing: border-box; }
@@ -236,6 +236,26 @@
       min-width: 0;
     }
 
+    /* ✅ Icono hamburguesa (premium, sin texto) */
+    .hamb-ic{
+      width: 18px;
+      height: 12px;
+      display:inline-block;
+      position: relative;
+    }
+    .hamb-ic::before,
+    .hamb-ic::after{
+      content:"";
+      position:absolute;
+      left:0; right:0;
+      height: 2px;
+      border-radius: 2px;
+      background: rgba(255,255,255,.86);
+    }
+    .hamb-ic::before{ top:0; box-shadow: 0 5px 0 rgba(255,255,255,.86); }
+    .hamb-ic::after{ bottom:0; }
+
+    /* ✅ Drawer como overlay (no empuja el layout) */
     .mobile-drawer{
       display:none;
       border-top:1px solid var(--line);
@@ -316,7 +336,6 @@
       padding: 18px;
       position: relative;
       overflow:hidden;
-      /* Ajuste: sin min-height fijo para que no quede aire abajo */
       min-height: unset;
     }
     .hero-card h3{
@@ -655,8 +674,24 @@
       .grid-2{ grid-template-columns: 1fr; }
       .nav-links{ display:none; }
       .hamburger{ display:inline-flex; }
-      .mobile-drawer{ display:block; }
+
+      /* ✅ drawer overlay en mobile/tablet */
+      .mobile-drawer{
+        display:block;
+        position: fixed;
+        left: 0; right: 0;
+        top: var(--navH);
+        z-index: 998;
+        background: rgba(7,10,15,.88);
+        backdrop-filter: blur(14px);
+        border-top: 1px solid var(--line);
+        box-shadow: 0 22px 60px rgba(0,0,0,.55);
+        padding: 12px 0 18px;
+        max-height: calc(100vh - var(--navH));
+        overflow: auto;
+      }
       .mobile-drawer[hidden]{ display:none; }
+      .mobile-drawer .container{ padding: 0; } /* no-op (por si) */
 
       .brand-logo{ width: 112px; height: 74px; }
       .brand-text{ max-width: 260px; }
@@ -664,13 +699,28 @@
     }
 
     @media (max-width: 520px){
+      /* ✅ Header minimal: CTA fuera del header */
+      #btnPaseNav{ display:none; }
+
+      .nav-inner{
+        padding: 8px 0; /* más premium y menos alto */
+      }
+
       .brand-logo{ width: 86px; height: 58px; }
-      .brand-text{ max-width: 190px; }
+      .brand-text{ max-width: 230px; } /* ✅ más aire para “CEPATAGONIA” */
       .brand-sub--congreso,
       .brand-sub--edition{ display:none; }
 
       .btn{ padding: 9px 10px; font-size: 12px; }
       .nav-actions{ gap:8px; }
+
+      /* ✅ hamburguesa como ícono (no “botón texto”) */
+      .hamburger{
+        padding: 10px 11px;
+        border-radius: 999px;
+        min-width: 42px;
+        justify-content: center;
+      }
 
       .kicker--metaInline{
         font-size: 11px;
@@ -709,24 +759,30 @@
         </nav>
 
         <div class="nav-actions">
-          <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu">Menú</button>
-          <!-- Asesorate removido del nav-actions -->
+          <!-- ✅ Menú minimal: sin texto -->
+          <button class="btn btn-ghost hamburger" id="menuBtn" aria-expanded="false" aria-controls="mobileMenu" aria-label="Abrir menú">
+            <span class="hamb-ic" aria-hidden="true"></span>
+          </button>
+
+          <!-- CTA en desktop / tablet, oculto en mobile -->
           <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
         </div>
       </div>
 
+      <!-- Drawer overlay -->
       <div class="mobile-drawer" id="mobileMenu" hidden>
-        <a href="#vision">Visión</a>
-        <a href="#diferenciales">Diferenciales</a>
-        <a href="#programa">Programa</a>
-        <a href="#speakers">Speakers</a>
-        <a href="#sede">Sede</a>
-        <a href="#entradas">Entradas</a>
-        <a href="#contacto">Contacto</a>
-        <a href="#faq">FAQ</a>
-        <div style="height:10px"></div>
-        <!-- Asesorate removido del drawer para simplificar -->
-        <a href="#" id="btnPaseMobile">Adquirí tu pase</a>
+        <div class="container">
+          <a href="#vision">Visión</a>
+          <a href="#diferenciales">Diferenciales</a>
+          <a href="#programa">Programa</a>
+          <a href="#speakers">Speakers</a>
+          <a href="#sede">Sede</a>
+          <a href="#entradas">Entradas</a>
+          <a href="#contacto">Contacto</a>
+          <a href="#faq">FAQ</a>
+          <div style="height:10px"></div>
+          <a href="#" id="btnPaseMobile">Adquirí tu pase</a>
+        </div>
       </div>
     </div>
   </div>
