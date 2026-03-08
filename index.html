@@ -108,7 +108,7 @@
       :root{ --navH: 82px; }
     }
     @media (max-width: 520px){
-      :root{ --navH: 72px; } /* ✅ un toque más compacto en mobile */
+      :root{ --navH: 72px; }
     }
 
     *{ box-sizing: border-box; }
@@ -149,7 +149,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding: 6px 0;              /* ✅ menos padding para agrandar logo SIN subir la barra */
+      padding: 6px 0;
       min-height: var(--navH);
     }
 
@@ -166,11 +166,10 @@
     }
     .brand:hover{ opacity:.95; }
 
-    /* ✅ Logo NAV: más grande pero atado a la altura del nav */
     .brand-logo{
-      height: calc(var(--navH) - 14px); /* 👈 crece, pero no puede “empujar” la barra */
+      height: calc(var(--navH) - 14px);
       width: auto;
-      max-width: 210px;                /* evita que se coma todo el nav en desktop */
+      max-width: 210px;
       object-fit: contain;
       display:block;
       filter: drop-shadow(0 10px 22px rgba(0,0,0,.35));
@@ -321,11 +320,10 @@
       text-transform:none;
       gap:6px;
       padding: 8px 10px;
-      line-height: 1; /* ✅ compacta el alto del bloque fecha */
+      line-height: 1;
     }
     .kicker.kicker-meta b{ font-weight: 760; }
 
-    /* ✅ META arriba del H1 (más grande, mismo formato) */
     .hero-metaTop{
       font-size: 18px;
       padding: 10px 14px;
@@ -356,7 +354,7 @@
       border: 1px solid rgba(255,255,255,.14);
       background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
       box-shadow: var(--shadow);
-      padding: 18px; /* ✅ vuelve a un padding más “natural” ahora que no hay logo/meta */
+      padding: 18px;
       position: relative;
       overflow:hidden;
       min-height: unset;
@@ -502,6 +500,20 @@
       background: radial-gradient(circle at 30% 30%, rgba(82,255,214,.22), transparent 60%),
                   radial-gradient(circle at 70% 75%, rgba(122,167,255,.22), transparent 60%);
       transform: rotate(18deg);
+    }
+    .avatar.has-photo{
+      background: rgba(255,255,255,.06);
+    }
+    .avatar.has-photo:before{
+      display:none;
+    }
+    .avatar img{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     /* ===== SEDE (IMÁGENES) ===== */
@@ -713,9 +725,8 @@
         overflow: auto;
       }
       .mobile-drawer[hidden]{ display:none; }
-      .mobile-drawer .container{ padding: 0; } /* no-op (por si) */
+      .mobile-drawer .container{ padding: 0; }
 
-      /* ✅ sigue grande, pero controlado */
       .brand-logo{
         height: calc(var(--navH) - 16px);
         max-width: 190px;
@@ -777,7 +788,6 @@
     <div class="container">
       <div class="nav-inner">
         <a class="brand" href="#top" aria-label="Volver al inicio">
-          <!-- ✅ NUEVO LOGO -->
           <img class="brand-logo" src="assets/logo-blanco-cropped-transparent.png" alt="CEPATAGONIA" />
           <div class="brand-text">
             <span class="brand-title">CEPATAGONIA</span>
@@ -806,7 +816,6 @@
         </div>
       </div>
 
-      <!-- Drawer overlay -->
       <div class="mobile-drawer" id="mobileMenu" hidden>
         <div class="container">
           <a href="#vision">Visión</a>
@@ -832,7 +841,6 @@
     <div class="container">
       <div class="hero-grid">
         <div>
-          <!-- ✅ FECHA + CIUDAD arriba del H1 -->
           <div class="kicker kicker--metaInline kicker-meta hero-metaTop">
             <span class="dot" aria-hidden="true"></span>
             <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
@@ -1347,6 +1355,85 @@
       el.setAttribute('rel', 'noopener noreferrer');
     }
 
+    function normalizeText(value){
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+    }
+
+    function applyCepOverrides(){
+      if (!window.CEP || !Array.isArray(window.CEP.ejes)) return;
+
+      const eje1 = window.CEP.ejes.find(e =>
+        normalizeText(e.eje).includes("eje 1") ||
+        normalizeText(e.titulo).includes("regeneracion celular") ||
+        normalizeText(e.titulo).includes("wellaging")
+      );
+
+      if (!eje1) return;
+
+      if (!Array.isArray(eje1.speakers) || !eje1.speakers.length){
+        eje1.speakers = [];
+      }
+
+      const adriana = {
+        nombre: "Adriana Sardot",
+        credenciales: "Cosmetóloga y dermocosmiatra con más de 40 años de trayectoria. Diplomada en Cosmiatría Avanzada y formación continua en congresos nacionales e internacionales. Referente en actualización científica y profesionalización estética.",
+        disertacion: "Estética Personalizada & Wellaging - El rol de las células madre y los telómeros en la longevidad cutánea.",
+        bullets: [
+          "Bases biológicas del wellaging",
+          "Senescencia celular y longevidad funcional",
+          "Impacto de los telómeros en el envejecimiento cutáneo",
+          "Células madre como herramienta regenerativa",
+          "Protocolos personalizados basados en biología celular"
+        ],
+        image: "assets/Adriana Sardot.webp"
+      };
+
+      if (eje1.speakers.length){
+        eje1.speakers[0] = { ...eje1.speakers[0], ...adriana };
+      } else {
+        eje1.speakers.push(adriana);
+      }
+    }
+
+    function renderSpeakerExtras(s){
+      const blocks = [];
+
+      if (s.extraTitle){
+        blocks.push(`
+          <div style="height:10px;"></div>
+          <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
+          <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
+        `);
+      }
+
+      if (Array.isArray(s.extras)){
+        s.extras.forEach(ex => {
+          blocks.push(`
+            <div style="height:10px;"></div>
+            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>
+            ${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
+          `);
+        });
+      }
+
+      return blocks.join('');
+    }
+
+    function renderSpeakerAvatar(s){
+      if (s.image){
+        return `
+          <div class="avatar has-photo" aria-hidden="true">
+            <img src="${s.image}" alt="${s.nombre}" loading="lazy" />
+          </div>
+        `;
+      }
+      return `<div class="avatar" aria-hidden="true"></div>`;
+    }
+
     document.getElementById('year').textContent = new Date().getFullYear();
 
     const btn = document.getElementById('menuBtn');
@@ -1448,6 +1535,8 @@
     if (!window.CEP) {
       console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
     } else {
+      applyCepOverrides();
+
       const { fecha, ciudad, modalidad } = window.CEP.meta || { fecha:"—", ciudad:"—", modalidad:"—" };
 
       const metaDateStrong = document.getElementById('metaDateStrong');
@@ -1488,31 +1577,6 @@
       }
 
       const ejesList = document.getElementById('ejesList');
-
-      function renderSpeakerExtras(s){
-        const blocks = [];
-
-        if (s.extraTitle){
-          blocks.push(`
-            <div style="height:10px;"></div>
-            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
-            <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
-          `);
-        }
-
-        if (Array.isArray(s.extras)){
-          s.extras.forEach(ex => {
-            blocks.push(`
-              <div style="height:10px;"></div>
-              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>
-              ${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
-            `);
-          });
-        }
-
-        return blocks.join('');
-      }
-
       if (ejesList){
         ejesList.innerHTML = (window.CEP.ejes || []).map(e => `
           <details>
@@ -1542,11 +1606,12 @@
       const speakers = (window.CEP.ejes || []).flatMap(e =>
         (e.speakers || []).map(s => ({...s, eje: e.eje, tema: e.titulo}))
       );
+
       const spGrid = document.getElementById('speakersGrid');
       if (spGrid){
         spGrid.innerHTML = speakers.map(s => `
           <div class="card speaker">
-            <div class="avatar" aria-hidden="true"></div>
+            ${renderSpeakerAvatar(s)}
             <div>
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje} • ${s.tema}</div>
               <div style="font-weight:820; margin-top:6px;">${s.nombre}</div>
