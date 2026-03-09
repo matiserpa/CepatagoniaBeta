@@ -460,6 +460,35 @@
       pointer-events:none;
     }
 
+    /* ===== BLOQUE EDITORIAL ===== */
+    .brand-editorial{
+      padding: 4px 0 18px;
+      border-top: 0;
+    }
+    .brand-editorial-wrap{
+      border-radius: 30px;
+      overflow: hidden;
+      border: 1px solid rgba(35,36,32,.08);
+      background: linear-gradient(180deg, rgba(255,255,255,.56), rgba(255,255,255,.34));
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .brand-editorial-img{
+      display:block;
+      width:100%;
+      height:auto;
+      object-fit:cover;
+      object-position:center;
+      filter: saturate(.86) contrast(.98) brightness(1.02);
+    }
+    .brand-editorial-overlay{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+
     /* ===== SECTIONS ===== */
     section{
       padding: 58px 0;
@@ -858,6 +887,14 @@
       .hero-card .big{
         max-width: 100%;
       }
+
+      .brand-editorial{
+        padding: 0 0 12px;
+      }
+
+      .brand-editorial-wrap{
+        border-radius: 24px;
+      }
     }
 
     @media (max-width: 520px){
@@ -1006,6 +1043,21 @@
       </div>
     </div>
   </header>
+
+  <!-- BLOQUE EDITORIAL -->
+  <section class="brand-editorial" aria-label="Identidad visual CEPATAGONIA">
+    <div class="container">
+      <div class="brand-editorial-wrap">
+        <img
+          class="brand-editorial-img"
+          src="assets/kv-editorial.webp"
+          alt="Identidad visual de CEPATAGONIA: ciencia que regenera, naturaleza que inspira."
+          loading="lazy"
+        />
+        <div class="brand-editorial-overlay" aria-hidden="true"></div>
+      </div>
+    </div>
+  </section>
 
   <!-- VISIÓN / OBJETIVOS -->
   <section id="vision">
