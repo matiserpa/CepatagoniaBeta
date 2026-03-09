@@ -114,15 +114,15 @@ window.CEP = {
           disertacion: "Inside out glow",
           bullets: [
             "Uso de nutracéuticos para potenciar el Skin Quality y los resultados de procedimientos estéticos."
+          ],
+          extras: [
+            {
+              title: "Disertación complementaria",
+              bullets: [
+                "Regenerando la piel con Polinucleótidos y Exosomas para tratar las hiperpigmentaciones."
+              ]
+            }
           ]
-        },
-        {
-          nombre: "Dra. Carolina Laxague",
-          credenciales:
-            "Médica (UBA). Especialista en Dermatología Hospital Ramos Mejía. Curso superior de dermatología Hospital Bernardo Houssay. Formación en Medicina Estética (AMA). Formada en Mónaco, Miami y Corea.",
-          disertacion:
-            "Regenerando la piel con Polinucleótidos y Exosomas para tratar las hiperpigmentaciones.",
-          bullets: []
         }
       ]
     },
@@ -138,44 +138,38 @@ window.CEP = {
             "Innovación en Exosomas y Microbiota Cutánea - EXODERMAL y EXOBIOTIC 15",
           bullets: [
             "Pablo González"
-          ]
-        },
-        {
-          nombre: "Lab UDERM y SEM BIOCREAM",
-          credenciales: "Presentación institucional y científica.",
-          disertacion:
-            "Bio Péptidos - Comprendiendo su potencial de acción en piel.",
-          bullets: [
-            "Pablo González"
-          ]
-        },
-        {
-          nombre: "Lab UDERM y SEM BIOCREAM",
-          credenciales: "Presentación institucional y científica.",
-          disertacion:
-            "Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.",
-          bullets: [
-            "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM",
-            "Pablo González y Sandra Monzalvez"
-          ]
-        },
-        {
-          nombre: "Lab UDERM y SEM BIOCREAM",
-          credenciales: "Presentación institucional y científica.",
-          disertacion:
-            "EQLM - La Era de la Bio-Regeneración Molecular",
-          bullets: [
-            "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea",
-            "Sandra Monzalvez"
-          ]
-        },
-        {
-          nombre: "Lab UDERM y SEM BIOCREAM",
-          credenciales: "Presentación institucional y científica.",
-          disertacion:
-            "Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM",
-          bullets: [
-            "Más allá de los filtros: reparación, defensa y equilibrio biológico"
+          ],
+          extras: [
+            {
+              title: "Disertación complementaria",
+              bullets: [
+                "Bio Péptidos - Comprendiendo su potencial de acción en piel.",
+                "Pablo González"
+              ]
+            },
+            {
+              title: "Disertación complementaria",
+              bullets: [
+                "Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.",
+                "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.",
+                "Pablo González y Sandra Monzalvez"
+              ]
+            },
+            {
+              title: "Disertación complementaria",
+              bullets: [
+                "EQLM - La Era de la Bio-Regeneración Molecular.",
+                "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.",
+                "Sandra Monzalvez"
+              ]
+            },
+            {
+              title: "Disertación complementaria",
+              bullets: [
+                "Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM.",
+                "Más allá de los filtros: reparación, defensa y equilibrio biológico."
+              ]
+            }
           ]
         }
       ]
@@ -278,15 +272,15 @@ window.CEP = {
             "Dermatocosmiatra-esteticista e instructora de formación profesional. Con más de 12 años en el rubro de la estética, speaker internacional.",
           disertacion:
             "La nueva era del acné: inflamación, barrera y microbiota como ejes del tratamiento",
-          bullets: []
-        },
-        {
-          nombre: "Jimena Álvarez Morales",
-          credenciales:
-            "Dermatocosmiatra-esteticista e instructora de formación profesional. Con más de 12 años en el rubro de la estética, speaker internacional.",
-          disertacion:
-            "Pieles del sur: reactividad, barrera y rosácea en climas extremos",
-          bullets: []
+          bullets: [],
+          extras: [
+            {
+              title: "Disertación complementaria",
+              bullets: [
+                "Pieles del sur: reactividad, barrera y rosácea en climas extremos."
+              ]
+            }
+          ]
         }
       ]
     },
@@ -316,15 +310,13 @@ window.CEP = {
   ],
 
   dirigidoA: [
-    "Cosmiatras",
-    "Dermatocosmiatras",
-    "Médicos estéticos",
-    "Profesionales en estética corporal",
-    "Directores de SPA",
-    "Estudiantes avanzados",
     "Cosmiatras y cosmetólogos/as",
+    "Dermatocosmiatras",
     "Dermatólogos/as y médicos/as estéticos",
     "Profesionales de estética avanzada",
-    "Clínicas, centros y equipos de trabajo del sector"
+    "Profesionales en estética corporal",
+    "Directores de SPA",
+    "Clínicas, centros y equipos de trabajo del sector",
+    "Estudiantes avanzados"
   ]
 };
