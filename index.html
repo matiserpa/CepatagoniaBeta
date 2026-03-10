@@ -8,7 +8,7 @@
   <meta name="description" content="Congreso de capacitación en estética avanzada: innovación, tecnología y formación profesional. Patagonia como marco." />
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500;1,600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 
     html, body { height: 100%; scroll-behavior: smooth; }
     html { overflow-x: clip; }
@@ -20,9 +20,9 @@
       --panel2: rgba(255,255,255,.72);
       --panel-strong: #e7e4db;
 
-      --text: #1a1a18;
-      --muted: #5f655f;
-      --muted2: #7f857c;
+      --text: #181713;
+      --muted: #64675f;
+      --muted2: #80857c;
       --line: rgba(35,36,32,.12);
 
       --a1: #7f977f;
@@ -51,7 +51,7 @@
       position: relative;
       isolation: isolate;
       margin:0;
-      font-family: "Manrope", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      font-family: "Montserrat", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
       color: var(--text);
       background:
         radial-gradient(1200px 700px at 12% 8%, rgba(127,151,127,.12), transparent 55%),
@@ -59,10 +59,11 @@
         radial-gradient(900px 650px at 50% 92%, rgba(255,255,255,.45), transparent 60%),
         linear-gradient(180deg, #f4f2eb 0%, #efede6 100%);
       overflow-x: clip;
-      line-height:1.45;
+      line-height:1.5;
       padding-top: var(--navH);
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
+      font-weight: 400;
     }
 
     [id]{ scroll-margin-top: calc(var(--navH) + 14px); }
@@ -203,7 +204,7 @@
       min-width: 0;
     }
     .brand-title{
-      font-weight: 760;
+      font-weight: 800;
       color: var(--text);
     }
     .brand-sub--congreso{
@@ -223,8 +224,10 @@
       display:flex;
       gap: 18px;
       align-items:center;
-      font-size: 13px;
+      font-size: 12.5px;
       color: var(--muted);
+      font-weight: 500;
+      letter-spacing: .03em;
     }
     .nav-links a{
       padding: 10px 10px;
@@ -248,8 +251,10 @@
       background: rgba(255,255,255,.58);
       box-shadow: none;
       color: var(--text);
-      font-weight: 650;
-      font-size: 13px;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
       cursor:pointer;
       transition: transform .15s ease, background .15s ease, border-color .15s ease, color .15s ease;
       user-select:none;
@@ -314,6 +319,8 @@
       display:block;
       padding: 10px 8px;
       color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .03em;
     }
     .mobile-drawer a:hover{
       color: var(--text);
@@ -342,7 +349,8 @@
       border: 1px solid rgba(35,36,32,.10);
       background: rgba(255,255,255,.46);
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
+      font-weight: 600;
       letter-spacing: .16em;
       text-transform: uppercase;
       max-width: 100%;
@@ -375,7 +383,7 @@
     .kicker.kicker-meta b{ font-weight: 760; }
 
     .hero-metaTop{
-      font-size: 15px;
+      font-size: 14px;
       padding: 10px 14px;
       background: rgba(255,255,255,.56);
       border-color: rgba(35,36,32,.10);
@@ -384,23 +392,24 @@
     }
 
     h1{
-      margin: 18px 0 10px;
-      font-family: "Manrope", sans-serif;
-      font-size: clamp(34px, 4.8vw, 62px);
-      line-height: .98;
-      letter-spacing: -.045em;
-      text-transform: uppercase;
-      font-weight: 500;
+      margin: 18px 0 12px;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(38px, 5vw, 70px);
+      line-height: .95;
+      letter-spacing: -.03em;
+      text-transform: none;
+      font-weight: 600;
       max-width: 10ch;
     }
 
     .subhead{
       color: var(--muted);
-      font-size: clamp(16px, 1.5vw, 18px);
-      max-width: 56ch;
-      margin: 16px 0 24px;
+      font-size: clamp(15px, 1.5vw, 17px);
+      max-width: 58ch;
+      margin: 18px 0 24px;
       letter-spacing: 0;
-      line-height: 1.65;
+      line-height: 1.75;
+      font-weight: 400;
     }
     .hero-actions{
       display:flex;
@@ -421,26 +430,28 @@
     }
     .hero-card h3{
       margin: 6px 0 8px;
-      font-size: 14px;
-      letter-spacing: .18em;
+      font-size: 12px;
+      letter-spacing: .20em;
       text-transform: uppercase;
       color: var(--muted);
+      font-weight: 700;
     }
     .hero-card .big{
-      font-family: "Manrope", sans-serif;
-      font-size: clamp(24px, 2.2vw, 30px);
-      line-height:1.05;
-      margin: 0 0 10px;
-      letter-spacing: -.035em;
-      text-transform: uppercase;
-      font-weight: 500;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(28px, 2.4vw, 34px);
+      line-height:1.02;
+      margin: 0 0 12px;
+      letter-spacing: -.02em;
+      text-transform: none;
+      font-weight: 600;
       max-width: 11ch;
+      color: var(--text);
     }
     .hero-card p{
       margin:0;
       color: var(--muted);
       font-size: 14px;
-      line-height: 1.6;
+      line-height: 1.72;
     }
 
     .glow{
@@ -503,9 +514,9 @@
     }
     .section-head h2{
       margin:0;
-      font-family: "Manrope", sans-serif;
-      font-size: 16px;
-      letter-spacing: .22em;
+      font-family: "Montserrat", sans-serif;
+      font-size: 14px;
+      letter-spacing: .26em;
       text-transform: uppercase;
       color: var(--muted);
       font-weight: 700;
@@ -516,6 +527,7 @@
       max-width: 64ch;
       font-size: 13.5px;
       letter-spacing: 0;
+      line-height: 1.7;
     }
 
     .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
@@ -533,8 +545,8 @@
     }
     .card h3{
       margin: 0 0 8px;
-      font-size: 14px;
-      letter-spacing: .14em;
+      font-size: 12px;
+      letter-spacing: .16em;
       text-transform: uppercase;
       font-weight: 700;
       color: var(--text);
@@ -543,7 +555,7 @@
       margin:0;
       color: var(--muted);
       font-size: 13.8px;
-      line-height: 1.65;
+      line-height: 1.72;
     }
 
     .icon{
@@ -577,6 +589,8 @@
       justify-content:space-between;
       gap: 12px;
       padding: 10px 6px;
+      font-size: 14px;
+      line-height: 1.5;
     }
     summary::-webkit-details-marker{ display:none; }
     summary::after{
@@ -595,13 +609,14 @@
     .muted{
       color: var(--muted2);
       font-size: 13px;
+      line-height: 1.7;
     }
     ul{
       margin: 10px 0 0;
       padding-left: 18px;
       color: var(--muted);
       font-size: 13.8px;
-      line-height: 1.7;
+      line-height: 1.8;
     }
 
     .speaker{
@@ -705,18 +720,18 @@
     }
     .modal h3{
       margin: 16px 0 8px;
-      font-family: "Manrope", sans-serif;
-      font-size: 30px;
-      letter-spacing: -0.04em;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 34px;
+      letter-spacing: -.02em;
       font-weight: 600;
       color: var(--text);
-      text-transform: uppercase;
+      text-transform: none;
     }
     .modal p{
       margin: 0 0 18px;
       color: var(--muted);
       font-size: 15px;
-      line-height: 1.6;
+      line-height: 1.7;
     }
     .modal .btn-modal{
       display:inline-flex;
@@ -744,7 +759,7 @@
     /* ===== CONTACTO ===== */
     .field{ display:flex; flex-direction:column; gap:8px; }
     .label{
-      font-size: 12px;
+      font-size: 11px;
       letter-spacing: .16em;
       text-transform: uppercase;
       color: var(--muted2);
@@ -761,6 +776,7 @@
       font-size: 14px;
       transition: border-color .15s ease, background .15s ease;
       min-width: 0;
+      font-family: inherit;
     }
     .textarea{ min-height: 120px; resize: vertical; }
     .input:focus, .textarea:focus, .select:focus{
@@ -775,6 +791,7 @@
       font-size: 12px;
       color: var(--muted2);
       margin-top: 6px;
+      line-height: 1.6;
     }
 
     .form-notice{
@@ -827,6 +844,10 @@
       color: var(--muted);
       transition: transform .15s ease, background .15s ease, border-color .15s ease;
       box-shadow:none;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
     }
     .social-btn:hover{
       transform: translateY(-1px);
@@ -881,7 +902,7 @@
 
       h1{
         max-width: 100%;
-        font-size: clamp(30px, 9vw, 52px);
+        font-size: clamp(34px, 10vw, 56px);
       }
 
       .hero-card .big{
@@ -910,7 +931,7 @@
       .brand-sub--congreso,
       .brand-sub--edition{ display:none; }
 
-      .btn{ padding: 9px 10px; font-size: 12px; }
+      .btn{ padding: 9px 10px; font-size: 11px; }
       .nav-actions{ gap:8px; }
 
       .hamburger{
@@ -1110,7 +1131,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -1228,7 +1248,6 @@
           <div class="img-caption"><div class="muted"></div></div>
         </div>
       </div>
-
     </div>
   </section>
 
