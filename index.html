@@ -1461,7 +1461,18 @@
 
           <div style="height:16px;"></div>
 
-          <form id="contactForm" method="POST" action="FORM_ENDPOINT">
+          <iframe
+            name="fs_iframe"
+            id="fs_iframe"
+            title="FormSubmit hidden iframe"
+            style="display:none; width:0; height:0; border:0;"
+          ></iframe>
+
+          <form id="contactForm" method="POST" action="https://formsubmit.co/infocepatagonia@gmail.com" target="fs_iframe">
+
+            <input type="hidden" name="_subject" value="Nuevo contacto desde CEPATAGONIA">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_captcha" value="false">
             <div class="grid-2">
               <div class="field">
                 <div class="label">Nombre y apellido</div>
