@@ -194,13 +194,13 @@
       line-height: 1.12;
       letter-spacing: .16em;
       min-width: 0;
-      max-width: 360px;
+      max-width: 420px;
     }
     .brand-text span{
       display:block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: unset;
       min-width: 0;
     }
     .brand-title{
@@ -2002,7 +2002,7 @@
         `).join('');
       }
 
-        const speakers = (window.CEP.ejes || []).flatMap(e =>
+      const speakers = (window.CEP.ejes || []).flatMap(e =>
         (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo }))
       );
 
