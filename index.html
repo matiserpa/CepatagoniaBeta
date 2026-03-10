@@ -186,38 +186,49 @@
     .brand-text{
       display:flex;
       flex-direction:column;
-      gap:3px;
-      line-height: 1.08;
+      justify-content:center;
+      align-items:center;
+      gap:2px;
+      line-height: 1.05;
       min-width: 0;
       max-width: 210px;
       letter-spacing: 0;
+      text-align:center;
     }
     .brand-text span{
       display:block;
       min-width: 0;
     }
     .brand-title{
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 700;
       color: var(--text);
-      letter-spacing: .18em;
+      letter-spacing: .10em;
       text-transform: uppercase;
       white-space: nowrap;
     }
     .brand-subline{
-      font-size: 10.5px;
+      font-size: 10px;
       font-weight: 600;
       color: var(--muted);
       letter-spacing: .08em;
       text-transform: uppercase;
       white-space: nowrap;
     }
+    .brand-edition{
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
 
     .nav-links{
       display:flex;
-      gap: 4px;
+      gap: 6px;
       align-items:center;
-      font-size: 11.5px;
+      font-size: 13px;
       color: var(--muted);
       font-weight: 500;
       letter-spacing: .01em;
@@ -226,7 +237,7 @@
       min-width: 0;
     }
     .nav-links a{
-      padding: 8px 6px;
+      padding: 10px 8px;
       border-radius: 10px;
       border: 1px solid transparent;
       white-space: nowrap;
@@ -1001,11 +1012,14 @@
         max-width: 180px;
       }
       .brand-title{
-        font-size: 11.5px;
+        font-size: 10.5px;
       }
       .brand-subline{
-        font-size: 9.5px;
+        font-size: 9px;
         letter-spacing: .08em;
+      }
+      .brand-edition{
+        font-size: 9px;
       }
       .btn{ padding: 10px 12px; }
 
@@ -1036,7 +1050,12 @@
       .brand-text{
         max-width: 130px;
       }
-      .brand-subline{ display:none; }
+      .brand-subline{
+        font-size: 8px;
+      }
+      .brand-edition{
+        font-size: 8px;
+      }
 
       .btn{ padding: 9px 10px; font-size: 11px; }
       .nav-actions{ gap:8px; }
@@ -1071,10 +1090,11 @@
     <div class="container">
       <div class="nav-inner">
         <a class="brand" href="#top" aria-label="Volver al inicio">
-          <img class="brand-logo" src="assets/logo-blanco-cropped-transparent.png" alt="CEPATAGONIA" />
+          <img class="brand-logo" src="assets/cepatagonia-logo.webp" alt="CEPATAGONIA" />
           <div class="brand-text">
-            <span class="brand-title">CEPATAGONIA</span>
-            <span class="brand-subline">Congreso de Estética · 1ra edición</span>
+            <span class="brand-title">Congreso de Estética</span>
+            <span class="brand-subline">de la Patagonia</span>
+            <span class="brand-edition">1ra edición</span>
           </div>
         </a>
 
