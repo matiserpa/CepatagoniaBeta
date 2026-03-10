@@ -471,39 +471,93 @@
       pointer-events:none;
     }
 
-    /* ===== BLOQUE EDITORIAL ===== */
+    /* ===== BLOQUE EDITORIAL — REDISEÑADO ===== */
     .brand-editorial{
-      padding: 4px 0 18px;
+      padding: 0 0 0;
       border-top: 0;
     }
-    .brand-editorial-wrap{
-      border-radius: 30px;
-      overflow: hidden;
-      border: 1px solid rgba(35,36,32,.08);
-      background: linear-gradient(180deg, rgba(255,255,255,.56), rgba(255,255,255,.34));
-      box-shadow: var(--shadow);
+
+    /* Banner compacto full-width con overlay de texto */
+    .editorial-banner{
       position: relative;
+      width: 100%;
+      height: clamp(260px, 32vw, 420px);
+      overflow: hidden;
     }
-    .brand-editorial-img{
-      display:block;
-      width:100%;
-      height:auto;
-      object-fit:cover;
-      object-position:center;
-      filter: saturate(.86) contrast(.98) brightness(1.02);
+    .editorial-banner-img{
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: saturate(.72) contrast(.96) brightness(.92);
+      display: block;
     }
-    .brand-editorial-overlay{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
+    /* gradientes laterales para que se funda con el fondo de la página */
+    .editorial-banner-fade{
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+        linear-gradient(to right,
+          rgba(244,242,235,1) 0%,
+          rgba(244,242,235,0) 14%,
+          rgba(244,242,235,0) 86%,
+          rgba(244,242,235,1) 100%
+        ),
+        linear-gradient(to bottom,
+          rgba(244,242,235,.6) 0%,
+          rgba(244,242,235,0) 22%,
+          rgba(244,242,235,0) 72%,
+          rgba(244,242,235,.95) 100%
+        );
+    }
+    /* texto encima */
+    .editorial-banner-text{
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      padding: 0 var(--pad);
+      pointer-events: none;
+    }
+    .editorial-tagline{
+      font-family: "Montserrat", sans-serif;
+      font-weight: 800;
+      font-size: clamp(28px, 5vw, 58px);
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--text);
+      line-height: 1.08;
+      text-shadow: 0 2px 24px rgba(255,255,255,.55);
+    }
+    .editorial-tagline span{
+      display: block;
+    }
+    .editorial-divider{
+      width: 48px;
+      height: 1px;
+      background: rgba(127,151,127,.55);
+      margin: 4px auto;
+    }
+    .editorial-sub{
+      font-size: clamp(10px, 1.1vw, 13px);
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
     }
 
     /* ===== SECTIONS ===== */
     section{
       padding: 58px 0;
       border-top: 1px solid var(--line);
+      position: relative;
     }
     .section-head{
       display:flex;
@@ -679,6 +733,68 @@
       position:absolute; left:16px; right:16px; bottom:16px;
     }
     .strip img{ height:180px; min-height:auto; opacity:.9; }
+
+    /* ===== FONDO SUTIL EN SECCIÓN VISIÓN ===== */
+    #vision{
+      overflow: hidden;
+    }
+    #vision::before{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/kv-editorial.webp");
+      background-size: cover;
+      background-position: center 35%;
+      background-repeat: no-repeat;
+      opacity: .055;
+      filter: grayscale(1) contrast(.9) brightness(1.1);
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,.7) 20%,
+        rgba(0,0,0,.7) 80%,
+        rgba(0,0,0,0) 100%
+      );
+      mask-image: linear-gradient(to bottom,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,.7) 20%,
+        rgba(0,0,0,.7) 80%,
+        rgba(0,0,0,0) 100%
+      );
+      z-index: 0;
+    }
+    #vision > *{ position: relative; z-index: 1; }
+
+    /* ===== FONDO SUTIL EN SECCIÓN DIFERENCIALES ===== */
+    #diferenciales{
+      overflow: hidden;
+    }
+    #diferenciales::before{
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("assets/adn.webp");
+      background-size: cover;
+      background-position: right center;
+      background-repeat: no-repeat;
+      opacity: .05;
+      filter: grayscale(1) contrast(.85) brightness(1.12);
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to left,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,.6) 30%,
+        rgba(0,0,0,.6) 70%,
+        rgba(0,0,0,0) 100%
+      );
+      mask-image: linear-gradient(to left,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,.6) 30%,
+        rgba(0,0,0,.6) 70%,
+        rgba(0,0,0,0) 100%
+      );
+      z-index: 0;
+    }
+    #diferenciales > *{ position: relative; z-index: 1; }
 
     footer{
       padding: 28px 0 44px;
@@ -909,12 +1025,11 @@
         max-width: 100%;
       }
 
-      .brand-editorial{
-        padding: 0 0 12px;
+      .editorial-banner{
+        height: clamp(200px, 50vw, 320px);
       }
-
-      .brand-editorial-wrap{
-        border-radius: 24px;
+      .editorial-tagline{
+        font-size: clamp(22px, 6vw, 40px);
       }
     }
 
@@ -951,6 +1066,14 @@
         font-size: 12px;
         padding: 9px 12px;
         margin-bottom: 12px;
+      }
+
+      .editorial-banner{
+        height: clamp(180px, 55vw, 260px);
+      }
+      .editorial-tagline{
+        font-size: clamp(18px, 7vw, 30px);
+        letter-spacing: .14em;
       }
     }
   </style>
@@ -1065,17 +1188,23 @@
     </div>
   </header>
 
-  <!-- BLOQUE EDITORIAL -->
+  <!-- BLOQUE EDITORIAL — banner compacto con texto integrado -->
   <section class="brand-editorial" aria-label="Identidad visual CEPATAGONIA">
-    <div class="container">
-      <div class="brand-editorial-wrap">
-        <img
-          class="brand-editorial-img"
-          src="assets/kv-editorial.webp"
-          alt="Identidad visual de CEPATAGONIA: ciencia que regenera, naturaleza que inspira."
-          loading="lazy"
-        />
-        <div class="brand-editorial-overlay" aria-hidden="true"></div>
+    <div class="editorial-banner">
+      <img
+        class="editorial-banner-img"
+        src="assets/kv-editorial.webp"
+        alt="Identidad visual de CEPATAGONIA"
+        loading="lazy"
+      />
+      <div class="editorial-banner-fade" aria-hidden="true"></div>
+      <div class="editorial-banner-text" aria-hidden="true">
+        <div class="editorial-tagline">
+          <span>Ciencia que</span>
+          <span>regenera</span>
+        </div>
+        <div class="editorial-divider"></div>
+        <div class="editorial-sub">Naturaleza que inspira</div>
       </div>
     </div>
   </section>
