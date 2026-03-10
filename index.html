@@ -471,17 +471,15 @@
       pointer-events:none;
     }
 
-    /* ===== BLOQUE EDITORIAL — REDISEÑADO ===== */
-    .brand-editorial{
-      padding: 0 0 0;
-      border-top: 0;
-    }
-
-    /* Banner compacto full-width con overlay de texto */
+    /* ===== BLOQUE EDITORIAL — full-width sin container ===== */
     .editorial-banner{
       position: relative;
-      width: 100%;
-      height: clamp(260px, 32vw, 420px);
+      width: 100vw;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      height: clamp(300px, 38vw, 480px);
       overflow: hidden;
     }
     .editorial-banner-img{
@@ -490,30 +488,22 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center 30%;
-      filter: saturate(.72) contrast(.96) brightness(.92);
+      object-position: center 28%;
+      filter: saturate(.68) contrast(.94) brightness(.88);
       display: block;
     }
-    /* gradientes laterales para que se funda con el fondo de la página */
     .editorial-banner-fade{
       position: absolute;
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(to right,
-          rgba(244,242,235,1) 0%,
-          rgba(244,242,235,0) 14%,
-          rgba(244,242,235,0) 86%,
-          rgba(244,242,235,1) 100%
-        ),
         linear-gradient(to bottom,
-          rgba(244,242,235,.6) 0%,
-          rgba(244,242,235,0) 22%,
-          rgba(244,242,235,0) 72%,
-          rgba(244,242,235,.95) 100%
+          rgba(244,242,235,.82) 0%,
+          rgba(244,242,235,0) 18%,
+          rgba(244,242,235,0) 68%,
+          rgba(244,242,235,.92) 100%
         );
     }
-    /* texto encima */
     .editorial-banner-text{
       position: absolute;
       inset: 0;
@@ -523,34 +513,32 @@
       justify-content: center;
       text-align: center;
       gap: 10px;
-      padding: 0 var(--pad);
-      pointer-events: none;
+      padding: 0 clamp(16px, 5vw, 60px);
     }
     .editorial-tagline{
       font-family: "Montserrat", sans-serif;
       font-weight: 800;
-      font-size: clamp(28px, 5vw, 58px);
-      letter-spacing: .22em;
+      font-size: clamp(32px, 6vw, 72px);
+      letter-spacing: .20em;
       text-transform: uppercase;
       color: var(--text);
-      line-height: 1.08;
-      text-shadow: 0 2px 24px rgba(255,255,255,.55);
+      line-height: 1.06;
+      text-shadow: 0 2px 32px rgba(244,242,235,.5);
     }
-    .editorial-tagline span{
-      display: block;
-    }
+    .editorial-tagline span{ display: block; }
     .editorial-divider{
       width: 48px;
       height: 1px;
-      background: rgba(127,151,127,.55);
-      margin: 4px auto;
+      background: rgba(127,151,127,.6);
+      margin: 6px auto;
     }
     .editorial-sub{
-      font-size: clamp(10px, 1.1vw, 13px);
-      letter-spacing: .28em;
+      font-size: clamp(11px, 1.2vw, 14px);
+      letter-spacing: .30em;
       text-transform: uppercase;
       color: var(--muted);
       font-weight: 600;
+      text-shadow: 0 1px 12px rgba(244,242,235,.7);
     }
 
     /* ===== SECTIONS ===== */
@@ -1025,12 +1013,7 @@
         max-width: 100%;
       }
 
-      .editorial-banner{
-        height: clamp(200px, 50vw, 320px);
-      }
-      .editorial-tagline{
-        font-size: clamp(22px, 6vw, 40px);
-      }
+      /* editorial banner: clamp() ya maneja el responsive */
     }
 
     @media (max-width: 520px){
@@ -1068,13 +1051,7 @@
         margin-bottom: 12px;
       }
 
-      .editorial-banner{
-        height: clamp(180px, 55vw, 260px);
-      }
-      .editorial-tagline{
-        font-size: clamp(18px, 7vw, 30px);
-        letter-spacing: .14em;
-      }
+      /* editorial banner: clamp() cubre mobile */
     }
   </style>
 </head>
@@ -1188,26 +1165,24 @@
     </div>
   </header>
 
-  <!-- BLOQUE EDITORIAL — banner compacto con texto integrado -->
-  <section class="brand-editorial" aria-label="Identidad visual CEPATAGONIA">
-    <div class="editorial-banner">
-      <img
-        class="editorial-banner-img"
-        src="assets/kv-editorial.webp"
-        alt="Identidad visual de CEPATAGONIA"
-        loading="lazy"
-      />
-      <div class="editorial-banner-fade" aria-hidden="true"></div>
-      <div class="editorial-banner-text" aria-hidden="true">
-        <div class="editorial-tagline">
-          <span>Ciencia que</span>
-          <span>regenera</span>
-        </div>
-        <div class="editorial-divider"></div>
-        <div class="editorial-sub">Naturaleza que inspira</div>
+  <!-- BLOQUE EDITORIAL — banner full-width con texto integrado -->
+  <div class="editorial-banner" aria-label="Identidad visual CEPATAGONIA">
+    <img
+      class="editorial-banner-img"
+      src="assets/kv-editorial.webp"
+      alt="Identidad visual de CEPATAGONIA"
+      loading="lazy"
+    />
+    <div class="editorial-banner-fade" aria-hidden="true"></div>
+    <div class="editorial-banner-text">
+      <div class="editorial-tagline">
+        <span>Ciencia que</span>
+        <span>regenera</span>
       </div>
+      <div class="editorial-divider"></div>
+      <div class="editorial-sub">Naturaleza que inspira</div>
     </div>
-  </section>
+  </div>
 
   <!-- VISIÓN / OBJETIVOS -->
   <section id="vision">
@@ -1435,7 +1410,7 @@
           <div style="display:grid; gap:10px;">
             <div class="kicker" style="justify-content:space-between;">
               <b>Email</b>
-              <a href="mailto:infocepatagonia@gmail.com" style="color:var(--text); font-weight:720; letter-spacing:0;">infocepatagonia@gmail.com</a>
+              <a href="/cdn-cgi/l/email-protection#8ce5e2eae3efe9fcedf8edebe3e2e5edccebe1ede5e0a2efe3e1" style="color:var(--text); font-weight:720; letter-spacing:0;"><span class="__cf_email__" data-cfemail="21484f474e424451405540464e4f484061464c40484d0f424e4c">[email&#160;protected]</span></a>
             </div>
             <div class="kicker" style="justify-content:space-between;">
               <b>Tel</b>
@@ -1523,7 +1498,7 @@
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
 
             <div class="help" style="margin-top:10px;">
-              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);">infocepatagonia@gmail.com</b>.
+              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b0b7bfb6babca9b8adb8beb6b7b0b899beb4b8b0b5f7bab6b4">[email&#160;protected]</a></b>.
             </div>
           </form>
         </div>
@@ -1606,7 +1581,7 @@
           <div style="height:14px;"></div>
 
           <div style="display:grid; gap:10px;">
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Email:</b> <a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></div>
+            <div class="muted"><b style="color:var(--text); font-weight:720;">Email:</b> <a href="/cdn-cgi/l/email-protection#83eaede5ece0e6f3e2f7e2e4ecedeae2c3e4eee2eaefade0ecee"><span class="__cf_email__" data-cfemail="6801060e070b0d18091c090f07060109280f05090104460b0705">[email&#160;protected]</span></a></div>
             <div class="muted"><b style="color:var(--text); font-weight:720;">Tel:</b> <a href="tel:+5491131888164">+54 9 11 3188-8164</a></div>
             <div class="muted"><b style="color:var(--text); font-weight:720;">Dirección:</b> Gral. Roca 816, San Martín de los Andes</div>
           </div>
@@ -1651,7 +1626,7 @@
     </div>
   </div>
 
-  <script src="./data.js"></script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="./data.js"></script>
   <script>
     const CEP_CONTACT = {
       email: "infocepatagonia@gmail.com",
@@ -1885,19 +1860,4 @@
           <div class="card speaker">
             ${renderSpeakerAvatar(s)}
             <div>
-              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje} • ${s.tema}</div>
-              <div style="font-weight:820; margin-top:6px;">${s.nombre}</div>
-              ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
-            </div>
-          </div>
-        `).join('');
-      }
-
-      const dir = document.getElementById('dirigidoList');
-      if (dir){
-        dir.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
-      }
-    }
-  </script>
-</body>
-</html>
+              <div class="muted" style="letter
