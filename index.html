@@ -2013,3 +2013,26 @@
             ${renderSpeakerAvatar(s)}
             <div>
               <div class="muted" style="letter
+                  const spGrid = document.getElementById('speakersGrid');
+    if (spGrid){
+      spGrid.innerHTML = speakers.map(s => `
+        <div class="card speaker">
+          ${renderSpeakerAvatar(s)}
+          <div>
+            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje}</div>
+            <div style="font-weight:800; margin-top:4px;">${s.nombre}</div>
+            <div class="muted" style="margin-top:4px;">${s.tema}</div>
+            ${s.disertacion ? `<div style="margin-top:8px;"><b>Disertación:</b> ${s.disertacion}</div>` : ``}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    const dirigidoList = document.getElementById('dirigidoList');
+    if (dirigidoList){
+      dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
+    }
+  }
+  </script>
+</body>
+</html>
