@@ -460,8 +460,7 @@
       pointer-events:none;
     }
 
-    /* ===== BLOQUE EDITORIAL — full-width ===== */
-    /* Desktop: usa 100vw trick */
+    /* ===== BLOQUE EDITORIAL — diseño split mobile ===== */
     .editorial-banner{
       position: relative;
       width: 100vw;
@@ -481,19 +480,73 @@
       filter: saturate(.68) contrast(.94) brightness(.88);
       display: block;
     }
-    /* Mobile: el banner ocupa 100% del flujo normal */
     @media (max-width: 920px){
       .editorial-banner{
         width: 100%;
         left: auto;
         margin-left: 0;
         margin-right: 0;
-        height: clamp(300px, 80vw, 420px);
+        height: auto;
+        min-height: 200px;
+        display: flex;
+        flex-direction: row;
+        align-items: stretch;
+        overflow: hidden;
+        background: var(--bg);
       }
+      .editorial-banner-img{
+        position: relative;
+        inset: auto;
+        width: 52%;
+        height: auto;
+        min-height: 260px;
+        flex: 0 0 52%;
+        object-fit: cover;
+        object-position: center 18%;
+        filter: saturate(.68) contrast(.94) brightness(.88);
+        order: 2;
+      }
+      .editorial-banner-fade{ display: none; }
+      .editorial-banner-text{
+        position: relative;
+        inset: auto;
+        order: 1;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        text-align: left;
+        padding: 28px 20px 28px 24px;
+        gap: 8px;
+        background: var(--bg);
+      }
+      .editorial-tagline{
+        font-size: clamp(22px, 6.5vw, 38px);
+        letter-spacing: .12em;
+        color: var(--text);
+        text-shadow: none;
+        line-height: 1.08;
+      }
+      .editorial-sub{
+        font-size: 10px;
+        letter-spacing: .22em;
+        color: var(--muted);
+        text-shadow: none;
+      }
+      .editorial-divider{ margin: 2px 0; }
     }
     @media (max-width: 520px){
-      .editorial-banner{
-        height: clamp(260px, 90vw, 360px);
+      .editorial-banner-img{
+        min-height: 220px;
+        width: 48%;
+        flex: 0 0 48%;
+      }
+      .editorial-banner-text{
+        padding: 22px 16px 22px 20px;
+      }
+      .editorial-tagline{
+        font-size: clamp(20px, 6vw, 30px);
       }
     }
     .editorial-banner-fade{
