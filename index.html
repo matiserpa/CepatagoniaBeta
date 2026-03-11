@@ -1209,15 +1209,40 @@
       <div class="editorial-sub">Naturaleza que inspira</div>
     </div>
   </div>
-  <!-- EDITORIAL SOLO MOBILE -->
-  <div class="ed-mobile">
-    <div class="ed-mobile-left">
-      <div class="ed-mobile-tag">CIENCIA QUE<br>REGENERA</div>
-      <div class="ed-mobile-line"></div>
-      <div class="ed-mobile-sub">NATURALEZA QUE INSPIRA</div>
+  <!-- EDITORIAL MOBILE — style inline, sin conflictos CSS -->
+  <div id="edMob" style="display:none; flex-direction:column; width:100%; background:var(--bg);">
+    <div style="width:100%; overflow:hidden; line-height:0;">
+      <img src="assets/kv-editorial.webp" alt="" loading="eager"
+        style="width:100%; height:260px; object-fit:cover; object-position:center 22%; display:block; filter:saturate(.68) contrast(.94) brightness(.88);" />
     </div>
-    <img class="ed-mobile-img" src="assets/kv-editorial.webp" alt="" loading="eager" />
+    <div style="padding:22px 24px 18px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px;">
+      <div style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:clamp(26px,8vw,40px); letter-spacing:.18em; text-transform:uppercase; color:var(--text); line-height:1.08;">
+        Ciencia que<br>regenera
+      </div>
+      <div style="width:32px; height:1px; background:var(--text); opacity:.25;"></div>
+      <div style="font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.24em; text-transform:uppercase; color:var(--muted);">
+        Naturaleza que inspira
+      </div>
+    </div>
   </div>
+  <script>
+    (function(){
+      var el = document.getElementById('edMob');
+      var banner = document.querySelector('.editorial-banner');
+      function check(){
+        if(window.innerWidth <= 920){
+          el.style.display = 'flex';
+          banner.style.display = 'none';
+        } else {
+          el.style.display = 'none';
+          banner.style.display = '';
+        }
+      }
+      check();
+      window.addEventListener('resize', check);
+    })();
+  </script>
+
 
 
   <!-- HERO -->
