@@ -20,7 +20,8 @@
     html, body { height: 100%; scroll-behavior: smooth; }
     html { overflow-x: clip; }
     @media (max-width: 920px){
-      html, body { overflow-x: hidden; }
+      html { overflow-x: hidden !important; }
+      body { overflow-x: hidden !important; }
     }
 
     :root{
@@ -459,26 +460,16 @@
       pointer-events:none;
     }
 
-    /* ===== BLOQUE EDITORIAL — full-width sin container ===== */
+    /* ===== BLOQUE EDITORIAL — full-width ===== */
+    /* Desktop: usa 100vw trick */
     .editorial-banner{
       position: relative;
       width: 100vw;
       left: 50%;
-      right: 50%;
       margin-left: -50vw;
-      margin-right: -50vw;
       height: clamp(300px, 38vw, 480px);
       overflow: hidden;
       z-index: 0;
-    }
-    @media (max-width: 920px){
-      .editorial-banner{
-        width: 100% !important;
-        left: 0 !important;
-        right: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-      }
     }
     .editorial-banner-img{
       position: absolute;
@@ -489,6 +480,21 @@
       object-position: center 28%;
       filter: saturate(.68) contrast(.94) brightness(.88);
       display: block;
+    }
+    /* Mobile: el banner ocupa 100% del flujo normal */
+    @media (max-width: 920px){
+      .editorial-banner{
+        width: 100%;
+        left: auto;
+        margin-left: 0;
+        margin-right: 0;
+        height: clamp(300px, 80vw, 420px);
+      }
+    }
+    @media (max-width: 520px){
+      .editorial-banner{
+        height: clamp(260px, 90vw, 360px);
+      }
     }
     .editorial-banner-fade{
       position: absolute;
@@ -943,12 +949,8 @@
       .hero-card .big{ max-width: 100%; }
 
       /* EDITORIAL tablet/mobile */
-      .editorial-banner{
-        height: clamp(320px, 80vw, 440px);
-      }
       .editorial-banner-img{
-        object-position: center 20%;
-        transform: none;
+        object-position: center 22%;
       }
       .editorial-banner-fade{
         background: linear-gradient(to bottom,
@@ -1003,9 +1005,6 @@
       .hero-actions{ gap: 10px; margin-top: 8px; }
 
       /* EDITORIAL en mobile: ajustes finos */
-      .editorial-banner{
-        height: clamp(280px, 92vw, 380px);
-      }
       .editorial-banner-img{
         object-position: center 16%;
       }
@@ -1083,7 +1082,7 @@
       class="editorial-banner-img"
       src="assets/kv-editorial.webp"
       alt="Identidad visual de CEPATAGONIA"
-      loading="lazy"
+      loading="eager"
     />
     <div class="editorial-banner-fade" aria-hidden="true"></div>
     <div class="editorial-banner-text">
