@@ -495,10 +495,10 @@
         background: var(--bg);
       }
       .editorial-banner-img{
-        position: relative;
-        inset: auto;
-        width: 52%;
-        height: auto;
+        position: static !important;
+        inset: auto !important;
+        width: 52% !important;
+        height: auto !important;
         min-height: 260px;
         flex: 0 0 52%;
         object-fit: cover;
@@ -508,11 +508,11 @@
       }
       .editorial-banner-fade{ display: none; }
       .editorial-banner-text{
-        position: relative;
-        inset: auto;
+        position: static !important;
+        inset: auto !important;
         order: 1;
         flex: 1 1 auto;
-        display: flex;
+        display: flex !important;
         flex-direction: column;
         justify-content: center;
         align-items: flex-start;
