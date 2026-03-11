@@ -23,37 +23,27 @@
     :root{
       --bg: #efede6;
       --bg-2: #f6f4ee;
-    
       --panel: rgba(255,255,255,.56);
       --panel2: rgba(255,255,255,.72);
       --panel-strong: #e7e4db;
-
       --text: #181713;
       --muted: #64675f;
       --muted2: #80857c;
       --line: rgba(35,36,32,.12);
-
       --a1: #7f977f;
       --a2: #9bb3a3;
       --a3: #bccdbd;
       --a4: #dedcd2;
-
       --radius: 22px;
       --shadow: 0 24px 70px rgba(48,45,37,.10);
       --shadow2: 0 12px 32px rgba(48,45,37,.08);
-
       --max: 1160px;
       --pad: clamp(18px, 3vw, 28px);
-
       --navH: 86px;
     }
 
-    @media (max-width: 920px){
-      :root{ --navH: 82px; }
-    }
-    @media (max-width: 520px){
-      :root{ --navH: 72px; }
-    }
+    @media (max-width: 920px){ :root{ --navH: 82px; } }
+    @media (max-width: 520px){ :root{ --navH: 72px; } }
 
     body{
       position: relative;
@@ -89,16 +79,8 @@
       opacity: .045;
       filter: grayscale(1) contrast(.95) brightness(1.08);
       transform: translateZ(0);
-      -webkit-mask-image: linear-gradient(to right,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,0.10) 34%,
-        rgba(0,0,0,1) 72%
-      );
-      mask-image: linear-gradient(to right,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,0.10) 34%,
-        rgba(0,0,0,1) 72%
-      );
+      -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.10) 34%, rgba(0,0,0,1) 72%);
+      mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.10) 34%, rgba(0,0,0,1) 72%);
       will-change: background-position;
       animation: adn-drift 30s ease-in-out infinite alternate;
     }
@@ -108,25 +90,15 @@
       100% { background-position: 72% 55%; }
     }
 
-    @media (prefers-reduced-motion: reduce){
-      body::before{ animation: none !important; }
-    }
+    @media (prefers-reduced-motion: reduce){ body::before{ animation: none !important; } }
 
     @media (max-width: 920px){
       body::before{
         opacity: .035;
         background-position: right 20% top;
         filter: grayscale(1) contrast(.95) brightness(1.05);
-        -webkit-mask-image: linear-gradient(to right,
-          rgba(0,0,0,0) 0%,
-          rgba(0,0,0,0.08) 28%,
-          rgba(0,0,0,1) 64%
-        );
-        mask-image: linear-gradient(to right,
-          rgba(0,0,0,0) 0%,
-          rgba(0,0,0,0.08) 28%,
-          rgba(0,0,0,1) 64%
-        );
+        -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 28%, rgba(0,0,0,1) 64%);
+        mask-image: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.08) 28%, rgba(0,0,0,1) 64%);
       }
     }
 
@@ -204,10 +176,7 @@
       text-align:center;
       margin-left: 6px;
     }
-    .brand-text span{
-      display:block;
-      min-width: 0;
-    }
+    .brand-text span{ display:block; min-width: 0; }
     .brand-title{
       font-size: 11px;
       font-weight: 700;
@@ -387,9 +356,7 @@
       text-overflow: ellipsis;
       min-width: 0;
     }
-    #metaDateStrong, #metaCityStrong{
-      white-space: nowrap;
-    }
+    #metaDateStrong, #metaCityStrong{ white-space: nowrap; }
 
     .kicker.kicker-meta{
       letter-spacing:0;
@@ -592,8 +559,7 @@
     }
 
     .grid-3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-    .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .grid-2{ align-items: start; }
+    .grid-2{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 14px; align-items: start; }
 
     .card{
       border-radius: var(--radius);
@@ -680,11 +646,7 @@
       line-height: 1.8;
     }
 
-    .speaker{
-      display:flex;
-      gap: 14px;
-      align-items:center;
-    }
+    .speaker{ display:flex; gap: 14px; align-items:center; }
     .avatar{
       width: 56px; height: 56px;
       border-radius: 18px;
@@ -703,12 +665,8 @@
         radial-gradient(circle at 70% 75%, rgba(188,205,189,.22), transparent 60%);
       transform: rotate(18deg);
     }
-    .avatar.has-photo{
-      background: rgba(255,255,255,.62);
-    }
-    .avatar.has-photo:before{
-      display:none;
-    }
+    .avatar.has-photo{ background: rgba(255,255,255,.62); }
+    .avatar.has-photo:before{ display:none; }
     .avatar img{
       position:absolute;
       inset:0;
@@ -736,15 +694,11 @@
         radial-gradient(820px 560px at 80% 40%, rgba(255,255,255,.22), transparent 60%),
         linear-gradient(180deg, rgba(239,237,230,.02), rgba(239,237,230,.34));
     }
-    .img-caption{
-      position:absolute; left:16px; right:16px; bottom:16px;
-    }
+    .img-caption{ position:absolute; left:16px; right:16px; bottom:16px; }
     .strip img{ height:180px; min-height:auto; opacity:.9; }
 
     /* ===== FONDO SUTIL EN SECCIÓN VISIÓN ===== */
-    #vision{
-      overflow: hidden;
-    }
+    #vision{ overflow: hidden; }
     #vision::before{
       content: "";
       position: absolute;
@@ -756,26 +710,14 @@
       opacity: .055;
       filter: grayscale(1) contrast(.9) brightness(1.1);
       pointer-events: none;
-      -webkit-mask-image: linear-gradient(to bottom,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,.7) 20%,
-        rgba(0,0,0,.7) 80%,
-        rgba(0,0,0,0) 100%
-      );
-      mask-image: linear-gradient(to bottom,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,.7) 20%,
-        rgba(0,0,0,.7) 80%,
-        rgba(0,0,0,0) 100%
-      );
+      -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.7) 20%, rgba(0,0,0,.7) 80%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,.7) 20%, rgba(0,0,0,.7) 80%, rgba(0,0,0,0) 100%);
       z-index: 0;
     }
     #vision > *{ position: relative; z-index: 1; }
 
     /* ===== FONDO SUTIL EN SECCIÓN DIFERENCIALES ===== */
-    #diferenciales{
-      overflow: hidden;
-    }
+    #diferenciales{ overflow: hidden; }
     #diferenciales::before{
       content: "";
       position: absolute;
@@ -787,26 +729,13 @@
       opacity: .05;
       filter: grayscale(1) contrast(.85) brightness(1.12);
       pointer-events: none;
-      -webkit-mask-image: linear-gradient(to left,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,.6) 30%,
-        rgba(0,0,0,.6) 70%,
-        rgba(0,0,0,0) 100%
-      );
-      mask-image: linear-gradient(to left,
-        rgba(0,0,0,0) 0%,
-        rgba(0,0,0,.6) 30%,
-        rgba(0,0,0,.6) 70%,
-        rgba(0,0,0,0) 100%
-      );
+      -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0) 0%, rgba(0,0,0,.6) 30%, rgba(0,0,0,.6) 70%, rgba(0,0,0,0) 100%);
+      mask-image: linear-gradient(to left, rgba(0,0,0,0) 0%, rgba(0,0,0,.6) 30%, rgba(0,0,0,.6) 70%, rgba(0,0,0,0) 100%);
       z-index: 0;
     }
     #diferenciales > *{ position: relative; z-index: 1; }
 
-    footer{
-      padding: 28px 0 44px;
-      color: var(--muted2);
-    }
+    footer{ padding: 28px 0 44px; color: var(--muted2); }
 
     /* ===== MODAL PLANOUT ===== */
     .modal-overlay{
@@ -821,7 +750,6 @@
       padding: 18px;
     }
     .modal-overlay[aria-hidden="false"]{ display:flex; }
-
     .modal{
       width: min(520px, 100%);
       border-radius: 30px;
@@ -850,12 +778,7 @@
       color: var(--text);
       text-transform: none;
     }
-    .modal p{
-      margin: 0 0 18px;
-      color: var(--muted);
-      font-size: 15px;
-      line-height: 1.7;
-    }
+    .modal p{ margin: 0 0 18px; color: var(--muted); font-size: 15px; line-height: 1.7; }
     .modal .btn-modal{
       display:inline-flex;
       align-items:center;
@@ -906,16 +829,8 @@
       border-color: rgba(127,151,127,.34);
       background: rgba(255,255,255,.86);
     }
-    .select option{
-      background: #f6f4ee;
-      color: #1a1a18;
-    }
-    .help{
-      font-size: 12px;
-      color: var(--muted2);
-      margin-top: 6px;
-      line-height: 1.6;
-    }
+    .select option{ background: #f6f4ee; color: #1a1a18; }
+    .help{ font-size: 12px; color: var(--muted2); margin-top: 6px; line-height: 1.6; }
 
     .form-notice{
       margin-top: 10px;
@@ -950,12 +865,7 @@
       min-height: 320px;
     }
 
-    .socials{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top: 12px;
-    }
+    .socials{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 12px; }
     .social-btn{
       display:inline-flex;
       align-items:center;
@@ -979,14 +889,12 @@
       color: var(--text);
     }
     .social-ic{
-      width:18px;
-      height:18px;
-      opacity:.92;
+      width:18px; height:18px; opacity:.92;
       filter: none !important;
       -webkit-filter: none !important;
     }
 
-    /* ===== RESPONSIVE ===== */
+    /* ===== RESPONSIVE 920px ===== */
     @media (max-width: 920px){
       .hero-grid{ grid-template-columns: 1fr; }
       .grid-3{ grid-template-columns: 1fr; }
@@ -1011,207 +919,92 @@
       .mobile-drawer[hidden]{ display:none; }
       .mobile-drawer .container{ padding: 0; }
 
-      .brand{
-        flex: 1 1 auto;
-      }
-
-      .brand-logo{
-        height: calc(var(--navH) - 16px);
-        max-width: 190px;
-      }
-      .brand-text{
-        max-width: 180px;
-      }
-      .brand-title{
-        font-size: 10.5px;
-      }
-      .brand-subline{
-        font-size: 9px;
-        letter-spacing: .08em;
-      }
-      .brand-edition{
-        font-size: 9px;
-      }
+      .brand{ flex: 1 1 auto; }
+      .brand-logo{ height: calc(var(--navH) - 16px); max-width: 190px; }
+      .brand-text{ max-width: 180px; }
+      .brand-title{ font-size: 10.5px; }
+      .brand-subline{ font-size: 9px; letter-spacing: .08em; }
+      .brand-edition{ font-size: 9px; }
       .btn{ padding: 10px 12px; }
+      .hero-metaTop{ font-size: 13px; padding: 9px 12px; }
+      h1{ max-width: 100%; font-size: clamp(34px, 10vw, 56px); }
+      .hero-card .big{ max-width: 100%; }
 
-      .hero-metaTop{
-        font-size: 13px;
-        padding: 9px 12px;
-      }
-
-      h1{
-        max-width: 100%;
-        font-size: clamp(34px, 10vw, 56px);
-      }
-
-      .hero-card .big{
-        max-width: 100%;
-      }
-
-      /* ===== AJUSTE EDITORIAL + HERO MOBILE/TABLET ===== */
+      /* EDITORIAL en tablet: imagen ocupa todo, texto debajo */
       .editorial-banner{
-        height: clamp(280px, 46vw, 360px);
-        };
+        height: auto;
+        display: flex;
+        flex-direction: column;
       }
       .editorial-banner-img{
-        object-position: center 34%;
-        transform: scale(1.06);
+        position: relative;
+        height: clamp(240px, 46vw, 340px);
+        width: 100%;
+        object-fit: cover;
+        object-position: center 28%;
+        transform: none;
+        flex: 0 0 auto;
       }
+      .editorial-banner-fade{ display: none; }
       .editorial-banner-text{
-        justify-content: flex-end;
+        position: relative;
+        inset: auto;
+        justify-content: center;
+        align-items: center;
+        padding: 18px 24px 16px;
         gap: 8px;
-        padding-bottom: 22px;
+        background: var(--bg);
+        text-align: center;
       }
-      .hero{
-        margin-top: -10px;
-        padding: 24px 0 40px;
+      .editorial-tagline{
+        font-size: clamp(28px, 7vw, 44px);
+        letter-spacing: .16em;
+        text-shadow: none;
+        color: var(--text);
       }
+      .editorial-sub{ text-shadow: none; }
+      .hero{ margin-top: 0; padding: 24px 0 40px; }
     }
 
-   @media (max-width: 520px){
-  #btnPaseNav{
-    display: none !important;
-  }
+    /* ===== RESPONSIVE 520px ===== */
+    @media (max-width: 520px){
+      /* NAV */
+      #btnPaseNav{ display: none !important; }
+      .nav-inner{ padding: 6px 0; gap: 6px; }
+      .brand{ flex: 1 1 auto; min-width: 0; gap: 6px; }
+      .brand-logo{ height: calc(var(--navH) - 16px); max-width: 108px; }
+      .brand-text{ max-width: 140px; margin-left: 0; align-items: flex-start; text-align: left; gap: 1px; }
+      .brand-title{ font-size: 9px; letter-spacing: .07em; line-height: 1.1; white-space: normal; }
+      .brand-subline{ font-size: 8px; letter-spacing: .05em; line-height: 1.1; white-space: normal; }
+      .brand-edition{ font-size: 8px; letter-spacing: .10em; line-height: 1.1; }
+      .btn{ padding: 9px 10px; font-size: 11px; }
+      .nav-actions{ gap: 6px; flex: 0 0 auto; }
+      .hamburger{ padding: 10px; border-radius: 999px; min-width: 40px; width: 40px; height: 40px; justify-content: center; }
 
-  .nav-inner{
-    padding: 6px 0;
-    gap: 8px;
-  }
+      /* HERO */
+      .kicker--metaInline{ font-size: 11px; padding: 7px 10px; letter-spacing: .08em; }
+      .hero-metaTop{ font-size: 12px; padding: 9px 12px; margin-bottom: 10px; }
+      .hero{ margin-top: 0; padding-top: 22px; }
+      h1{ margin-top: 12px; margin-bottom: 10px; }
+      .subhead{ margin: 14px 0 20px; }
+      .hero-actions{ gap: 10px; margin-top: 8px; }
 
-  .brand{
-    flex: 1 1 auto;
-    min-width: 0;
-    gap: 8px;
-  }
-
-  .brand-logo{
-    height: calc(var(--navH) - 16px);
-    max-width: 112px;
-  }
-
-  .brand-text{
-    max-width: 145px;
-    margin-left: 0;
-    align-items: flex-start;
-    text-align: left;
-    gap: 1px;
-  }
-
-  .brand-title{
-    font-size: 9px;
-    letter-spacing: .07em;
-    line-height: 1.08;
-    white-space: normal;
-  }
-
-  .brand-subline{
-    font-size: 8px;
-    letter-spacing: .05em;
-    line-height: 1.08;
-    white-space: normal;
-  }
-
-  .brand-edition{
-    font-size: 8px;
-    letter-spacing: .10em;
-    line-height: 1.08;
-  }
-
-  .btn{
-    padding: 9px 10px;
-    font-size: 11px;
-  }
-
-  .nav-actions{
-    gap: 6px;
-    flex: 0 0 auto;
-  }
-
-  .hamburger{
-    padding: 10px;
-    border-radius: 999px;
-    min-width: 42px;
-    width: 42px;
-    height: 42px;
-    justify-content: center;
-  }
-
-  .kicker--metaInline{
-    font-size: 11px;
-    padding: 7px 10px;
-    letter-spacing: .08em;
-  }
-
-  .hero-metaTop{
-    font-size: 12px;
-    padding: 9px 12px;
-    margin-bottom: 10px;
-  }
-
-  .editorial-banner{
-    height: 330px;
-  }
-
-  .editorial-banner-img{
-    object-fit: cover;
-    object-position: center 22%;
-    transform: scale(0.92);
-    opacity: .92;
-  }
-
-  .editorial-banner-fade{
-    background:
-      linear-gradient(to bottom,
-        rgba(244,242,235,.90) 0%,
-        rgba(244,242,235,.35) 22%,
-        rgba(244,242,235,.10) 48%,
-        rgba(244,242,235,.20) 72%,
-        rgba(244,242,235,.92) 100%
-      );
-  }
-
-  .editorial-banner-text{
-    justify-content: flex-start;
-    padding: 44px 20px 0;
-    gap: 10px;
-  }
-
-  .editorial-tagline{
-    font-size: clamp(24px, 8.4vw, 38px);
-    letter-spacing: .11em;
-    line-height: 1.06;
-  }
-
-  .editorial-divider{
-    width: 40px;
-    margin: 0 auto;
-  }
-
-  .editorial-sub{
-    font-size: 10px;
-    letter-spacing: .16em;
-  }
-
-  .hero{
-    margin-top: 0;
-    padding-top: 26px;
-  }
-
-  h1{
-    margin-top: 12px;
-    margin-bottom: 10px;
-  }
-
-  .subhead{
-    margin: 14px 0 20px;
-  }
-
-  .hero-actions{
-    gap: 10px;
-    margin-top: 8px;
-  }
-}
+      /* EDITORIAL en mobile: imagen más alta */
+      .editorial-banner-img{
+        height: 260px;
+        object-position: center 22%;
       }
+      .editorial-banner-text{
+        padding: 14px 20px 14px;
+        gap: 6px;
+      }
+      .editorial-tagline{
+        font-size: clamp(24px, 8.5vw, 36px);
+        letter-spacing: .12em;
+        line-height: 1.06;
+      }
+      .editorial-divider{ width: 38px; margin: 2px auto; }
+      .editorial-sub{ font-size: 10px; letter-spacing: .18em; }
     }
   </style>
 </head>
@@ -1248,7 +1041,6 @@
             <span class="hamb-ic" aria-hidden="true"></span>
           </button>
 
-          <a class="btn btn-primary" href="#" id="btnPaseNav">Adquirí tu pase</a>
         </div>
       </div>
 
@@ -1263,7 +1055,7 @@
           <a href="#contacto">Contacto</a>
           <a href="#faq">FAQ</a>
           <div style="height:10px"></div>
-          <a href="#" id="btnPaseMobile">Adquirí tu pase</a>
+          <a href="#" id="btnPaseMobile" style="margin-top:4px; display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:999px; background:linear-gradient(135deg,rgba(127,151,127,.92),rgba(155,179,163,.92)); border:1px solid rgba(127,151,127,.28); color:#f7f6f1; font-weight:700; font-size:12px; letter-spacing:.08em; text-transform:uppercase;">Adquirí tu pase</a>
         </div>
       </div>
     </div>
@@ -1347,42 +1139,20 @@
   <!-- VISIÓN / OBJETIVOS -->
   <section id="vision">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Visión & objetivos</h2>
-        </div>
-      </div>
-
+      <div class="section-head"><div><h2>Visión & objetivos</h2></div></div>
       <div class="grid-2">
         <div class="card" style="background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.40));">
-          <div class="kicker" style="margin-bottom:12px;">
-            <span class="dot" aria-hidden="true"></span>
-            Visión
-          </div>
+          <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Visión</div>
           <p id="visionText" class="muted" style="font-size:14px; line-height:1.75;"></p>
-
           <div style="height:14px;"></div>
-
-          <div class="kicker" style="margin-bottom:12px;">
-            <span class="dot" aria-hidden="true"></span>
-            Manifiesto
-          </div>
+          <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Manifiesto</div>
           <p id="manifestoText" class="muted" style="font-size:14px; line-height:1.75;"></p>
         </div>
-
         <div class="card">
-          <div class="kicker" style="margin-bottom:12px;">
-            <span class="dot" aria-hidden="true"></span>
-            Objetivos generales
-          </div>
+          <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Objetivos generales</div>
           <ul id="objetivosList"></ul>
-
           <div style="height:14px;"></div>
-
-          <div class="kicker" style="margin-bottom:12px;">
-            <span class="dot" aria-hidden="true"></span>
-            Posicionamiento
-          </div>
+          <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Posicionamiento</div>
           <div class="grid-2">
             <div class="card" style="padding:14px; background: rgba(255,255,255,.62); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Lema</div>
@@ -1401,11 +1171,7 @@
   <!-- DIFERENCIALES -->
   <section id="diferenciales">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Diferenciales</h2>
-        </div>
-      </div>
+      <div class="section-head"><div><h2>Diferenciales</h2></div></div>
       <div class="grid-3" id="diferencialesGrid"></div>
     </div>
   </section>
@@ -1413,11 +1179,7 @@
   <!-- PROGRAMA -->
   <section id="programa">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Programa</h2>
-        </div>
-      </div>
+      <div class="section-head"><div><h2>Programa</h2></div></div>
       <div id="ejesList"></div>
     </div>
   </section>
@@ -1425,11 +1187,7 @@
   <!-- SPEAKERS -->
   <section id="speakers">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Speakers</h2>
-        </div>
-      </div>
+      <div class="section-head"><div><h2>Speakers</h2></div></div>
       <div class="grid-2" id="speakersGrid"></div>
     </div>
   </section>
@@ -1438,78 +1196,52 @@
   <section id="sede">
     <div class="container">
       <div class="section-head">
-        <div>
-          <h2>Sede</h2>
-        </div>
+        <div><h2>Sede</h2></div>
         <a class="btn btn-ghost" href="#entradas">Ver entradas</a>
       </div>
-
       <div class="grid-2">
         <div class="card" style="background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.40));">
-          <div class="kicker" style="margin-bottom:12px;">
-            <span class="dot" aria-hidden="true"></span>
-            Patagonia • contexto del evento
-          </div>
-
+          <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Patagonia • contexto del evento</div>
           <h3 style="margin-top:0;">San Martín de los Andes</h3>
-
           <p style="margin-top:8px;">
-            La sede suma experiencia, foco y networking en un entorno cuidado.
-            <br/><br/>
-            <b style="color:var(--text); font-weight:680;">La innovación y la tecnología son el eje.</b>
-            La Patagonia potencia el encuentro.
+            La sede suma experiencia, foco y networking en un entorno cuidado.<br/><br/>
+            <b style="color:var(--text); font-weight:680;">La innovación y la tecnología son el eje.</b> La Patagonia potencia el encuentro.
           </p>
-
           <div style="height:12px;"></div>
-
           <div class="grid-2">
             <div class="card" style="padding:14px; background: rgba(255,255,255,.62); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Ubicación</div>
               <div style="margin-top:6px; font-weight:760;">Neuquén, Argentina</div>
             </div>
-
             <div class="card" style="padding:14px; background: rgba(255,255,255,.62); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Acceso</div>
               <div style="margin-top:6px; font-weight:760;">Avión + traslados</div>
             </div>
           </div>
-
           <div style="height:12px;"></div>
           <a class="btn" href="#contacto">Ver ubicación y contacto</a>
         </div>
-
         <div class="card img-card">
           <img src="assets/turismo1.webp" alt="San Martín de los Andes (entorno)" />
           <div class="img-overlay" aria-hidden="true"></div>
           <div class="img-caption">
-            <div class="kicker">
-              <span class="dot" aria-hidden="true"></span>
-            </div>
-            <div style="margin-top:10px; font-weight:820;"></div>
-            <div class="muted" style="margin-top:6px;"></div>
+            <div class="kicker"><span class="dot" aria-hidden="true"></span></div>
           </div>
         </div>
       </div>
-
       <div style="height:14px;"></div>
-
       <div class="grid-3 strip">
         <div class="card img-card">
           <img src="assets/turismo2.webp" alt="Entorno / lago" />
           <div class="img-overlay" aria-hidden="true"></div>
-          <div class="img-caption"><div class="muted"></div></div>
         </div>
-
         <div class="card img-card">
           <img src="assets/turismo3.webp" alt="Ciudad / infraestructura" />
           <div class="img-overlay" aria-hidden="true"></div>
-          <div class="img-caption"><div class="muted"></div></div>
         </div>
-
         <div class="card img-card">
           <img src="assets/turismo4.webp" alt="Bosque / textura patagónica" />
           <div class="img-overlay" aria-hidden="true"></div>
-          <div class="img-caption"><div class="muted"></div></div>
         </div>
       </div>
     </div>
@@ -1518,12 +1250,7 @@
   <!-- DIRIGIDO A -->
   <section id="dirigido">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Dirigido a</h2>
-          <p></p>
-        </div>
-      </div>
+      <div class="section-head"><div><h2>Dirigido a</h2></div></div>
       <div class="card"><ul id="dirigidoList"></ul></div>
     </div>
   </section>
@@ -1531,13 +1258,7 @@
   <!-- ENTRADAS -->
   <section id="entradas">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>Entradas</h2>
-          <p></p>
-        </div>
-      </div>
-
+      <div class="section-head"><div><h2>Entradas</h2></div></div>
       <div class="card">
         <p class="muted">Venta de pases: <b style="color:var(--text);">próximamente</b> (Planout)</p>
         <div style="height:12px;"></div>
@@ -1545,7 +1266,6 @@
           <a class="btn btn-primary" href="#" id="btnPaseEntradas">Adquirí tu pase</a>
           <a class="btn" href="#" id="btnAsesorateEntradas">Asesorate</a>
         </div>
-        <div class="help"></div>
       </div>
     </div>
   </section>
@@ -1559,18 +1279,13 @@
           <p>Consultas, acreditación, información general y soporte.</p>
         </div>
       </div>
-
       <div class="grid-2">
         <div class="card">
-          <div class="kicker" style="margin-bottom:12px;">
-            <span class="dot" aria-hidden="true"></span>
-            Datos oficiales
-          </div>
-
+          <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Datos oficiales</div>
           <div style="display:grid; gap:10px;">
             <div class="kicker" style="justify-content:space-between;">
               <b>Email</b>
-              <a href="/cdn-cgi/l/email-protection#8ce5e2eae3efe9fcedf8edebe3e2e5edccebe1ede5e0a2efe3e1" style="color:var(--text); font-weight:720; letter-spacing:0;"><span class="__cf_email__" data-cfemail="21484f474e424451405540464e4f484061464c40484d0f424e4c">[email&#160;protected]</span></a>
+              <a href="mailto:infocepatagonia@gmail.com" style="color:var(--text); font-weight:720; letter-spacing:0;">infocepatagonia@gmail.com</a>
             </div>
             <div class="kicker" style="justify-content:space-between;">
               <b>Tel</b>
@@ -1581,58 +1296,39 @@
               <span style="color:var(--text); font-weight:720; letter-spacing:0;">Gral. Roca 816, San Martín de los Andes</span>
             </div>
           </div>
-
           <div class="socials">
             <a class="social-btn" href="#" id="btnInstagram">
-              <img class="social-ic" src="assets/instagram.svg" alt="Instagram" />
-              Instagram
+              <img class="social-ic" src="assets/instagram.svg" alt="Instagram" /> Instagram
             </a>
             <a class="social-btn" href="#" id="btnWhatsapp">
-              <img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" />
-              WhatsApp
+              <img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" /> WhatsApp
             </a>
           </div>
-
           <div style="height:16px;"></div>
-
-          <iframe
-            name="fs_iframe"
-            id="fs_iframe"
-            title="FormSubmit hidden iframe"
-            style="display:none; width:0; height:0; border:0;"
-          ></iframe>
-
+          <iframe name="fs_iframe" id="fs_iframe" title="FormSubmit hidden iframe" style="display:none; width:0; height:0; border:0;"></iframe>
           <form id="contactForm" method="POST" action="https://formsubmit.co/infocepatagonia@gmail.com" target="fs_iframe">
-
             <input type="hidden" name="_subject" value="Nuevo contacto desde CEPATAGONIA">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_captcha" value="false">
             <div class="grid-2">
               <div class="field">
                 <div class="label">Nombre y apellido</div>
-                <input class="input" id="nombreInput" type="text" name="nombre" required minlength="2" maxlength="60"
-                  inputmode="text" autocomplete="name" placeholder="Tu nombre y apellido" />
+                <input class="input" id="nombreInput" type="text" name="nombre" required minlength="2" maxlength="60" inputmode="text" autocomplete="name" placeholder="Tu nombre y apellido" />
                 <div class="help">Solo letras (sin números).</div>
               </div>
-
               <div class="field">
                 <div class="label">Email</div>
-                <input class="input" type="email" name="email" required maxlength="80"
-                  autocomplete="email" placeholder="tu@email.com" />
+                <input class="input" type="email" name="email" required maxlength="80" autocomplete="email" placeholder="tu@email.com" />
                 <div class="help">Escribí un mail válido para poder responderte.</div>
               </div>
             </div>
-
             <div style="height:12px;"></div>
-
             <div class="grid-2">
               <div class="field">
                 <div class="label">Teléfono</div>
-                <input class="input" id="telInput" type="tel" name="telefono" maxlength="20"
-                  inputmode="tel" autocomplete="tel" placeholder="+54 9 11 0000-0000" pattern="^[0-9+\s()\-]{6,}$" />
+                <input class="input" id="telInput" type="tel" name="telefono" maxlength="20" inputmode="tel" autocomplete="tel" placeholder="+54 9 11 0000-0000" pattern="^[0-9+\s()\-]{6,}$" />
                 <div class="help">Solo números y símbolos válidos (+, espacios, guiones, paréntesis).</div>
               </div>
-
               <div class="field">
                 <div class="label">Asunto</div>
                 <select class="select" name="asunto" required>
@@ -1648,33 +1344,24 @@
                 </select>
               </div>
             </div>
-
             <div style="height:12px;"></div>
-
             <div class="field">
               <div class="label">Mensaje</div>
-              <textarea class="textarea" name="mensaje" required minlength="10" maxlength="1200"
-                placeholder="Escribí tu consulta..."></textarea>
+              <textarea class="textarea" name="mensaje" required minlength="10" maxlength="1200" placeholder="Escribí tu consulta..."></textarea>
               <div class="help">Mínimo 10 caracteres.</div>
             </div>
-
             <div style="position:absolute; left:-9999px; opacity:0;" aria-hidden="true">
               <label>Dejá este campo vacío</label>
               <input type="text" name="_honey" tabindex="-1" autocomplete="off" />
             </div>
-
             <div style="height:14px;"></div>
-
             <button class="btn btn-primary" type="submit">Enviar consulta</button>
-
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
-
             <div class="help" style="margin-top:10px;">
               Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></b>.
             </div>
           </form>
         </div>
-
         <div class="map-wrap" aria-label="Mapa de ubicación">
           <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
             src="https://www.google.com/maps?q=Gral.%20Roca%20816%2C%20San%20Mart%C3%ADn%20de%20los%20Andes&output=embed"
@@ -1687,57 +1374,31 @@
   <!-- FAQ -->
   <section id="faq">
     <div class="container">
-      <div class="section-head">
-        <div>
-          <h2>FAQ</h2>
-        </div>
-      </div>
-
+      <div class="section-head"><div><h2>FAQ</h2></div></div>
       <details>
         <summary>¿A quiénes está dirigido este Congreso?</summary>
-        <p>
-          El Congreso está dirigido principalmente a cosmiatras, cosmetólogas y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.
-          <br/><br/>
-          También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.
-          <br/><br/>
-          Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.
-        </p>
+        <p>El Congreso está dirigido principalmente a cosmiatras, cosmetólogas y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.<br/><br/>
+        También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.<br/><br/>
+        Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.</p>
       </details>
-
       <details>
         <summary>¿Qué hace diferente a este Congreso?</summary>
-        <p>
-          Este Congreso propone un cambio de paradigma: pasar de una estética centrada únicamente en lo visible a una estética celular avanzada, donde la ciencia, la tecnología y la práctica profesional se integran.
-          <br/><br/>
-          A diferencia de otros eventos, el enfoque está puesto en:
-        </p>
+        <p>Este Congreso propone un cambio de paradigma: pasar de una estética centrada únicamente en lo visible a una estética celular avanzada, donde la ciencia, la tecnología y la práctica profesional se integran.<br/><br/>A diferencia de otros eventos, el enfoque está puesto en:</p>
         <ul>
           <li>Los procesos celulares que dan origen a los resultados estéticos</li>
           <li>La validación científica aplicada al gabinete</li>
           <li>Tecnologías no invasivas de vanguardia</li>
           <li>Contenidos diseñados especialmente para el profesional de la estética</li>
         </ul>
-        <p style="margin-top:10px;">
-          Es un Congreso que conecta el laboratorio con la práctica clínica, en un entorno cuidado y de alto nivel académico.
-        </p>
+        <p style="margin-top:10px;">Es un Congreso que conecta el laboratorio con la práctica clínica, en un entorno cuidado y de alto nivel académico.</p>
       </details>
-
       <details>
         <summary>¿Habrá coffee break o espacio gastronómico?</summary>
-        <p>
-          Sí. El Congreso contará con espacios de coffee break y momentos pensados para el descanso y el networking entre los asistentes.
-          <br/><br/>
-          Estos espacios están diseñados como instancias de encuentro profesional, intercambio y conversación, dentro de una experiencia integral del evento.
-        </p>
+        <p>Sí. El Congreso contará con espacios de coffee break y momentos pensados para el descanso y el networking entre los asistentes.<br/><br/>Estos espacios están diseñados como instancias de encuentro profesional, intercambio y conversación, dentro de una experiencia integral del evento.</p>
       </details>
-
       <details>
         <summary>¿Habrá certificación?</summary>
-        <p>
-          Sí. Todos los asistentes recibirán un certificado de asistencia, que avala la participación en el Congreso y los contenidos abordados.
-          <br/><br/>
-          La certificación destaca el enfoque en estética celular avanzada y está pensada como un respaldo formativo para la práctica profesional.
-        </p>
+        <p>Sí. Todos los asistentes recibirán un certificado de asistencia, que avala la participación en el Congreso y los contenidos abordados.<br/><br/>La certificación destaca el enfoque en estética celular avanzada y está pensada como un respaldo formativo para la práctica profesional.</p>
       </details>
     </div>
   </section>
@@ -1749,27 +1410,17 @@
         <div class="card" style="box-shadow:none; background: rgba(255,255,255,.38);">
           <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">CEPATAGONIA</div>
           <div class="muted" style="margin-top:8px;">Congreso de Estética — Ciencia, innovación y estética.</div>
-
           <div style="height:14px;"></div>
-
           <div style="display:grid; gap:10px;">
             <div class="muted"><b style="color:var(--text); font-weight:720;">Email:</b> <a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></div>
             <div class="muted"><b style="color:var(--text); font-weight:720;">Tel:</b> <a href="tel:+5491131888164">+54 9 11 3188-8164</a></div>
             <div class="muted"><b style="color:var(--text); font-weight:720;">Dirección:</b> Gral. Roca 816, San Martín de los Andes</div>
           </div>
-
           <div class="socials">
-            <a class="social-btn" href="#" id="btnInstagramFooter">
-              <img class="social-ic" src="assets/instagram.svg" alt="Instagram" />
-              Instagram
-            </a>
-            <a class="social-btn" href="#" id="btnWhatsappFooter">
-              <img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" />
-              WhatsApp
-            </a>
+            <a class="social-btn" href="#" id="btnInstagramFooter"><img class="social-ic" src="assets/instagram.svg" alt="Instagram" /> Instagram</a>
+            <a class="social-btn" href="#" id="btnWhatsappFooter"><img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" /> WhatsApp</a>
           </div>
         </div>
-
         <div class="card" style="box-shadow:none; background: rgba(255,255,255,.38);">
           <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">Ficha del evento</div>
           <div style="height:6px;"></div>
@@ -1780,7 +1431,6 @@
           </div>
         </div>
       </div>
-
       <div style="height:18px;"></div>
       <div style="border-top:1px solid var(--line); padding-top:14px;" class="muted">
         © <span id="year"></span> CEPATAGONIA. Todos los derechos reservados.
@@ -1841,13 +1491,7 @@
           nombre: "Adriana Sardot",
           credenciales: "Cosmetóloga y dermocosmiatra con más de 40 años de trayectoria. Diplomada en Cosmiatría Avanzada y formación continua en congresos nacionales e internacionales. Referente en actualización científica y profesionalización estética.",
           disertacion: "Estética Personalizada & Wellaging - El rol de las células madre y los telómeros en la longevidad cutánea.",
-          bullets: [
-            "Bases biológicas del wellaging",
-            "Senescencia celular y longevidad funcional",
-            "Impacto de los telómeros en el envejecimiento cutáneo",
-            "Células madre como herramienta regenerativa",
-            "Protocolos personalizados basados en biología celular"
-          ],
+          bullets: ["Bases biológicas del wellaging","Senescencia celular y longevidad funcional","Impacto de los telómeros en el envejecimiento cutáneo","Células madre como herramienta regenerativa","Protocolos personalizados basados en biología celular"],
           image: "assets/Adriana Sardot.webp"
         }]
       },
@@ -1858,13 +1502,7 @@
           nombre: "Ana Paula Travattoni",
           credenciales: "APM (UAI) | Especialista en cosmiatría y dermatocosmiatría | Drenaje linfático | Peeling y fibrosis postoperatoria. Directora Académica AnaPau Estética.",
           disertacion: "Drenaje Linfático, Maderoterapia y Lipodrenaje Integrado",
-          bullets: [
-            "Técnica correcta de drenaje linfático corporal",
-            "Beneficios clínicos y optimización post procedimientos",
-            "Maderoterapia en celulitis, fibrosis y lipedema",
-            "Precauciones y criterios profesionales",
-            "Integración del Método AnaPau en protocolos combinados"
-          ],
+          bullets: ["Técnica correcta de drenaje linfático corporal","Beneficios clínicos y optimización post procedimientos","Maderoterapia en celulitis, fibrosis y lipedema","Precauciones y criterios profesionales","Integración del Método AnaPau en protocolos combinados"],
           image: "assets/Ana Paula Travattoni.webp"
         }]
       },
@@ -1875,17 +1513,8 @@
           nombre: "Dra. Carolina Laxague",
           credenciales: "Médica (UBA). Especialista en Dermatología Hospital Ramos Mejia. Curso superior de dermatología Hospital Bernardo Houssay. Formación en Medicina Estética (AMA). Formada en Mónaco, Miami y Corea.",
           disertacion: "Inside out glow",
-          bullets: [
-            "Uso de nutracéuticos para potenciar el Skin Quality y los resultados de procedimientos estéticos."
-          ],
-          extras: [
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "Regenerando la piel con Polinucleótidos y Exosomas para tratar las hiperpigmentaciones."
-              ]
-            }
-          ],
+          bullets: ["Uso de nutracéuticos para potenciar el Skin Quality y los resultados de procedimientos estéticos."],
+          extras: [{ title: "Disertación complementaria", bullets: ["Regenerando la piel con Polinucleótidos y Exosomas para tratar las hiperpigmentaciones."] }],
           image: "assets/Carolina Laxague.webp"
         }]
       },
@@ -1896,40 +1525,12 @@
           nombre: "Lab UDERM y SEM BIOCREAM",
           credenciales: "Presentación institucional y científica.",
           disertacion: "Innovación en Exosomas y Microbiota Cutánea - EXODERMAL y EXOBIOTIC 15",
-          bullets: [
-            "Pablo González"
-          ],
+          bullets: ["Pablo González"],
           extras: [
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "BIO PÉPTIDOS - Comprendiendo su potencial de acción en piel.",
-                "Pablo González"
-              ]
-            },
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.",
-                "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.",
-                "Pablo González y Sandra Monzalvez"
-              ]
-            },
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "EQLM - La Era de la Bio-Regeneración Molecular.",
-                "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.",
-                "Sandra Monzalvez"
-              ]
-            },
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM.",
-                "Más allá de los filtros: reparación, defensa y equilibrio biológico."
-              ]
-            }
+            { title: "Disertación complementaria", bullets: ["BIO PÉPTIDOS - Comprendiendo su potencial de acción en piel.", "Pablo González"] },
+            { title: "Disertación complementaria", bullets: ["Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.", "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.", "Pablo González y Sandra Monzalvez"] },
+            { title: "Disertación complementaria", bullets: ["EQLM - La Era de la Bio-Regeneración Molecular.", "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.", "Sandra Monzalvez"] },
+            { title: "Disertación complementaria", bullets: ["Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM.", "Más allá de los filtros: reparación, defensa y equilibrio biológico."] }
           ]
         }]
       },
@@ -1940,19 +1541,8 @@
           nombre: "Laura Varela",
           credenciales: "Dermatocosmiatra Hospitalaria – Especialista en Estética Integral y Cosmiatría Avanzada. Instructora Internacional | Speaker | Fundadora de Dalí Global International Training.",
           disertacion: "Método innovador en la recuperación de estrías y cicatrices atróficas sin tintas",
-          bullets: [
-            "Tratamiento innovador de estrías y cicatrices atróficas",
-            "Estimulación dérmica controlada"
-          ],
-          extras: [
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "Recuperación rápida de volumen de cejas y barba.",
-                "Técnica avanzada para la estimulación del folículo piloso."
-              ]
-            }
-          ],
+          bullets: ["Tratamiento innovador de estrías y cicatrices atróficas","Estimulación dérmica controlada"],
+          extras: [{ title: "Disertación complementaria", bullets: ["Recuperación rápida de volumen de cejas y barba.", "Técnica avanzada para la estimulación del folículo piloso."] }],
           image: "assets/Laura Varela.webp"
         }]
       },
@@ -1963,25 +1553,11 @@
           nombre: "Eduardo Finci",
           credenciales: "Embajador Emérito del World Wellness Weekend para Latinoamérica | Presidente de la American Wellness Association | Presidente de la Asociación Americana de Spa | Juez de los premios World Spa & Wellness Awards 2023 | Director de Wello Academy y de la Escuela Americana de Spa | Director Académico y Conferencista del Congreso Internacional de Spa & Bienestar | Creador e impulsor del Programa Spa Manager y Director Ejecutivo Wellness | Embajador de la Wellness Tourism Association para Argentina",
           disertacion: "Ventas Inteligentes en Estética y Spa: Cómo transformar experiencias de bienestar en resultados",
-          bullets: [
-            "La Nueva Era del Marketing en Estética: experiencia, confianza y resultados",
-            "Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética",
-            "Cómo atraer más pacientes, vender más tratamientos y fidelizar clientes"
-          ],
-          extras: [
-            {
-              title: "Post congreso exclusivo",
-              bullets: [
-                "Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética: cómo atraer más pacientes, vender más tratamientos y fidelizar clientes",
-                "Módulo 1 – La nueva economía de la estética y el bienestar",
-                "Módulo 2 – Marketing estratégico para centros estéticos y spa",
-                "Módulo 3 – Marketing digital aplicado a la estética",
-                "Módulo 4 – Experiencia del cliente en estética y spa",
-                "Módulo 5 – Ventas consultivas en estética",
-                "Módulo 6 – Taller práctico: análisis de caso y acciones para aumentar ventas"
-              ]
-            }
-          ],
+          bullets: ["La Nueva Era del Marketing en Estética: experiencia, confianza y resultados","Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética","Cómo atraer más pacientes, vender más tratamientos y fidelizar clientes"],
+          extras: [{
+            title: "Post congreso exclusivo",
+            bullets: ["Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética: cómo atraer más pacientes, vender más tratamientos y fidelizar clientes","Módulo 1 – La nueva economía de la estética y el bienestar","Módulo 2 – Marketing estratégico para centros estéticos y spa","Módulo 3 – Marketing digital aplicado a la estética","Módulo 4 – Experiencia del cliente en estética y spa","Módulo 5 – Ventas consultivas en estética","Módulo 6 – Taller práctico: análisis de caso y acciones para aumentar ventas"]
+          }],
           image: "assets/Eduardo Finci.webp"
         }]
       },
@@ -1992,18 +1568,8 @@
           nombre: "Leila Fernandez",
           credenciales: "Dermatocosmiatra - Superior de Cosmiatría (Art. UBA- AMA) Argentina / Esteticista corporal (CFP 42 – Bs As) Argentina / Spa Manager Wellness (AAS) Nacional e Internacional / Speaker, Conferencista y capacitadora Nacional e Internacional / Miembro titular Cosmedsa y SAACS / Alta dirección de centros de formación profesional (Cámara Argentina para la formación profesional y la capacitación laboral) | Coaching en salud",
           disertacion: "Alcances cosmiátricos integrativos",
-          bullets: [
-            "Pacientes oncológicos, veganos, diabéticos, pre y pos parto, tiroideos, celíacos"
-          ],
-          extras: [
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "Bioestimulación de la piel no invasiva",
-                "Procesos del envejecimiento, diferenciaciones y procedimientos en protocolos"
-              ]
-            }
-          ],
+          bullets: ["Pacientes oncológicos, veganos, diabéticos, pre y pos parto, tiroideos, celíacos"],
+          extras: [{ title: "Disertación complementaria", bullets: ["Bioestimulación de la piel no invasiva","Procesos del envejecimiento, diferenciaciones y procedimientos en protocolos"] }],
           image: "assets/Leila Fernandez.webp"
         }]
       },
@@ -2015,14 +1581,7 @@
           credenciales: "Dermatocosmiatra-esteticista e instructora de formación profesional. Con más de 12 años en el rubro de la estética, speaker internacional.",
           disertacion: "La nueva era del acné: inflamación, barrera y microbiota como ejes del tratamiento",
           bullets: [],
-          extras: [
-            {
-              title: "Disertación complementaria",
-              bullets: [
-                "Pieles del sur: reactividad, barrera y rosácea en climas extremos."
-              ]
-            }
-          ],
+          extras: [{ title: "Disertación complementaria", bullets: ["Pieles del sur: reactividad, barrera y rosácea en climas extremos."] }],
           image: "assets/Jimena Alvarez.webp"
         }]
       },
@@ -2033,10 +1592,8 @@
           {
             nombre: "Lourdes Acosta",
             credenciales: "Reikista de más de 35 años de experiencia / reflexóloga / Voluntariado en hospitales públicos con más de 15 años de experiencia / instructora de disciplinas holísticas con formación internacional",
-            disertacion: "Meditación guiada: “Habitar la calma”",
-            bullets: [
-              "Propósito: Crear un espacio interno de paz y seguridad para habitarme con calma, presencia y amor."
-            ],
+            disertacion: "Meditación guiada: \"Habitar la calma\"",
+            bullets: ["Propósito: Crear un espacio interno de paz y seguridad para habitarme con calma, presencia y amor."],
             image: "assets/Lourdes Acosta.webp"
           },
           {
@@ -2084,35 +1641,20 @@
 
     function renderSpeakerExtras(s){
       const blocks = [];
-
       if (s.extraTitle){
-        blocks.push(`
-          <div style="height:10px;"></div>
-          <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div>
-          <ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>
-        `);
+        blocks.push(`<div style="height:10px;"></div><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div><ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>`);
       }
-
       if (Array.isArray(s.extras)){
         s.extras.forEach(ex => {
-          blocks.push(`
-            <div style="height:10px;"></div>
-            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>
-            ${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
-          `);
+          blocks.push(`<div style="height:10px;"></div><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}`);
         });
       }
-
       return blocks.join('');
     }
 
     function renderSpeakerAvatar(s){
       if (s.image){
-        return `
-          <div class="avatar has-photo" aria-hidden="true">
-            <img src="${s.image}" alt="${s.nombre}" loading="lazy" />
-          </div>
-        `;
+        return `<div class="avatar has-photo" aria-hidden="true"><img src="${s.image}" alt="${s.nombre}" loading="lazy" /></div>`;
       }
       return `<div class="avatar" aria-hidden="true"></div>`;
     }
@@ -2127,71 +1669,43 @@
         const nextOpen = !isOpen;
         btn.setAttribute('aria-expanded', String(nextOpen));
         menu.hidden = !nextOpen;
-
         if (nextOpen){
           const firstLink = menu.querySelector('a[href^="#"]') || menu.querySelector('a');
           setTimeout(() => firstLink && firstLink.focus(), 0);
         }
       });
-
       menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
         const href = a.getAttribute('href') || '';
-        if (href.startsWith('#')){
-          btn.setAttribute('aria-expanded', 'false');
-          menu.hidden = true;
-          btn.focus();
-        }
+        if (href.startsWith('#')){ btn.setAttribute('aria-expanded', 'false'); menu.hidden = true; btn.focus(); }
       }));
     }
 
     const modalOverlay = document.getElementById('planoutModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
 
-    function openModal(){
-      modalOverlay.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      setTimeout(() => closeModalBtn && closeModalBtn.focus(), 50);
-    }
-    function closeModal(){
-      modalOverlay.setAttribute('aria-hidden', 'true');
-      document.body.style.overflow = '';
-    }
+    function openModal(){ modalOverlay.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; setTimeout(() => closeModalBtn && closeModalBtn.focus(), 50); }
+    function closeModal(){ modalOverlay.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+
     modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal();
-    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal(); });
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
-    const paseButtons = ['btnPaseNav','btnPaseMobile','btnPaseEntradas']
-      .map(id => document.getElementById(id)).filter(Boolean);
-
-    paseButtons.forEach(b => b.addEventListener('click', (e) => {
-      e.preventDefault();
-      openModal();
-    }));
+    const paseButtons = ['btnPaseNav','btnPaseMobile','btnPaseEntradas'].map(id => document.getElementById(id)).filter(Boolean);
+    paseButtons.forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
 
     const waUrl = getWhatsappUrl();
     setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);
     setExternalLink(document.getElementById('btnAsesorateEntradas'), waUrl);
     setExternalLink(document.getElementById('btnWhatsapp'), waUrl);
     setExternalLink(document.getElementById('btnWhatsappFooter'), waUrl);
-
     setExternalLink(document.getElementById('btnInstagram'), CEP_CONTACT.instagramUrl);
     setExternalLink(document.getElementById('btnInstagramFooter'), CEP_CONTACT.instagramUrl);
 
     const nombreInput = document.getElementById('nombreInput');
-    if (nombreInput){
-      nombreInput.addEventListener('input', () => {
-        nombreInput.value = nombreInput.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]/g, "");
-      });
-    }
+    if (nombreInput){ nombreInput.addEventListener('input', () => { nombreInput.value = nombreInput.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]/g, ""); }); }
 
     const telInput = document.getElementById('telInput');
-    if (telInput){
-      telInput.addEventListener('input', () => {
-        telInput.value = telInput.value.replace(/[^0-9+\s()\-]/g, "");
-      });
-    }
+    if (telInput){ telInput.addEventListener('input', () => { telInput.value = telInput.value.replace(/[^0-9+\s()\-]/g, ""); }); }
 
     const contactForm = document.getElementById('contactForm');
     const formNotice = document.getElementById('formNotice');
@@ -2199,20 +1713,13 @@
     let isSubmittingForm = false;
     let formFallbackTimer = null;
 
-    function showFormNotice(msg){
-      if (!formNotice) return;
-      formNotice.textContent = msg;
-      formNotice.setAttribute('data-show','true');
-    }
+    function showFormNotice(msg){ if (!formNotice) return; formNotice.textContent = msg; formNotice.setAttribute('data-show','true'); }
 
     if (formIframe){
       formIframe.addEventListener('load', () => {
         if (!isSubmittingForm) return;
         isSubmittingForm = false;
-        if (formFallbackTimer) {
-          clearTimeout(formFallbackTimer);
-          formFallbackTimer = null;
-        }
+        if (formFallbackTimer){ clearTimeout(formFallbackTimer); formFallbackTimer = null; }
         showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad.");
         if (contactForm) contactForm.reset();
       });
@@ -2221,14 +1728,9 @@
     if (contactForm){
       contactForm.addEventListener('submit', (e) => {
         const honey = contactForm.querySelector('input[name="_honey"]');
-        if (honey && honey.value.trim().length > 0){
-          e.preventDefault();
-          return false;
-        }
-
+        if (honey && honey.value.trim().length > 0){ e.preventDefault(); return false; }
         isSubmittingForm = true;
         showFormNotice("Enviando tu consulta...");
-
         if (formFallbackTimer) clearTimeout(formFallbackTimer);
         formFallbackTimer = setTimeout(() => {
           if (!isSubmittingForm) return;
@@ -2240,53 +1742,38 @@
     }
 
     if (!window.CEP) {
-      console.error("No se cargó window.CEP. Revisá data.js (nombre/ruta).");
+      console.error("No se cargó window.CEP.");
     } else {
       const { fecha, ciudad, modalidad } = window.CEP.meta || { fecha:"—", ciudad:"—", modalidad:"—" };
-
       const metaDateStrong = document.getElementById('metaDateStrong');
       const metaCityStrong = document.getElementById('metaCityStrong');
       const metaDateFooter = document.getElementById('metaDateFooter');
       const metaCityFooter = document.getElementById('metaCityFooter');
       const metaModeFooter = document.getElementById('metaModeFooter');
-
       if (metaDateStrong) metaDateStrong.textContent = fecha;
       if (metaCityStrong) metaCityStrong.textContent = ciudad;
       if (metaDateFooter) metaDateFooter.textContent = fecha;
       if (metaCityFooter) metaCityFooter.textContent = ciudad;
       if (metaModeFooter) metaModeFooter.textContent = modalidad;
 
+      const copy = window.CEP.copy || {};
       const visionText = document.getElementById('visionText');
       const manifestoText = document.getElementById('manifestoText');
       const objetivosList = document.getElementById('objetivosList');
       const taglineText = document.getElementById('taglineText');
-
-      const copy = window.CEP.copy || {};
       if (visionText) visionText.textContent = copy.vision || "";
       if (manifestoText) manifestoText.textContent = copy.manifesto || "";
       if (taglineText) taglineText.textContent = copy.tagline || "—";
-      if (objetivosList){
-        const objetivos = Array.isArray(copy.objetivos) ? copy.objetivos : [];
-        objetivosList.innerHTML = objetivos.map(x => `<li>${x}</li>`).join('');
-      }
+      if (objetivosList){ objetivosList.innerHTML = (Array.isArray(copy.objetivos) ? copy.objetivos : []).map(x => `<li>${x}</li>`).join(''); }
 
       const dif = document.getElementById('diferencialesGrid');
-      if (dif){
-        dif.innerHTML = (window.CEP.diferenciales || []).map(d => `
-          <div class="card">
-            <div class="icon" aria-hidden="true"></div>
-            <h3>${d.title}</h3>
-            <p>${d.desc}</p>
-          </div>
-        `).join('');
-      }
+      if (dif){ dif.innerHTML = (window.CEP.diferenciales || []).map(d => `<div class="card"><div class="icon" aria-hidden="true"></div><h3>${d.title}</h3><p>${d.desc}</p></div>`).join(''); }
 
       const ejesList = document.getElementById('ejesList');
       if (ejesList){
         ejesList.innerHTML = (window.CEP.ejes || []).map(e => `
           <details>
             <summary>${e.eje} — ${e.titulo}</summary>
-
             ${(e.speakers || []).map(s => `
               <div class="card" style="margin-top:12px;">
                 <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
@@ -2301,10 +1788,7 @@
         `).join('');
       }
 
-      const speakers = (window.CEP.ejes || []).flatMap(e =>
-        (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo }))
-      );
-
+      const speakers = (window.CEP.ejes || []).flatMap(e => (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo })));
       const spGrid = document.getElementById('speakersGrid');
       if (spGrid){
         spGrid.innerHTML = speakers.map(s => `
@@ -2321,9 +1805,7 @@
       }
 
       const dirigidoList = document.getElementById('dirigidoList');
-      if (dirigidoList){
-        dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join('');
-      }
+      if (dirigidoList){ dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join(''); }
     }
   </script>
 </body>
