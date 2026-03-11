@@ -1485,6 +1485,7 @@
                 <div class="label">Email</div>
                 <input class="input" type="email" name="email" required maxlength="80"
                   autocomplete="email" placeholder="tu@email.com" />
+                <div class="help">Escribí un mail válido para poder responderte.</div>
               </div>
             </div>
 
@@ -1525,7 +1526,7 @@
 
             <div style="position:absolute; left:-9999px; opacity:0;" aria-hidden="true">
               <label>Dejá este campo vacío</label>
-              <input type="text" name="website" tabindex="-1" autocomplete="off" />
+              <input type="text" name="_honey" tabindex="-1" autocomplete="off" />
             </div>
 
             <div style="height:14px;"></div>
@@ -1535,7 +1536,7 @@
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
 
             <div class="help" style="margin-top:10px;">
-              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b0b7bfb6babca9b8adb8beb6b7b0b899beb4b8b0b5f7bab6b4">[email&#160;protected]</a></b>.
+              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></b>.
             </div>
           </form>
         </div>
@@ -1618,7 +1619,7 @@
           <div style="height:14px;"></div>
 
           <div style="display:grid; gap:10px;">
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Email:</b> <a href="/cdn-cgi/l/email-protection#83eaede5ece0e6f3e2f7e2e4ecedeae2c3e4eee2eaefade0ecee"><span class="__cf_email__" data-cfemail="6801060e070b0d18091c090f07060109280f05090104460b0705">[email&#160;protected]</span></a></div>
+            <div class="muted"><b style="color:var(--text); font-weight:720;">Email:</b> <a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></div>
             <div class="muted"><b style="color:var(--text); font-weight:720;">Tel:</b> <a href="tel:+5491131888164">+54 9 11 3188-8164</a></div>
             <div class="muted"><b style="color:var(--text); font-weight:720;">Dirección:</b> Gral. Roca 816, San Martín de los Andes</div>
           </div>
@@ -2055,23 +2056,47 @@
 
     const contactForm = document.getElementById('contactForm');
     const formNotice = document.getElementById('formNotice');
+    const formIframe = document.getElementById('fs_iframe');
+    let isSubmittingForm = false;
+    let formFallbackTimer = null;
+
     function showFormNotice(msg){
       if (!formNotice) return;
       formNotice.textContent = msg;
       formNotice.setAttribute('data-show','true');
     }
+
+    if (formIframe){
+      formIframe.addEventListener('load', () => {
+        if (!isSubmittingForm) return;
+        isSubmittingForm = false;
+        if (formFallbackTimer) {
+          clearTimeout(formFallbackTimer);
+          formFallbackTimer = null;
+        }
+        showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad.");
+        if (contactForm) contactForm.reset();
+      });
+    }
+
     if (contactForm){
       contactForm.addEventListener('submit', (e) => {
-        const honey = contactForm.querySelector('input[name="website"]');
+        const honey = contactForm.querySelector('input[name="_honey"]');
         if (honey && honey.value.trim().length > 0){
           e.preventDefault();
           return false;
         }
-        if (contactForm.getAttribute('action') === 'FORM_ENDPOINT'){
-          e.preventDefault();
-          showFormNotice("Falta configurar el endpoint del formulario (FORM_ENDPOINT). Usá Formspree/Getform y pegá el link en el atributo action del form.");
-          return false;
-        }
+
+        isSubmittingForm = true;
+        showFormNotice("Enviando tu consulta...");
+
+        if (formFallbackTimer) clearTimeout(formFallbackTimer);
+        formFallbackTimer = setTimeout(() => {
+          if (!isSubmittingForm) return;
+          isSubmittingForm = false;
+          showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad.");
+          contactForm.reset();
+        }, 2500);
       });
     }
 
