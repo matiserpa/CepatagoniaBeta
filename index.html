@@ -1068,106 +1068,149 @@
       }
     }
 
-    @media (max-width: 520px){
-      #btnPaseNav{ display:none; }
+   @media (max-width: 520px){
+  #btnPaseNav{
+    display: none !important;
+  }
 
-      .nav-inner{ padding: 6px 0; }
+  .nav-inner{
+    padding: 6px 0;
+    gap: 8px;
+  }
 
-      .brand-logo{
-        height: calc(var(--navH) - 14px);
-        max-width: 150px;
-      }
-      .brand-text{
-        max-width: 130px;
-      }
-      .brand-subline{
-        font-size: 8px;
-      }
-      .brand-edition{
-        font-size: 8px;
-      }
+  .brand{
+    flex: 1 1 auto;
+    min-width: 0;
+    gap: 8px;
+  }
 
-      .btn{ padding: 9px 10px; font-size: 11px; }
-      .nav-actions{ gap:8px; }
+  .brand-logo{
+    height: calc(var(--navH) - 16px);
+    max-width: 112px;
+  }
 
-      .hamburger{
-        padding: 10px 11px;
-        border-radius: 999px;
-        min-width: 42px;
-        justify-content: center;
-      }
+  .brand-text{
+    max-width: 145px;
+    margin-left: 0;
+    align-items: flex-start;
+    text-align: left;
+    gap: 1px;
+  }
 
-      .kicker--metaInline{
-        font-size: 11px;
-        padding: 7px 10px;
-        letter-spacing: .08em;
-      }
+  .brand-title{
+    font-size: 9px;
+    letter-spacing: .07em;
+    line-height: 1.08;
+    white-space: normal;
+  }
 
-      .hero-metaTop{
-        font-size: 12px;
-        padding: 9px 12px;
-        margin-bottom: 10px;
-      }
+  .brand-subline{
+    font-size: 8px;
+    letter-spacing: .05em;
+    line-height: 1.08;
+    white-space: normal;
+  }
 
-      /* ===== AJUSTE FINO MOBILE ===== */
-     /* ===== AJUSTE FINO MOBILE ===== */
-.editorial-banner{
-  height: auto;
-  display: flex;
-  flex-direction: column;
+  .brand-edition{
+    font-size: 8px;
+    letter-spacing: .10em;
+    line-height: 1.08;
+  }
+
+  .btn{
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .nav-actions{
+    gap: 6px;
+    flex: 0 0 auto;
+  }
+
+  .hamburger{
+    padding: 10px;
+    border-radius: 999px;
+    min-width: 42px;
+    width: 42px;
+    height: 42px;
+    justify-content: center;
+  }
+
+  .kicker--metaInline{
+    font-size: 11px;
+    padding: 7px 10px;
+    letter-spacing: .08em;
+  }
+
+  .hero-metaTop{
+    font-size: 12px;
+    padding: 9px 12px;
+    margin-bottom: 10px;
+  }
+
+  .editorial-banner{
+    height: 330px;
+  }
+
+  .editorial-banner-img{
+    object-fit: cover;
+    object-position: center 22%;
+    transform: scale(0.92);
+    opacity: .92;
+  }
+
+  .editorial-banner-fade{
+    background:
+      linear-gradient(to bottom,
+        rgba(244,242,235,.90) 0%,
+        rgba(244,242,235,.35) 22%,
+        rgba(244,242,235,.10) 48%,
+        rgba(244,242,235,.20) 72%,
+        rgba(244,242,235,.92) 100%
+      );
+  }
+
+  .editorial-banner-text{
+    justify-content: flex-start;
+    padding: 44px 20px 0;
+    gap: 10px;
+  }
+
+  .editorial-tagline{
+    font-size: clamp(24px, 8.4vw, 38px);
+    letter-spacing: .11em;
+    line-height: 1.06;
+  }
+
+  .editorial-divider{
+    width: 40px;
+    margin: 0 auto;
+  }
+
+  .editorial-sub{
+    font-size: 10px;
+    letter-spacing: .16em;
+  }
+
+  .hero{
+    margin-top: 0;
+    padding-top: 26px;
+  }
+
+  h1{
+    margin-top: 12px;
+    margin-bottom: 10px;
+  }
+
+  .subhead{
+    margin: 14px 0 20px;
+  }
+
+  .hero-actions{
+    gap: 10px;
+    margin-top: 8px;
+  }
 }
-.editorial-banner-img{
-  position: relative;
-  height: 260px;
-  width: 100%;
-  object-fit: cover;
-  object-position: center 30%;
-  transform: none;
-  flex: 0 0 auto;
-}
-.editorial-banner-fade{
-  display: none;
-}
-.editorial-banner-text{
-  position: relative;
-  inset: auto;
-  justify-content: center;
-  align-items: center;
-  padding: 18px 20px 14px;
-  gap: 6px;
-  background: var(--bg);
-}
-.editorial-tagline{
-  font-size: clamp(26px, 9vw, 40px);
-  letter-spacing: .15em;
-  line-height: 1.05;
-  color: var(--text);
-  text-shadow: none;
-}
-.editorial-divider{
-  width: 38px;
-  margin: 3px auto;
-}
-.editorial-sub{
-  font-size: 10.5px;
-  letter-spacing: .22em;
-}
-      }
-
-      .hero{
-        margin-top: -18px;
-        padding-top: 18px;
-      }
-      h1{
-        margin-top: 12px;
-        margin-bottom: 10px;
-      }
-      .subhead{
-        margin: 14px 0 20px;
-      }
-      .hero-actions{
-        gap: 10px;
-        margin-top: 8px;
       }
     }
   </style>
