@@ -1034,6 +1034,69 @@
       .editorial-divider{ width: 34px; margin: 2px auto; }
       .editorial-sub{ font-size: 10px; letter-spacing: .18em; }
     }
+
+    /* ===== EDITORIAL MOBILE — estructura simple sin 100vw trick ===== */
+    .editorial-mobile{ display: none; }
+
+    @media (max-width: 920px){
+      /* Ocultar el banner desktop */
+      .editorial-banner{ display: none !important; }
+
+      /* Mostrar el banner mobile */
+      .editorial-mobile{
+        display: block;
+        position: relative;
+        width: 100%;
+        height: clamp(300px, 80vw, 420px);
+        overflow: hidden;
+        margin: 0;
+      }
+      .editorial-mobile-img{
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 22%;
+        filter: saturate(.68) contrast(.94) brightness(.88);
+        display: block;
+      }
+      .editorial-mobile-fade{
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(to bottom,
+          rgba(244,242,235,0) 0%,
+          rgba(244,242,235,0) 35%,
+          rgba(244,242,235,.75) 68%,
+          rgba(244,242,235,.97) 100%
+        );
+      }
+      .editorial-mobile-text{
+        position: absolute;
+        inset: auto 0 0 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        text-align: center;
+        gap: 6px;
+        padding: 0 24px 26px;
+      }
+    }
+
+    @media (max-width: 520px){
+      .editorial-mobile{
+        height: clamp(260px, 90vw, 360px);
+      }
+      .editorial-mobile-img{
+        object-position: center 18%;
+      }
+      .editorial-mobile-text{
+        padding: 0 20px 20px;
+        gap: 5px;
+      }
+    }
   </style>
 </head>
 
@@ -1099,6 +1162,19 @@
     />
     <div class="editorial-banner-fade" aria-hidden="true"></div>
     <div class="editorial-banner-text">
+      <div class="editorial-tagline">
+        <span>Ciencia que</span>
+        <span>regenera</span>
+      </div>
+      <div class="editorial-divider"></div>
+      <div class="editorial-sub">Naturaleza que inspira</div>
+    </div>
+  </div>
+  <!-- EDITORIAL MOBILE (solo visible en mobile) -->
+  <div class="editorial-mobile" aria-hidden="true">
+    <img src="assets/kv-editorial.webp" alt="" class="editorial-mobile-img" loading="lazy" />
+    <div class="editorial-mobile-fade"></div>
+    <div class="editorial-mobile-text">
       <div class="editorial-tagline">
         <span>Ciencia que</span>
         <span>regenera</span>
