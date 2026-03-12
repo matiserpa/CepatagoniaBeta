@@ -18,11 +18,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap');
 
     html, body { height: 100%; scroll-behavior: smooth; }
-    html { overflow-x: clip; }
-    @media (max-width: 920px){
-      html { overflow-x: hidden !important; }
-      body { overflow-x: hidden !important; }
-    }
+    html, body { overflow-x: hidden; }
 
     :root{
       --bg: #efede6;
@@ -465,9 +461,7 @@
     /* ===== BLOQUE EDITORIAL — diseño split mobile ===== */
     .editorial-banner{
       position: relative;
-      width: 100vw;
-      left: 50%;
-      margin-left: -50vw;
+      width: 100%;
       height: clamp(260px, 36vw, 440px);
       overflow: hidden;
       z-index: 0;
