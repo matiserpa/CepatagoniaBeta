@@ -1381,95 +1381,105 @@
         <div><h2>Sede</h2></div>
         <a class="btn btn-ghost" href="#entradas">Ver entradas</a>
       </div>
-      <div style="height:14px;"></div>
-      <div class="grid-3 strip">
-        <div class="card img-card">
-          <img src="assets/turismo2.webp" alt="Entorno / lago" />
-          <div class="img-overlay" aria-hidden="true"></div>
-        </div>
-        <div class="card img-card">
-          <img src="assets/turismo3.webp" alt="Ciudad / infraestructura" />
-          <div class="img-overlay" aria-hidden="true"></div>
-        </div>
-        <div class="card img-card">
-          <img src="assets/turismo4.webp" alt="Bosque / textura patagónica" />
-          <div class="img-overlay" aria-hidden="true"></div>
-        </div>
-      </div>
+      <!-- SEDE: layout editorial alternado imagen/contenido -->
+      <style>
+        .sede-block { display:grid; grid-template-columns:1fr 1fr; gap:clamp(16px,3vw,32px); align-items:stretch; margin-bottom: clamp(20px,4vw,40px); }
+        .sede-block.reverse { direction:rtl; }
+        .sede-block.reverse > * { direction:ltr; }
+        .sede-block .sede-img { border-radius:20px; overflow:hidden; min-height:280px; }
+        .sede-block .sede-img img { width:100%; height:100%; object-fit:cover; display:block; }
+        .sede-block .sede-content { display:flex; flex-direction:column; justify-content:center; gap:12px; }
+        .sede-kicker { font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted,#888); margin-bottom:2px; }
+        .sede-block h3 { margin:0; font-size:clamp(18px,2.2vw,24px); font-weight:700; }
+        .hotel-list { display:flex; flex-direction:column; gap:10px; }
+        .hotel-item { background:rgba(255,255,255,.62); border-radius:14px; padding:14px 16px; }
+        .hotel-item h4 { margin:0 0 4px; font-size:14px; font-weight:760; }
+        .hotel-item p { margin:0; font-size:13px; color:var(--muted,#888); }
+        .excursion-list { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+        .excursion-item { background:rgba(255,255,255,.62); border-radius:12px; padding:10px 14px; font-size:14px; }
+        @media(max-width:720px){
+          .sede-block { grid-template-columns:1fr; }
+          .sede-block.reverse { direction:ltr; }
+          .sede-block .sede-img { min-height:220px; }
+          .excursion-list { grid-template-columns:1fr; }
+        }
+      </style>
 
-      <!-- TURISMO: INFO EXPANDIDA -->
-      <div style="height:28px;"></div>
+      <div style="height:24px;"></div>
 
-      <!-- Alojamiento -->
-      <div class="section-head" style="margin-bottom:16px;">
-        <h3 style="margin:0; font-family:'Playfair Display',Georgia,serif; font-size:clamp(22px,3vw,30px); font-weight:600; letter-spacing:-.01em;">Alojamiento oficial del Congreso</h3>
-      </div>
-      <div class="grid-2">
-        <div class="card" style="background:rgba(255,255,255,.62);">
-          <div class="kicker" style="margin-bottom:10px;"><span class="dot" aria-hidden="true"></span> Hotel Sede</div>
-          <h4 style="margin:0 0 6px; font-size:15px; font-weight:760;">Hotel &amp; Centro de Convenciones Le Village</h4>
-          <p class="muted" style="margin:0 0 8px;">Sede principal del Congreso. Habitaciones amplias, desayuno buffet regional, salones de eventos y jardines internos.</p>
-          <p class="muted" style="margin:0; font-size:13px;"><b>Servicios:</b> WiFi · Desayuno buffet · Estacionamiento · Salones de convenciones</p>
+      <!-- Bloque 1: Alojamiento + turismo2 -->
+      <div class="sede-block">
+        <div class="sede-img">
+          <img src="assets/turismo2.webp" alt="San Martín de los Andes" loading="lazy" />
         </div>
-        <div class="card" style="background:rgba(255,255,255,.62);">
-          <div class="kicker" style="margin-bottom:10px;"><span class="dot" aria-hidden="true"></span> 3★ Superior</div>
-          <h4 style="margin:0 0 6px; font-size:15px; font-weight:760;">Hotel Le Chatelet</h4>
-          <p class="muted" style="margin:0 0 8px;">Ubicación estratégica, piscina climatizada y ambiente confortable.</p>
-          <p class="muted" style="margin:0; font-size:13px;"><b>Servicios:</b> Piscina climatizada · WiFi · Desayuno buffet · Recepción 24 h</p>
-        </div>
-        <div class="card" style="background:rgba(255,255,255,.62);">
-          <div class="kicker" style="margin-bottom:10px;"><span class="dot" aria-hidden="true"></span> 2★</div>
-          <h4 style="margin:0 0 6px; font-size:15px; font-weight:760;">Hotel Tunqueley</h4>
-          <p class="muted" style="margin:0 0 8px;">Practicidad y accesibilidad a metros de la avenida principal.</p>
-          <p class="muted" style="margin:0; font-size:13px;"><b>Servicios:</b> Desayuno continental · WiFi · Recepción 24 h</p>
-        </div>
-        <div class="card" style="background:rgba(255,255,255,.62);">
-          <div class="kicker" style="margin-bottom:10px;"><span class="dot" aria-hidden="true"></span> 2★ Superior</div>
-          <h4 style="margin:0 0 6px; font-size:15px; font-weight:760;">Hotel Viejo Esquiador</h4>
-          <p class="muted" style="margin:0 0 8px;">Ambiente cálido y familiar, a pocas cuadras del centro.</p>
-          <p class="muted" style="margin:0; font-size:13px;"><b>Servicios:</b> Desayuno regional · WiFi · Salón con chimenea</p>
-        </div>
-      </div>
-
-      <div style="height:28px;"></div>
-
-      <!-- Traslados -->
-      <div class="section-head" style="margin-bottom:16px;">
-        <h3 style="margin:0; font-family:'Playfair Display',Georgia,serif; font-size:clamp(22px,3vw,30px); font-weight:600; letter-spacing:-.01em;">Traslados Aeropuerto – Hotel</h3>
-      </div>
-      <div class="card" style="background:rgba(255,255,255,.62);">
-        <div class="grid-2">
-          <div>
-            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase; font-size:11px; margin-bottom:8px;">Aeropuertos</div>
-            <p style="margin:0 0 6px;"><b>Chapelco (CPC)</b> — Aviador Carlos Campos</p>
-            <p style="margin:0;"><b>Bariloche (BRC)</b> — Internacional de Bariloche</p>
-          </div>
-          <div>
-            <div class="muted" style="letter-spacing:.14em; text-transform:uppercase; font-size:11px; margin-bottom:8px;">Opciones</div>
-            <p style="margin:0 0 4px;">Traslado privado (1 a 3 pasajeros)</p>
-            <p style="margin:0 0 4px;">Minivan para grupos</p>
-            <p style="margin:0;">Servicios compartidos en horarios fijos</p>
+        <div class="sede-content">
+          <div class="sede-kicker">🏨 Alojamiento oficial</div>
+          <h3>Hoteles del Congreso</h3>
+          <p class="muted" style="margin:0; font-size:14px;">Todos con tarifas preferenciales para participantes y cupos limitados.</p>
+          <div class="hotel-list">
+            <div class="hotel-item">
+              <h4>Hotel &amp; CC Le Village <span style="font-weight:400; color:#aaa;">· Sede</span></h4>
+              <p>WiFi · Desayuno buffet · Salones de convenciones</p>
+            </div>
+            <div class="hotel-item">
+              <h4>Hotel Le Chatelet <span style="font-weight:400; color:#aaa;">· 3★ Superior</span></h4>
+              <p>Piscina climatizada · WiFi · Desayuno buffet</p>
+            </div>
+            <div class="hotel-item">
+              <h4>Hotel Tunqueley <span style="font-weight:400; color:#aaa;">· 2★</span></h4>
+              <p>Desayuno continental · WiFi · Recepción 24 h</p>
+            </div>
+            <div class="hotel-item">
+              <h4>Hotel Viejo Esquiador <span style="font-weight:400; color:#aaa;">· 2★ Superior</span></h4>
+              <p>Desayuno regional · WiFi · Salón con chimenea</p>
+            </div>
           </div>
         </div>
-        <div style="margin-top:14px;">
-          <a class="btn" href="#contacto">Consultar traslados</a>
+      </div>
+
+      <!-- Bloque 2: Traslados + turismo3 (imagen a la derecha) -->
+      <div class="sede-block reverse">
+        <div class="sede-img">
+          <img src="assets/turismo3.webp" alt="Acceso a San Martín de los Andes" loading="lazy" />
+        </div>
+        <div class="sede-content">
+          <div class="sede-kicker">✈️ Traslados</div>
+          <h3>Aeropuerto – Hotel</h3>
+          <p class="muted" style="margin:0; font-size:14px;">Servicios privados y compartidos desde los dos aeropuertos más cercanos.</p>
+          <div class="hotel-list">
+            <div class="hotel-item">
+              <h4>Chapelco (CPC)</h4>
+              <p>Aviador Carlos Campos — acceso directo</p>
+            </div>
+            <div class="hotel-item">
+              <h4>Bariloche (BRC)</h4>
+              <p>Internacional de Bariloche — traslado ~2 hs</p>
+            </div>
+          </div>
+          <p class="muted" style="margin:0; font-size:13px;">Traslado privado · Minivan grupal · Servicios compartidos</p>
+          <div><a class="btn" href="#contacto" style="display:inline-block;">Consultar traslados</a></div>
         </div>
       </div>
 
-      <div style="height:28px;"></div>
-
-      <!-- Excursiones -->
-      <div class="section-head" style="margin-bottom:16px;">
-        <h3 style="margin:0; font-family:'Playfair Display',Georgia,serif; font-size:clamp(22px,3vw,30px); font-weight:600; letter-spacing:-.01em;">Excursiones pre y post Congreso</h3>
-      </div>
-      <div class="grid-3">
-        <div class="card" style="background:rgba(255,255,255,.62);">🛣️ <b>Camino de los Siete Lagos</b></div>
-        <div class="card" style="background:rgba(255,255,255,.62);">🏔️ <b>Quila Quina + Mirador Bandurrias</b></div>
-        <div class="card" style="background:rgba(255,255,255,.62);">🌋 <b>Lago Huechulafquen y Volcán Lanín</b></div>
-        <div class="card" style="background:rgba(255,255,255,.62);">⛵ <b>Navegación por el Lago Lácar</b></div>
-        <div class="card" style="background:rgba(255,255,255,.62);">🥾 <b>Trekking Mirador Arrayanes</b></div>
-        <div class="card" style="background:rgba(255,255,255,.62);">⛷️ <b>Cerro Chapelco</b> (según temporada)</div>
-        <div class="card" style="background:rgba(255,255,255,.62);">🍽️ <b>Experiencias gastronómicas típicas</b></div>
+      <!-- Bloque 3: Excursiones + turismo4 -->
+      <div class="sede-block">
+        <div class="sede-img">
+          <img src="assets/turismo4.webp" alt="Patagonia - excursiones" loading="lazy" />
+        </div>
+        <div class="sede-content">
+          <div class="sede-kicker">🧭 Excursiones</div>
+          <h3>Pre y post Congreso</h3>
+          <p class="muted" style="margin:0; font-size:14px;">Aprovechá la estadía en uno de los destinos más hermosos de la Patagonia.</p>
+          <div class="excursion-list">
+            <div class="excursion-item">🛣️ Siete Lagos</div>
+            <div class="excursion-item">🏔️ Quila Quina</div>
+            <div class="excursion-item">🌋 Volcán Lanín</div>
+            <div class="excursion-item">⛵ Lago Lácar</div>
+            <div class="excursion-item">🥾 Mirador Arrayanes</div>
+            <div class="excursion-item">⛷️ Cerro Chapelco</div>
+            <div class="excursion-item">🍽️ Gastronomía típica</div>
+          </div>
+        </div>
       </div>
 
     </div>
