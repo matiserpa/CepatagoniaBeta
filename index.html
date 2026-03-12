@@ -2284,8 +2284,11 @@
           if (isAcompana) {
             return `<div style="margin-top:28px; padding-top:24px; border-top:1px solid var(--line);">
               <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:16px;">Nos acompaña</div>
-              <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
-                ${(e.speakers||[]).map(s => renderSpeakerAvatar(s)).join('')}
+              <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+                ${(e.speakers||[]).map(s => {
+                  const imgs = Array.isArray(s.images) ? s.images : (s.image ? [s.image] : []);
+                  return imgs.map(img => `<img src="${img}" alt="Logo patrocinador" style="height:56px; max-width:160px; object-fit:contain; border-radius:8px; background:#fff; padding:6px 12px; box-shadow:0 1px 6px rgba(0,0,0,.08);" />`).join('');
+                }).join('')}
               </div>
             </div>`;
           }
@@ -2305,7 +2308,7 @@
         }).join('');
       }
 
-      const speakers = (window.CEP.ejes || []).flatMap(e => (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo })));
+      const speakers = (window.CEP.ejes || []).filter(e => e.titulo !== 'NOS ACOMPAÑA').flatMap(e => (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo })));
       const spGrid = document.getElementById('speakersGrid');
       if (spGrid){
         spGrid.innerHTML = speakers.map(s => `
