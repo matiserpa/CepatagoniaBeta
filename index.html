@@ -2035,7 +2035,7 @@
       if (objetivosList){ objetivosList.innerHTML = (Array.isArray(copy.objetivos) ? copy.objetivos : []).map(x => `<li>${x}</li>`).join(''); }
 
       const dif = document.getElementById('diferencialesGrid');
-      if (dif){ dif.innerHTML = (window.CEP.diferenciales || []).map(d => `<div class="card"><div class="icon" aria-hidden="true"></div><h3>${d.title}</h3><p>${d.desc}</p></div>`).join(''); }
+      if (dif){ dif.innerHTML = (window.CEP.diferenciales || []).map(d => `<div class="card"><div class="icon" aria-hidden="true" style="background-image:url('assets/adn.webp'); background-size:cover; background-position:center;"></div><h3>${d.title}</h3><p>${d.desc}</p></div>`).join(''); }
 
       const ejesList = document.getElementById('ejesList');
       if (ejesList){
