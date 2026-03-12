@@ -1536,8 +1536,8 @@
   <!-- DIRIGIDO A -->
   <section id="dirigido">
     <div class="container">
-      <div class="section-head"><div><h2>Dirigido a</h2></div></div>
-      <div class="card"><ul id="dirigidoList"></ul></div>
+      <div class="section-head"><div><h2>¿Para quién es este Congreso?</h2></div></div>
+      <div id="dirigidoGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px;"></div>
     </div>
   </section>
 
@@ -2276,8 +2276,25 @@
         `).join('');
       }
 
-      const dirigidoList = document.getElementById('dirigidoList');
-      if (dirigidoList){ dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map(x => `<li>${x}</li>`).join(''); }
+      const dirigidoGrid = document.getElementById('dirigidoGrid');
+      if (dirigidoGrid){
+        const iconos = ['🩺','🔬','👩‍⚕️','✨','💆','🏨','🏥','🎓'];
+        dirigidoGrid.innerHTML = (window.CEP.dirigidoA || []).map((x, i) => `
+          <div style="
+            background: rgba(255,255,255,.72);
+            border-radius: 16px;
+            padding: 20px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.05);
+            border-left: 3px solid #7f977f;
+          ">
+            <span style="font-size:22px; line-height:1; flex-shrink:0; margin-top:2px;">${iconos[i] || '◆'}</span>
+            <span style="font-size:14px; font-weight:650; color:#232420; line-height:1.4;">${x}</span>
+          </div>
+        `).join('');
+      }
     }
   </script>
 </body>
