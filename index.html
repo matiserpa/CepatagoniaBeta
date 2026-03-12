@@ -1165,7 +1165,14 @@
       color: rgba(240,237,230,.65);
     }
     @media(max-width:520px){
-      .event-bar-inner{ gap:8px; }
+      .event-bar-inner{
+        flex-direction: column;
+        gap: 3px;
+      }
+      .event-bar-sep{ display: none; }
+      .event-bar-dot{ display: none; }
+      .event-bar-date{ font-size: 11px; letter-spacing: .18em; }
+      .event-bar-city{ font-size: 10.5px; letter-spacing: .15em; }
     }
 
     .editorial-banner-fade{
