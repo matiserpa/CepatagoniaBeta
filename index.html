@@ -1840,7 +1840,7 @@
       if (s.images && Array.isArray(s.images)){
         return `<div style="display:flex; flex-direction:column; gap:8px; flex-shrink:0;">
           ${s.images.map((img, i) => img
-            ? `<div class="avatar has-photo" aria-hidden="true" style="width:52px;height:52px;"><img src="${img}" alt="${s.nombres ? s.nombres[i] : s.nombre}" loading="lazy" /></div>`
+            ? `<div class="avatar has-photo" aria-hidden="true" style="width:52px;height:52px;"><img src="${img}" alt="${s.nombres ? s.nombres[i] : s.nombre}" loading="lazy" style="object-fit:contain; padding:4px;" /></div>`
             : `<div class="avatar" aria-hidden="true" style="width:52px;height:52px; display:flex; align-items:center; justify-content:center; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:rgba(35,36,32,.4); text-align:center; padding:4px;">${s.nombres ? s.nombres[i] : ''}</div>`
           ).join('')}
         </div>`;
