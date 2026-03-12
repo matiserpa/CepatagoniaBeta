@@ -1536,9 +1536,9 @@
   <!-- DIRIGIDO A -->
   <section id="dirigido">
     <div class="container">
-      <div class="section-head"><div><h2>¿Para quién es este Congreso?</h2></div></div>
-      <div class="card" style="background:rgba(255,255,255,.72); border-top: 3px solid #7f977f; padding:0;">
-        <ul id="dirigidoList" style="list-style:none; margin:0; padding:0;"></ul>
+      <div class="section-head"><div><h2>Dirigido a</h2></div></div>
+      <div style="background:var(--surface, #f4f2eb); border-radius:20px; border-top: 3px solid #7f977f; padding:8px 0;">
+        <ul id="dirigidoList" style="list-style:none; margin:0; padding:0; display:grid; grid-template-columns:1fr 1fr; gap:0;"></ul>
       </div>
     </div>
   </section>
@@ -2296,18 +2296,18 @@
 
       const dirigidoList = document.getElementById('dirigidoList');
       if (dirigidoList){
-        dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map((x, i, arr) => `
+        dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map((x, i) => `
           <li style="
-            padding: 16px 28px;
-            font-size: 15px;
+            padding: 13px 24px;
+            font-size: 13.5px;
             font-weight: 500;
-            color: #232420;
+            color: #3a3a38;
             display: flex;
             align-items: center;
-            gap: 12px;
-            ${i < arr.length - 1 ? 'border-bottom: 1px solid rgba(0,0,0,.06);' : ''}
+            gap: 10px;
+            border-bottom: 1px solid rgba(0,0,0,.05);
           ">
-            <span style="width:6px; height:6px; border-radius:50%; background:#7f977f; flex-shrink:0; opacity:.7;"></span>
+            <span style="width:5px; height:5px; border-radius:50%; background:#7f977f; flex-shrink:0;"></span>
             ${x}
           </li>
         `).join('');
