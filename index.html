@@ -1856,10 +1856,21 @@
             </div>
           </form>
         </div>
-        <div class="map-wrap" aria-label="Mapa de ubicación">
-          <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-            src="https://www.google.com/maps?q=Gral.%20Roca%20816%2C%20San%20Mart%C3%ADn%20de%20los%20Andes&output=embed"
-            title="Mapa — Gral. Roca 816, San Martín de los Andes"></iframe>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div class="map-wrap" aria-label="Mapa de ubicación">
+            <iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Gral.%20Roca%20816%2C%20San%20Mart%C3%ADn%20de%20los%20Andes&output=embed"
+              title="Mapa — Gral. Roca 816, San Martín de los Andes"></iframe>
+          </div>
+          <div class="card" style="box-shadow:none; background:rgba(255,255,255,.38);">
+            <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:14px;">Ficha del evento</div>
+            <div style="display:grid; gap:10px;">
+              <div class="muted"><b style="color:var(--text); font-weight:720;">Fecha:</b> <span id="metaDateFooter">—</span></div>
+              <div class="muted"><b style="color:var(--text); font-weight:720;">Ciudad:</b> <span id="metaCityFooter">—</span></div>
+              <div class="muted"><b style="color:var(--text); font-weight:720;">Modalidad:</b> <span id="metaModeFooter">—</span></div>
+              <div class="muted"><b style="color:var(--text); font-weight:720;">Sede:</b> Hotel & Centro de Convenciones Le Village</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1868,35 +1879,7 @@
   <!-- FOOTER -->
   <footer>
     <div class="container">
-      <div class="grid-2" style="align-items:start;">
-        <div class="card" style="box-shadow:none; background: rgba(255,255,255,.38); display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">CEPATAGONIA</div>
-            <div class="muted" style="margin-top:10px; font-size:14px; line-height:1.6;">Congreso de Estética de la Patagonia.<br>Ciencia. Innovación. Naturaleza.</div>
-            <div style="margin-top:16px; font-size:13px; color:var(--muted); font-style:italic; line-height:1.6;">"El primer congreso de estética de la Patagonia"</div>
-          </div>
-          <div class="socials" style="margin-top:24px;">
-            <a class="social-btn" href="#" id="btnInstagramFooter"><img class="social-ic" src="assets/instagram.svg" alt="Instagram" /> Instagram</a>
-            <a class="social-btn" href="#" id="btnWhatsappFooter"><img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" /> WhatsApp</a>
-          </div>
-        </div>
-        <div class="card" style="box-shadow:none; background: rgba(255,255,255,.38);">
-          <div style="font-weight:820; letter-spacing:.14em; text-transform:uppercase; color: var(--muted);">Ficha del evento</div>
-          <div style="height:14px;"></div>
-          <div style="display:grid; gap:10px;">
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Fecha:</b> <span id="metaDateFooter">—</span></div>
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Ciudad:</b> <span id="metaCityFooter">—</span></div>
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Modalidad:</b> <span id="metaModeFooter">—</span></div>
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Sede:</b> Hotel & Centro de Convenciones Le Village</div>
-            <div class="muted"><b style="color:var(--text); font-weight:720;">Dirección:</b> Gral. Roca 816, San Martín de los Andes</div>
-          </div>
-          <div class="socials">
-            <a class="social-btn" href="#contacto">Contacto</a>
-            <a class="social-btn" href="#entradas">Entradas</a>
-          </div>
-        </div>
-      </div>
-      <div style="border-top:1px solid var(--line); margin-top:24px; padding-top:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+      <div style="border-top:1px solid var(--line); padding-top:18px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
         <div style="display:flex; align-items:center; gap:12px;">
           <img src="assets/cepatagonia-logo-transparente.webp" alt="CEPATAGONIA" style="height:28px; opacity:.45; object-fit:contain;" />
           <span class="muted" style="font-size:12px;">© <span id="year"></span> CEPATAGONIA · Todos los derechos reservados.</span>
