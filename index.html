@@ -1917,9 +1917,9 @@
       tagline: "Ciencia. Innovación. Naturaleza.",
       manifesto: [
         "La nueva estética ya no se limita a corregir signos visibles.",
-        "Regenera, estimula, optimiza y gestiona.",
-        "Un encuentro diseñado para quienes buscan posicionarse en la vanguardia de la estética regenerativa.",
-        "Ciencia. Innovación. Naturaleza."
+        "Regenerar. Estimular. Optimizar.",
+        "Creemos en una estética que evoluciona junto a la ciencia y respeta la naturaleza de la piel.",
+        "Un nuevo paradigma donde la innovación, el conocimiento y el criterio profesional marcan el camino."
       ].join(" "),
       vision:
         "Convertirnos en el epicentro patagónico de la estética celular avanzada, donde la regeneración tisular, la biotecnología y la inteligencia aplicada redefinen los límites de la práctica profesional. Impulsar una nueva era en la estética, basada en evidencia científica, personalización terapéutica y tecnología no invasiva, posicionando al Congreso como un espacio de referencia internacional en innovación regenerativa.",
@@ -1988,8 +1988,8 @@
           bullets: ["Pablo González"],
           extras: [
             { title: "Disertación complementaria", bullets: ["BIO PÉPTIDOS - Comprendiendo su potencial de acción en piel.", "Pablo González"] },
-            { title: "Disertación complementaria", bullets: ["Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.", "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.", "Pablo González y Sandra Monzalvez"] },
-            { title: "Disertación complementaria", bullets: ["EQLM - La Era de la Bio-Regeneración Molecular.", "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.", "Sandra Monzalvez"] },
+            { title: "Disertación complementaria", bullets: ["Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.", "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.", "Pablo González e Ing. Sandra Monzalvez"] },
+            { title: "Disertación complementaria", bullets: ["EQLM - La Era de la Bio-Regeneración Molecular.", "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.", "Ing. Sandra Monzalvez"] },
             { title: "Disertación complementaria", bullets: ["Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM.", "Más allá de los filtros: reparación, defensa y equilibrio biológico."] }
           ]
         }]
@@ -2010,7 +2010,7 @@
         eje: "EJE 6",
         titulo: "GESTIÓN, MARKETING & RENTABILIDAD DEL GABINETE",
         speakers: [{
-          nombre: "Eduardo Finci",
+          nombre: "Lic. Eduardo Finci",
           credenciales: "Embajador Emérito del World Wellness Weekend para Latinoamérica | Presidente de la American Wellness Association | Presidente de la Asociación Americana de Spa | Juez de los premios World Spa & Wellness Awards 2023 | Director de Wello Academy y de la Escuela Americana de Spa | Director Académico y Conferencista del Congreso Internacional de Spa & Bienestar | Creador e impulsor del Programa Spa Manager y Director Ejecutivo Wellness | Embajador de la Wellness Tourism Association para Argentina",
           disertacion: "Ventas Inteligentes en Estética y Spa: Cómo transformar experiencias de bienestar en resultados",
           bullets: ["La Nueva Era del Marketing en Estética: experiencia, confianza y resultados","Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética","Cómo atraer más pacientes, vender más tratamientos y fidelizar clientes"],
@@ -2025,7 +2025,7 @@
         eje: "EJE 7",
         titulo: "COSMIATRÍA INTEGRATIVA & BIOESTIMULACIÓN NO INVASIVA",
         speakers: [{
-          nombre: "Leila Fernandez",
+          nombre: "Lelia Fernández",
           credenciales: "Dermatocosmiatra - Superior de Cosmiatría (Art. UBA- AMA) Argentina / Esteticista corporal (CFP 42 – Bs As) Argentina / Spa Manager Wellness (AAS) Nacional e Internacional / Speaker, Conferencista y capacitadora Nacional e Internacional / Miembro titular Cosmedsa y SAACS / Alta dirección de centros de formación profesional (Cámara Argentina para la formación profesional y la capacitación laboral) | Coaching en salud",
           disertacion: "Alcances cosmiátricos integrativos",
           bullets: ["Pacientes oncológicos, veganos, diabéticos, pre y pos parto, tiroideos, celíacos"],
@@ -2061,6 +2061,21 @@
             credenciales: "Título de Médico - Universidad de Buenos Aires | Título de Especialista en Cirugía General | Título de Especialista en Medicina del Trabajo | Master en Medicina Estética, rejuvenecimiento y antienvejecimiento | Universidad Complutense de Madrid | Áreas de especialización: Lesiones epidérmicas, lesiones dérmicas, lesiones subdérmicas | Actualmente desarrollando sus labores en la clínica Tufet.",
             disertacion: "Participación especial",
             bullets: []
+          }
+        ]
+      }
+      ,
+      {
+        eje: "",
+        titulo: "NOS ACOMPAÑA",
+        speakers: [
+          {
+            nombre: "LACA",
+            credenciales: "",
+            disertacion: "",
+            bullets: [],
+            images: ["assets/logo-laca.webp"],
+            nombres: [""]
           }
         ]
       }
@@ -2264,9 +2279,18 @@
 
       const ejesList = document.getElementById('ejesList');
       if (ejesList){
-        ejesList.innerHTML = (window.CEP.ejes || []).map(e => `
-          <details>
-            <summary>${e.eje} — ${e.titulo}</summary>
+        ejesList.innerHTML = (window.CEP.ejes || []).map(e => {
+          const isAcompana = e.titulo === 'NOS ACOMPAÑA';
+          if (isAcompana) {
+            return `<div style="margin-top:28px; padding-top:24px; border-top:1px solid var(--line);">
+              <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:16px;">Nos acompaña</div>
+              <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
+                ${(e.speakers||[]).map(s => renderSpeakerAvatar(s)).join('')}
+              </div>
+            </div>`;
+          }
+          return `<details>
+            <summary>${e.eje ? e.eje + ' — ' : ''}${e.titulo}</summary>
             ${(e.speakers || []).map(s => `
               <div class="card" style="margin-top:12px;">
                 <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
@@ -2277,7 +2301,8 @@
                 ${renderSpeakerExtras(s)}
               </div>
             `).join('')}
-          </details>
+          </details>`;
+        }).join('')
         `).join('');
       }
 
