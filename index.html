@@ -1548,26 +1548,34 @@
     <div class="container">
       <div class="section-head"><div><h2>Entradas</h2></div></div>
 
-      <div class="card" style="background:rgba(255,255,255,.72); display:grid; grid-template-columns:1fr auto; gap:32px; align-items:center; position:relative; overflow:hidden;">
-        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#7f977f,#b2c9b2);"></div>
-
-        <!-- Info pase -->
-        <div style="display:flex; flex-direction:column; gap:14px; padding-top:4px;">
+      <div style="display:flex; justify-content:center;">
+        <div style="
+          background:rgba(255,255,255,.72);
+          border-radius:20px;
+          border-top: 3px solid #7f977f;
+          padding: 32px 40px;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          gap:16px;
+          text-align:center;
+          max-width:480px;
+          width:100%;
+          box-shadow: 0 2px 12px rgba(0,0,0,.05);
+        ">
           <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; color:#7f977f;">Pase General</div>
-          <div style="font-size:clamp(26px,3.5vw,36px); font-weight:800; color:#232420; line-height:1;">
-            <span style="font-size:13px; font-weight:400; color:#aaa; display:block; margin-bottom:4px;">Precio</span>
+          <div style="font-size:clamp(22px,3vw,30px); font-weight:800; color:#232420; line-height:1.1;">
+            <span style="font-size:12px; font-weight:400; color:#aaa; display:block; margin-bottom:6px; letter-spacing:.1em; text-transform:uppercase;">Precio</span>
             Próximamente
           </div>
-          <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
             <a class="btn btn-primary" href="#" id="btnPaseEntradas">Adquirí tu pase</a>
             <a class="btn" href="#" id="btnAsesorateEntradas">Asesorate</a>
           </div>
-        </div>
-
-        <!-- Logo Planout -->
-        <div style="display:flex; flex-direction:column; align-items:center; gap:8px; border-left:1px solid rgba(0,0,0,.07); padding-left:32px;">
-          <span style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:#aaa;">Venta a través de</span>
-          <img src="assets/planout-logo-negro.png" alt="Planout" style="height:28px; object-fit:contain; opacity:.75;" />
+          <div style="border-top:1px solid rgba(0,0,0,.07); padding-top:14px; width:100%; display:flex; align-items:center; justify-content:center; gap:10px;">
+            <span style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#bbb;">Venta a través de</span>
+            <img src="assets/planout-logo-negro.png" alt="Planout" style="height:20px; object-fit:contain; opacity:.5;" />
+          </div>
         </div>
       </div>
 
