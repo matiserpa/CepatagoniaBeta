@@ -2302,8 +2302,7 @@
               </div>
             `).join('')}
           </details>`;
-        }).join('')
-        `).join('');
+        }).join('');
       }
 
       const speakers = (window.CEP.ejes || []).flatMap(e => (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo })));
