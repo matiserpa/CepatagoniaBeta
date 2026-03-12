@@ -375,6 +375,7 @@
     .kicker.kicker-meta b{ font-weight: 760; }
 
     .hero-metaTop{
+      display: none;
       font-size: 14px;
       padding: 10px 14px;
       background: rgba(255,255,255,.56);
@@ -509,7 +510,36 @@
         filter: saturate(.68) contrast(.94) brightness(.88);
         order: 2;
       }
-      .editorial-banner-fade{ display: none; }
+      /* Sello de fecha dentro del banner */
+    .editorial-date-stamp{
+      position: absolute;
+      bottom: 28px;
+      right: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      z-index: 4;
+    }
+    .editorial-date-stamp span:first-child{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(13px, 1.1vw, 16px);
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(247,246,241,.95);
+      text-shadow: 0 1px 8px rgba(40,60,40,.35);
+    }
+    .editorial-date-city{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(9px, .75vw, 11px);
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(247,246,241,.65);
+    }
+
+    .editorial-banner-fade{ display: none; }
       .editorial-banner-text{
         position: static !important;
         inset: auto !important;
@@ -553,6 +583,35 @@
         letter-spacing: .08em;
       }
     }
+    /* Sello de fecha dentro del banner */
+    .editorial-date-stamp{
+      position: absolute;
+      bottom: 28px;
+      right: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      z-index: 4;
+    }
+    .editorial-date-stamp span:first-child{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(13px, 1.1vw, 16px);
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(247,246,241,.95);
+      text-shadow: 0 1px 8px rgba(40,60,40,.35);
+    }
+    .editorial-date-city{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(9px, .75vw, 11px);
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(247,246,241,.65);
+    }
+
     .editorial-banner-fade{
       position: absolute;
       inset: 0;
@@ -1021,7 +1080,36 @@
       .editorial-banner-img{
         object-position: center 22%;
       }
-      .editorial-banner-fade{
+      /* Sello de fecha dentro del banner */
+    .editorial-date-stamp{
+      position: absolute;
+      bottom: 28px;
+      right: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 3px;
+      z-index: 4;
+    }
+    .editorial-date-stamp span:first-child{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(13px, 1.1vw, 16px);
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(247,246,241,.95);
+      text-shadow: 0 1px 8px rgba(40,60,40,.35);
+    }
+    .editorial-date-city{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(9px, .75vw, 11px);
+      font-weight: 500;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(247,246,241,.65);
+    }
+
+    .editorial-banner-fade{
         background: linear-gradient(to bottom,
           rgba(244,242,235,0) 0%,
           rgba(244,242,235,0) 35%,
@@ -1223,6 +1311,10 @@
       <div class="editorial-divider"></div>
       <div class="editorial-sub">Naturaleza que inspira</div>
     </div>
+    <div class="editorial-date-stamp" aria-hidden="true">
+      <span id="bannerDate">—</span>
+      <span class="editorial-date-city" id="bannerCity">—</span>
+    </div>
   </div>
   <!-- EDITORIAL MOBILE — style inline, sin conflictos CSS -->
   <div id="edMob" style="display:none; flex-direction:column; width:100vw; margin-left:calc(50% - 50vw); background:#000; position:relative;">
@@ -1239,6 +1331,11 @@
         <div style="font-family:'Montserrat',sans-serif; font-size:10px; letter-spacing:.26em; text-transform:uppercase; color:rgba(247,246,241,.85);">
           Naturaleza que inspira
         </div>
+      </div>
+      <!-- Sello fecha mobile -->
+      <div style="position:absolute; bottom:18px; right:20px; text-align:right;">
+        <div style="font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:rgba(247,246,241,.92); text-shadow:0 1px 6px rgba(40,60,40,.4);" id="bannerDateMob">—</div>
+        <div style="font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(247,246,241,.6);" id="bannerCityMob">—</div>
       </div>
     </div>
   </div>
@@ -2007,6 +2104,14 @@
       const metaCityFooter = document.getElementById('metaCityFooter');
       const metaModeFooter = document.getElementById('metaModeFooter');
       if (metaDateStrong) metaDateStrong.textContent = fecha;
+      const bannerDate = document.getElementById('bannerDate');
+      const bannerCity = document.getElementById('bannerCity');
+      if (bannerDate) bannerDate.textContent = fecha;
+      if (bannerCity) bannerCity.textContent = ciudad;
+      const bannerDateMob = document.getElementById('bannerDateMob');
+      const bannerCityMob = document.getElementById('bannerCityMob');
+      if (bannerDateMob) bannerDateMob.textContent = fecha;
+      if (bannerCityMob) bannerCityMob.textContent = ciudad;
       if (metaCityStrong) metaCityStrong.textContent = ciudad;
       if (metaDateFooter) metaDateFooter.textContent = fecha;
       if (metaCityFooter) metaCityFooter.textContent = ciudad;
