@@ -1705,6 +1705,8 @@
         titulo: "INNOVACIÓN EN EXOSOMAS & MICROBIOTA CUTÁNEA",
         speakers: [{
           nombre: "Lab UDERM y SEM BIOCREAM",
+          nombres: ["Lab UDERM", "SEM BIOCREAM"],
+          images: ["assets/logo_uderm.webp", "assets/logo-sem.webp"],
           credenciales: "Presentación institucional y científica.",
           disertacion: "Innovación en Exosomas y Microbiota Cutánea - EXODERMAL y EXOBIOTIC 15",
           bullets: ["Pablo González"],
@@ -1835,6 +1837,14 @@
     }
 
     function renderSpeakerAvatar(s){
+      if (s.images && Array.isArray(s.images)){
+        return `<div style="display:flex; flex-direction:column; gap:8px; flex-shrink:0;">
+          ${s.images.map((img, i) => img
+            ? `<div class="avatar has-photo" aria-hidden="true" style="width:52px;height:52px;"><img src="${img}" alt="${s.nombres ? s.nombres[i] : s.nombre}" loading="lazy" /></div>`
+            : `<div class="avatar" aria-hidden="true" style="width:52px;height:52px; display:flex; align-items:center; justify-content:center; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:rgba(35,36,32,.4); text-align:center; padding:4px;">${s.nombres ? s.nombres[i] : ''}</div>`
+          ).join('')}
+        </div>`;
+      }
       if (s.image){
         return `<div class="avatar has-photo" aria-hidden="true"><img src="${s.image}" alt="${s.nombre}" loading="lazy" /></div>`;
       }
@@ -1974,9 +1984,9 @@
       const spGrid = document.getElementById('speakersGrid');
       if (spGrid){
         spGrid.innerHTML = speakers.map(s => `
-          <div class="card speaker">
+          <div class="card speaker" style="align-items:flex-start;">
             ${renderSpeakerAvatar(s)}
-            <div>
+            <div style="min-width:0;">
               <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje}</div>
               <div style="font-weight:800; margin-top:4px;">${s.nombre}</div>
               <div class="muted" style="margin-top:4px;">${s.tema}</div>
