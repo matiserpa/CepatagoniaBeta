@@ -1537,7 +1537,9 @@
   <section id="dirigido">
     <div class="container">
       <div class="section-head"><div><h2>¿Para quién es este Congreso?</h2></div></div>
-      <div id="dirigidoGrid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(220px, 1fr)); gap:12px;"></div>
+      <div class="card" style="background:rgba(255,255,255,.72); border-top: 3px solid #7f977f; padding:0;">
+        <ul id="dirigidoList" style="list-style:none; margin:0; padding:0;"></ul>
+      </div>
     </div>
   </section>
 
@@ -2313,36 +2315,22 @@
         `).join('');
       }
 
-      const dirigidoGrid = document.getElementById('dirigidoGrid');
-      if (dirigidoGrid){
-        dirigidoGrid.innerHTML = (window.CEP.dirigidoA || []).map((x, i) => `
-          <div style="
-            background: rgba(255,255,255,.65);
-            border-radius: 14px;
-            padding: 18px 20px;
+      const dirigidoList = document.getElementById('dirigidoList');
+      if (dirigidoList){
+        dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map((x, i, arr) => `
+          <li style="
+            padding: 16px 28px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #232420;
             display: flex;
             align-items: center;
-            gap: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.04);
+            gap: 12px;
+            ${i < arr.length - 1 ? 'border-bottom: 1px solid rgba(0,0,0,.06);' : ''}
           ">
-            <span style="
-              font-family: 'Montserrat', sans-serif;
-              font-size: 11px;
-              font-weight: 800;
-              color: #7f977f;
-              letter-spacing: .04em;
-              flex-shrink: 0;
-              width: 22px;
-              text-align: right;
-              opacity: .7;
-            ">${String(i+1).padStart(2,'0')}</span>
-            <span style="
-              width: 1px; height: 28px;
-              background: rgba(127,151,127,.3);
-              flex-shrink: 0;
-            "></span>
-            <span style="font-size:14px; font-weight:600; color:#232420; line-height:1.4;">${x}</span>
-          </div>
+            <span style="width:6px; height:6px; border-radius:50%; background:#7f977f; flex-shrink:0; opacity:.7;"></span>
+            ${x}
+          </li>
         `).join('');
       }
     }
