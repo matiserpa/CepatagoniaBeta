@@ -510,33 +510,51 @@
         filter: saturate(.68) contrast(.94) brightness(.88);
         order: 2;
       }
-      /* Sello de fecha dentro del banner */
-    .editorial-date-stamp{
-      position: absolute;
-      bottom: 28px;
-      right: 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 3px;
-      z-index: 4;
+      /* ── Barra de evento ── */
+    .event-bar{
+      width: 100%;
+      background: #3d5245;
+      padding: 13px 0;
+      z-index: 2;
+      position: relative;
     }
-    .editorial-date-stamp span:first-child{
+    .event-bar-inner{
+      max-width: var(--max-w, 1200px);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 5vw, 48px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .event-bar-dot{
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.45);
+      flex-shrink: 0;
+    }
+    .event-bar-date{
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(13px, 1.1vw, 16px);
+      font-size: clamp(12px, 1.4vw, 15px);
       font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #f0ede6;
+    }
+    .event-bar-sep{
+      color: rgba(255,255,255,.35);
+      font-size: 16px;
+    }
+    .event-bar-city{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(11px, 1.1vw, 13px);
+      font-weight: 500;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: rgba(247,246,241,.95);
-      text-shadow: 0 1px 8px rgba(40,60,40,.35);
+      color: rgba(240,237,230,.65);
     }
-    .editorial-date-city{
-      font-family: 'Montserrat', sans-serif;
-      font-size: clamp(9px, .75vw, 11px);
-      font-weight: 500;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: rgba(247,246,241,.65);
+    @media(max-width:520px){
+      .event-bar-inner{ gap:8px; }
     }
 
     .editorial-banner-fade{ display: none; }
@@ -583,33 +601,51 @@
         letter-spacing: .08em;
       }
     }
-    /* Sello de fecha dentro del banner */
-    .editorial-date-stamp{
-      position: absolute;
-      bottom: 28px;
-      right: 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 3px;
-      z-index: 4;
+    /* ── Barra de evento ── */
+    .event-bar{
+      width: 100%;
+      background: #3d5245;
+      padding: 13px 0;
+      z-index: 2;
+      position: relative;
     }
-    .editorial-date-stamp span:first-child{
+    .event-bar-inner{
+      max-width: var(--max-w, 1200px);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 5vw, 48px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .event-bar-dot{
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.45);
+      flex-shrink: 0;
+    }
+    .event-bar-date{
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(13px, 1.1vw, 16px);
+      font-size: clamp(12px, 1.4vw, 15px);
       font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #f0ede6;
+    }
+    .event-bar-sep{
+      color: rgba(255,255,255,.35);
+      font-size: 16px;
+    }
+    .event-bar-city{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(11px, 1.1vw, 13px);
+      font-weight: 500;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: rgba(247,246,241,.95);
-      text-shadow: 0 1px 8px rgba(40,60,40,.35);
+      color: rgba(240,237,230,.65);
     }
-    .editorial-date-city{
-      font-family: 'Montserrat', sans-serif;
-      font-size: clamp(9px, .75vw, 11px);
-      font-weight: 500;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: rgba(247,246,241,.65);
+    @media(max-width:520px){
+      .event-bar-inner{ gap:8px; }
     }
 
     .editorial-banner-fade{
@@ -1080,33 +1116,51 @@
       .editorial-banner-img{
         object-position: center 22%;
       }
-      /* Sello de fecha dentro del banner */
-    .editorial-date-stamp{
-      position: absolute;
-      bottom: 28px;
-      right: 32px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 3px;
-      z-index: 4;
+      /* ── Barra de evento ── */
+    .event-bar{
+      width: 100%;
+      background: #3d5245;
+      padding: 13px 0;
+      z-index: 2;
+      position: relative;
     }
-    .editorial-date-stamp span:first-child{
+    .event-bar-inner{
+      max-width: var(--max-w, 1200px);
+      margin: 0 auto;
+      padding: 0 clamp(16px, 5vw, 48px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .event-bar-dot{
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.45);
+      flex-shrink: 0;
+    }
+    .event-bar-date{
       font-family: 'Montserrat', sans-serif;
-      font-size: clamp(13px, 1.1vw, 16px);
+      font-size: clamp(12px, 1.4vw, 15px);
       font-weight: 700;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: #f0ede6;
+    }
+    .event-bar-sep{
+      color: rgba(255,255,255,.35);
+      font-size: 16px;
+    }
+    .event-bar-city{
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(11px, 1.1vw, 13px);
+      font-weight: 500;
       letter-spacing: .18em;
       text-transform: uppercase;
-      color: rgba(247,246,241,.95);
-      text-shadow: 0 1px 8px rgba(40,60,40,.35);
+      color: rgba(240,237,230,.65);
     }
-    .editorial-date-city{
-      font-family: 'Montserrat', sans-serif;
-      font-size: clamp(9px, .75vw, 11px);
-      font-weight: 500;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      color: rgba(247,246,241,.65);
+    @media(max-width:520px){
+      .event-bar-inner{ gap:8px; }
     }
 
     .editorial-banner-fade{
@@ -1311,10 +1365,6 @@
       <div class="editorial-divider"></div>
       <div class="editorial-sub">Naturaleza que inspira</div>
     </div>
-    <div class="editorial-date-stamp" aria-hidden="true">
-      <span id="bannerDate">—</span>
-      <span class="editorial-date-city" id="bannerCity">—</span>
-    </div>
   </div>
   <!-- EDITORIAL MOBILE — style inline, sin conflictos CSS -->
   <div id="edMob" style="display:none; flex-direction:column; width:100vw; margin-left:calc(50% - 50vw); background:#000; position:relative;">
@@ -1332,11 +1382,7 @@
           Naturaleza que inspira
         </div>
       </div>
-      <!-- Sello fecha mobile -->
-      <div style="position:absolute; bottom:18px; right:20px; text-align:right;">
-        <div style="font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:rgba(247,246,241,.92); text-shadow:0 1px 6px rgba(40,60,40,.4);" id="bannerDateMob">—</div>
-        <div style="font-family:'Montserrat',sans-serif; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(247,246,241,.6);" id="bannerCityMob">—</div>
-      </div>
+
     </div>
   </div>
   <script>
@@ -1358,6 +1404,16 @@
   </script>
 
 
+
+  <!-- BARRA DE EVENTO -->
+  <div class="event-bar" id="eventBar">
+    <div class="event-bar-inner">
+      <span class="event-bar-dot" aria-hidden="true"></span>
+      <span class="event-bar-date" id="eventBarDate">—</span>
+      <span class="event-bar-sep" aria-hidden="true">·</span>
+      <span class="event-bar-city" id="eventBarCity">—</span>
+    </div>
+  </div>
 
   <!-- HERO -->
   <header class="hero">
@@ -2106,12 +2162,10 @@
       if (metaDateStrong) metaDateStrong.textContent = fecha;
       const bannerDate = document.getElementById('bannerDate');
       const bannerCity = document.getElementById('bannerCity');
-      if (bannerDate) bannerDate.textContent = fecha;
-      if (bannerCity) bannerCity.textContent = ciudad;
-      const bannerDateMob = document.getElementById('bannerDateMob');
-      const bannerCityMob = document.getElementById('bannerCityMob');
-      if (bannerDateMob) bannerDateMob.textContent = fecha;
-      if (bannerCityMob) bannerCityMob.textContent = ciudad;
+      const eventBarDate = document.getElementById('eventBarDate');
+      const eventBarCity = document.getElementById('eventBarCity');
+      if (eventBarDate) eventBarDate.textContent = fecha;
+      if (eventBarCity) eventBarCity.textContent = ciudad;
       if (metaCityStrong) metaCityStrong.textContent = ciudad;
       if (metaDateFooter) metaDateFooter.textContent = fecha;
       if (metaCityFooter) metaCityFooter.textContent = ciudad;
