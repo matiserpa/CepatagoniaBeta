@@ -464,7 +464,9 @@
       width: 100vw;
       left: 50%;
       transform: translateX(-50%);
-      height: clamp(260px, 36vw, 440px);
+      height: calc(100vh - 72px);
+      max-height: 820px;
+      min-height: 420px;
       overflow: hidden;
       z-index: 0;
     }
