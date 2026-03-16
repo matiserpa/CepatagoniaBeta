@@ -2294,16 +2294,18 @@
         ejesList.innerHTML = (window.CEP.ejes || []).map(e => {
           const isAcompana = e.titulo === 'NOS ACOMPAÑA';
           if (isAcompana) {
-            // Renderizar en el bloque debajo de speakers
+            // ── "Nos acompaña" — LACA + UDERM + SEM los 3 juntos ──
             const acompanaBlock = document.getElementById('nosAcompanaBlock');
             if (acompanaBlock) {
-              const imgs = (e.speakers||[]).flatMap(s => Array.isArray(s.images) ? s.images : (s.image ? [s.image] : []));
-              acompanaBlock.innerHTML = `<div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--line);">
-                <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:20px;">Nos acompaña</div>
-                <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
-                  ${imgs.map(img => `<img src="${img}" alt="LACA" style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />`).join('')}
-                </div>
-              </div>`;
+              acompanaBlock.innerHTML = `
+                <div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--line);">
+                  <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:20px;">Nos acompañan</div>
+                  <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
+                    <img src="assets/logo-laca2.webp"    alt="LACA"       style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
+                    <img src="assets/logo_uderm.webp"    alt="Lab UDERM"  style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
+                    <img src="assets/logo-sem.webp"      alt="SEM BIOCREAM" style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
+                  </div>
+                </div>`;
             }
             return '';
           }
