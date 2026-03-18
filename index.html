@@ -520,7 +520,7 @@
     .event-bar{
       width: 100%;
       background: #3d5245;
-      padding: 13px 0;
+      padding: 20px 0;
       z-index: 2;
       position: relative;
     }
@@ -611,7 +611,7 @@
     .event-bar{
       width: 100%;
       background: #3d5245;
-      padding: 13px 0;
+      padding: 20px 0;
       z-index: 2;
       position: relative;
     }
@@ -1133,7 +1133,7 @@
     .event-bar{
       width: 100%;
       background: #3d5245;
-      padding: 13px 0;
+      padding: 20px 0;
       z-index: 2;
       position: relative;
     }
@@ -1174,13 +1174,15 @@
     }
     @media(max-width:520px){
       .event-bar-inner{
-        flex-direction: column;
-        gap: 3px;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 6px;
+        justify-content: center;
       }
-      .event-bar-sep{ display: none; }
-      .event-bar-dot{ display: none; }
-      .event-bar-date{ font-size: 11px; letter-spacing: .18em; }
-      .event-bar-city{ font-size: 10.5px; letter-spacing: .15em; }
+      .event-bar-sep{ display: inline; }
+      .event-bar-dot{ display: inline-block; }
+      .event-bar-date{ font-size: 10px; letter-spacing: .10em; }
+      .event-bar-city{ font-size: 10px; letter-spacing: .10em; }
     }
 
     .editorial-banner-fade{
