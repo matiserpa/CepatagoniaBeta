@@ -476,11 +476,8 @@
       overflow: hidden;
       z-index: 0;
       margin-top: calc(-1 * clamp(40px, 6vw, 80px));
-      margin-bottom: -1px;
-      display: block;
-      vertical-align: top;
-      font-size: 0;
-      line-height: 0;
+      margin-bottom: 0;
+      flex-shrink: 0;
     }
     .editorial-banner-img{
       position: absolute;
@@ -1370,7 +1367,8 @@
     </div>
   </div>
 
-  <!-- BLOQUE EDITORIAL -->
+  <!-- BLOQUE EDITORIAL + BARRA: wrapper flush sin gap -->
+  <div style="display:flex; flex-direction:column; line-height:0; font-size:0;">
   <div class="editorial-banner" aria-label="Identidad visual CEPATAGONIA">
     <img
       class="editorial-banner-img"
@@ -1434,6 +1432,8 @@
       <span class="event-bar-city" id="eventBarCity">—</span>
     </div>
   </div>
+
+  </div><!-- /wrapper flush -->
 
   <!-- HERO -->
   <header class="hero">
