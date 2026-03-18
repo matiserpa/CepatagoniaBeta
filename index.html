@@ -472,7 +472,8 @@
       width: 100vw;
       left: 50%;
       transform: translateX(-50%);
-      height: clamp(400px, calc(100vh - var(--navH)), 700px);
+      height: calc(100vh - var(--navH) + clamp(40px, 6vw, 80px));
+      min-height: 440px;
       overflow: hidden;
       z-index: 0;
       margin-top: calc(-1 * clamp(40px, 6vw, 80px));
