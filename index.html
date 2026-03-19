@@ -1609,7 +1609,6 @@
         .sede-block .sede-img img { width:100%; height:100%; object-fit:cover; display:block; }
         .sede-block .sede-content { display:flex; flex-direction:column; justify-content:center; gap:16px; }
 
-        /* Kicker mejorado — con línea de acento */
         .sede-kicker {
           display: inline-flex; align-items: center; gap: 8px;
           font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
@@ -1621,7 +1620,6 @@
           background: #3d5245; border-radius: 2px; flex-shrink: 0;
         }
 
-        /* Título del bloque — más peso */
         .sede-block h3 {
           margin: 0;
           font-family: 'Playfair Display', Georgia, serif;
@@ -1631,12 +1629,10 @@
           color: #232420;
         }
 
-        /* Descripción intro */
         .sede-block .sede-intro {
           margin: 0; font-size: 14px; color: #666; line-height: 1.6;
         }
 
-        /* Lista de hoteles */
         .hotel-list { display:flex; flex-direction:column; gap:8px; }
         .hotel-item {
           background: rgba(255,255,255,.72);
@@ -1647,7 +1643,6 @@
         .hotel-item h4 { margin:0 0 4px; font-size:14px; font-weight:780; color:#232420; }
         .hotel-item p { margin:0; font-size:12.5px; color:#888; }
 
-        /* Lista de excursiones */
         .excursion-list { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
         .excursion-item {
           background: rgba(255,255,255,.72);
@@ -1666,7 +1661,6 @@
 
       <div style="height:24px;"></div>
 
-      <!-- Bloque 1: Alojamiento + turismo2 -->
       <div class="sede-block">
         <div class="sede-img">
           <img src="assets/slide-2-0-l.webp" alt="Hotel Le Village — Sede del Congreso" loading="lazy" />
@@ -1693,11 +1687,9 @@
               <p>Desayuno regional · WiFi · Salón con chimenea</p>
             </div>
           </div>
-
         </div>
       </div>
 
-      <!-- Bloque 2: Traslados + turismo3 (imagen a la derecha) -->
       <div class="sede-block reverse">
         <div class="sede-img">
           <img src="assets/turismo3.webp" alt="Acceso a San Martín de los Andes" loading="lazy" />
@@ -1717,11 +1709,9 @@
             </div>
           </div>
           <p class="muted" style="margin:0; font-size:13px;">Traslado privado · Minivan grupal · Servicios compartidos</p>
-
         </div>
       </div>
 
-      <!-- Bloque 3: Excursiones + turismo4 -->
       <div class="sede-block">
         <div class="sede-img">
           <img src="assets/turismo4.webp" alt="Patagonia - excursiones" loading="lazy" />
@@ -1742,7 +1732,6 @@
         </div>
       </div>
 
-      <!-- Contacto turismo -->
       <div style="margin-top:40px; padding:24px 32px; background:rgba(255,255,255,.6); border-radius:16px; border:1px solid rgba(127,151,127,.18); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
         <div>
           <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; color:#7f977f; margin-bottom:6px;">Consultas de turismo y hospedaje</div>
@@ -2081,8 +2070,7 @@
             image: "assets/Lourdes Acosta.webp"
           }
         ]
-      }
-      ,
+      },
       {
         eje: "",
         titulo: "NOS ACOMPAÑA",
@@ -2271,8 +2259,6 @@
       const metaCityFooter = document.getElementById('metaCityFooter');
       const metaModeFooter = document.getElementById('metaModeFooter');
       if (metaDateStrong) metaDateStrong.textContent = fecha;
-      const bannerDate = document.getElementById('bannerDate');
-      const bannerCity = document.getElementById('bannerCity');
       const eventBarDate = document.getElementById('eventBarDate');
       const eventBarCity = document.getElementById('eventBarCity');
       if (eventBarDate) eventBarDate.textContent = fecha;
@@ -2300,18 +2286,16 @@
         ejesList.innerHTML = (window.CEP.ejes || []).map(e => {
           const isAcompana = e.titulo === 'NOS ACOMPAÑA';
           if (isAcompana) {
-            // ── "Nos acompaña" — LACA + UDERM + SEM los 3 juntos ──
             const acompanaBlock = document.getElementById('nosAcompanaBlock');
             if (acompanaBlock) {
               acompanaBlock.innerHTML = `
                 <div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--line);">
                   <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:20px;">Nos acompañan</div>
                   <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
-                    <img src="assets/logo-laca2.webp"    alt="LACA"       style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                    <img src="assets/logo_uderm.webp"    alt="Lab UDERM"  style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                    <img src="assets/logo-sem.webp"      alt="SEM BIOCREAM" style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                    <img src="assets/logo-bbm-sin fondo.webp" alt="BBM" style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                  </div>
+                    <img src="assets/logo-laca2.webp"    alt="LACA"         style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
+                    <img src="assets/logo_uderm.webp"    alt="Lab UDERM"    style="height:64px; max-width:180px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 16px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
+                    <img src="assets/logo-sem.webp"      alt="SEM BIOCREAM" style="height:80px; max-width:200px; object-fit:contain; border-radius:10px; background:#fff; padding:6px 14px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
+                    <img src="assets/logo-bbm-sin fondo.webp" alt="BBM"    style="height:80px; max-width:200px; object-fit:contain; border-radius:10px; background:#fff; padding:6px 14px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
                   </div>
                 </div>`;
             }
