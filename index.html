@@ -1419,15 +1419,117 @@
     })();
   </script>
 
-  <!-- BARRA DE EVENTO -->
+  <!-- BARRA DE EVENTO + CONTADOR -->
   <div class="event-bar" id="eventBar">
-    <div class="event-bar-inner">
+    <div class="event-bar-inner" style="flex-wrap: wrap; row-gap: 6px;">
+      <!-- Fecha y ciudad -->
       <span class="event-bar-dot" aria-hidden="true"></span>
       <span class="event-bar-date" id="eventBarDate">—</span>
       <span class="event-bar-sep" aria-hidden="true">·</span>
       <span class="event-bar-city" id="eventBarCity">—</span>
+      <!-- Separador -->
+      <span class="event-bar-sep" aria-hidden="true" style="opacity:.3; margin: 0 4px;">|</span>
+      <!-- Contador regresivo -->
+      <div id="countdown" style="display:flex; align-items:center; gap:6px; font-family:'Montserrat',sans-serif;">
+        <div class="cdown-unit">
+          <span class="cdown-num" id="cd-days">--</span>
+          <span class="cdown-label">días</span>
+        </div>
+        <span class="cdown-sep">:</span>
+        <div class="cdown-unit">
+          <span class="cdown-num" id="cd-hours">--</span>
+          <span class="cdown-label">hs</span>
+        </div>
+        <span class="cdown-sep">:</span>
+        <div class="cdown-unit">
+          <span class="cdown-num" id="cd-mins">--</span>
+          <span class="cdown-label">min</span>
+        </div>
+        <span class="cdown-sep">:</span>
+        <div class="cdown-unit">
+          <span class="cdown-num" id="cd-secs">--</span>
+          <span class="cdown-label">seg</span>
+        </div>
+      </div>
     </div>
   </div>
+
+  <style>
+    .cdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      gap: 1px;
+    }
+    .cdown-num {
+      font-size: clamp(13px, 1.4vw, 15px);
+      font-weight: 700;
+      letter-spacing: .06em;
+      color: #f0ede6;
+      min-width: 26px;
+      text-align: center;
+    }
+    .cdown-label {
+      font-size: 8px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(188,205,189,.70);
+      font-weight: 600;
+    }
+    .cdown-sep {
+      font-size: 14px;
+      color: rgba(255,255,255,.30);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    #countdown.finished .cdown-num { color: rgba(188,205,189,.60); }
+    @media (max-width: 520px) {
+      #countdown { gap: 4px; }
+      .cdown-num { font-size: 12px; min-width: 22px; }
+      .cdown-sep { font-size: 12px; }
+    }
+  </style>
+
+  <script>
+    (function(){
+      // Fecha del congreso: 10 de octubre 2026, 9:00 AM ARG (UTC-3)
+      var target = new Date('2026-10-10T09:00:00-03:00').getTime();
+
+      var elDays  = document.getElementById('cd-days');
+      var elHours = document.getElementById('cd-hours');
+      var elMins  = document.getElementById('cd-mins');
+      var elSecs  = document.getElementById('cd-secs');
+      var elCd    = document.getElementById('countdown');
+
+      function pad(n){ return n < 10 ? '0' + n : String(n); }
+
+      function tick(){
+        var now  = Date.now();
+        var diff = target - now;
+        if(diff <= 0){
+          elDays.textContent  = '00';
+          elHours.textContent = '00';
+          elMins.textContent  = '00';
+          elSecs.textContent  = '00';
+          if(elCd) elCd.classList.add('finished');
+          return;
+        }
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000)  / 60000);
+        var s = Math.floor((diff % 60000)    / 1000);
+        elDays.textContent  = pad(d);
+        elHours.textContent = pad(h);
+        elMins.textContent  = pad(m);
+        elSecs.textContent  = pad(s);
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
 
   </div><!-- /wrapper flush -->
 
