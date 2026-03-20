@@ -1554,7 +1554,14 @@
         gap: 24px;
         text-align: center;
       }
-      .sales-band-divider { display: none; }
+      .sales-band-inner > div:nth-child(2) {
+        flex-direction: row !important;
+        min-height: unset !important;
+        width: 100%;
+        justify-content: center;
+        gap: 16px;
+      }
+      .sales-band-inner > div:nth-child(2) > div { display: none; }
       .sales-band-left { align-items: center; }
       .sales-band-date { justify-content: center; }
       .sales-band-cta { justify-content: center; }
@@ -2070,9 +2077,6 @@
         <div class="sales-band-left">
           <div class="sales-band-eyebrow">Apertura de ventas</div>
           <p class="sales-band-title" style="margin:0;">Las entradas estarán<br>disponibles muy pronto</p>
-          <div style="display:flex; align-items:center; justify-content:center; padding: 10px 0 4px;">
-            <img src="assets/planout-logo-negro.png" alt="Planout" style="height:56px; object-fit:contain; opacity:.75; filter:invert(1) brightness(2);" />
-          </div>
           <div class="sales-band-date">31 de marzo · 12:00 hs (hora Argentina)</div>
           <div class="sales-band-cta">
             <a class="sales-band-btn sales-band-btn-primary" id="btnInstagramEntradas" href="#" target="_blank" rel="noopener noreferrer">Seguinos en Instagram</a>
@@ -2080,8 +2084,12 @@
           </div>
         </div>
 
-        <!-- Divider -->
-        <div class="sales-band-divider"></div>
+        <!-- Divider central con logo Planout -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; flex-shrink:0;">
+          <div style="width:1px; flex:1; background:rgba(255,255,255,.10); min-height:30px;"></div>
+          <img src="assets/planout-logo-negro.png" alt="Planout" style="height:52px; object-fit:contain; opacity:.72; filter:invert(1) brightness(2); flex-shrink:0;" />
+          <div style="width:1px; flex:1; background:rgba(255,255,255,.10); min-height:30px;"></div>
+        </div>
 
         <!-- Derecha: dígitos -->
         <div class="sales-band-right">
