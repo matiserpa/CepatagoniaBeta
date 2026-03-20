@@ -644,7 +644,16 @@
       color: rgba(240,237,230,.65);
     }
     @media(max-width:520px){
-      .event-bar-inner{ gap:8px; }
+      .event-bar-inner{
+        flex-direction: row;
+        flex-wrap: nowrap;
+        gap: 6px;
+        justify-content: center;
+      }
+      .event-bar-sep{ display: inline; }
+      .event-bar-dot{ display: inline-block; }
+      .event-bar-date{ font-size: 10px; letter-spacing: .10em; }
+      .event-bar-city{ font-size: 10px; letter-spacing: .10em; }
     }
 
     .editorial-banner-fade{
@@ -1308,6 +1317,153 @@
       .ed-mobile-tag{ font-size: 15px; }
       .ed-mobile-left{ padding: 16px 10px 16px 16px; }
     }
+
+    /* ===== CONTADOR DE APERTURA DE VENTAS ===== */
+    .sales-countdown-wrap {
+      display: flex;
+      justify-content: center;
+    }
+
+    .sales-countdown-card {
+      background: rgba(255,255,255,.72);
+      border-radius: 24px;
+      border: 1px solid rgba(127,151,127,.20);
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      text-align: center;
+      max-width: 520px;
+      width: 100%;
+      box-shadow: 0 2px 20px rgba(61,82,69,.08), 0 0 0 1px rgba(127,151,127,.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .sales-countdown-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #7f977f, #9bb3a3, #bccdbd, #9bb3a3, #7f977f);
+      background-size: 200% 100%;
+      animation: shimmer-bar 3s linear infinite;
+    }
+
+    @keyframes shimmer-bar {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .sales-countdown-label {
+      font-size: 10px;
+      letter-spacing: .26em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #7f977f;
+    }
+
+    .sales-countdown-title {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(20px, 3vw, 26px);
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -.01em;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .sales-countdown-date-hint {
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: .06em;
+      margin: -8px 0 0;
+    }
+
+    .sales-cd-units {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .sales-cd-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      background: rgba(127,151,127,.08);
+      border: 1px solid rgba(127,151,127,.16);
+      border-radius: 16px;
+      padding: 14px 18px;
+      min-width: 72px;
+    }
+
+    .sales-cd-num {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -.02em;
+      transition: transform .15s ease;
+    }
+
+    .sales-cd-num.tick {
+      transform: scale(1.08);
+    }
+
+    .sales-cd-lbl {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .sales-cd-sep {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 28px;
+      color: rgba(127,151,127,.5);
+      font-weight: 300;
+      line-height: 1;
+      margin-bottom: 12px;
+      user-select: none;
+    }
+
+    .sales-countdown-sub {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 36ch;
+    }
+
+    /* Estado: ventas abiertas */
+    .sales-open-card {
+      background: rgba(255,255,255,.72);
+      border-radius: 24px;
+      border-top: 3px solid #7f977f;
+      border-left: 1px solid rgba(127,151,127,.16);
+      border-right: 1px solid rgba(127,151,127,.16);
+      border-bottom: 1px solid rgba(127,151,127,.16);
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 2px 12px rgba(0,0,0,.05);
+    }
+
+    @media (max-width: 520px) {
+      .sales-countdown-card { padding: 24px 16px; }
+      .sales-cd-unit { min-width: 58px; padding: 12px 10px; }
+      .sales-cd-num { font-size: 28px; }
+      .sales-cd-sep { font-size: 22px; }
+      .sales-open-card { padding: 24px 16px; }
+    }
   </style>
 </head>
 
@@ -1802,22 +1958,46 @@
     <div class="container">
       <div class="section-head"><div><h2>Entradas</h2></div></div>
 
-      <div style="display:flex; justify-content:center;">
-        <div style="
-          background:rgba(255,255,255,.72);
-          border-radius:20px;
-          border-top: 3px solid #7f977f;
-          padding: 32px 40px;
-          display:flex;
-          flex-direction:column;
-          align-items:center;
-          gap:16px;
-          text-align:center;
-          max-width:480px;
-          width:100%;
-          box-shadow: 0 2px 12px rgba(0,0,0,.05);
-        ">
-          <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; color:#7f977f;">Pase General</div>
+      <!-- ESTADO: contador de apertura (visible antes del 31/03/2026 12:00 ARG) -->
+      <div class="sales-countdown-wrap" id="salesCountdownWrap">
+        <div class="sales-countdown-card">
+          <div class="sales-countdown-label">Apertura de ventas</div>
+          <p class="sales-countdown-title">Las entradas estarán disponibles en</p>
+          <div class="sales-countdown-date-hint">31 de marzo · 12:00 hs (hora Argentina)</div>
+          <div class="sales-cd-units">
+            <div class="sales-cd-unit">
+              <span class="sales-cd-num" id="scd-days">--</span>
+              <span class="sales-cd-lbl">Días</span>
+            </div>
+            <span class="sales-cd-sep">:</span>
+            <div class="sales-cd-unit">
+              <span class="sales-cd-num" id="scd-hours">--</span>
+              <span class="sales-cd-lbl">Horas</span>
+            </div>
+            <span class="sales-cd-sep">:</span>
+            <div class="sales-cd-unit">
+              <span class="sales-cd-num" id="scd-mins">--</span>
+              <span class="sales-cd-lbl">Min</span>
+            </div>
+            <span class="sales-cd-sep">:</span>
+            <div class="sales-cd-unit">
+              <span class="sales-cd-num" id="scd-secs">--</span>
+              <span class="sales-cd-lbl">Seg</span>
+            </div>
+          </div>
+          <p class="sales-countdown-sub">Registrate en Instagram para ser el primero en enterarte cuando salgan las entradas.</p>
+          <a class="btn btn-primary" id="btnInstagramEntradas" href="#" target="_blank" rel="noopener noreferrer">Seguinos en Instagram</a>
+          <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+            <span style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#bbb;">Venta a través de</span>
+            <img src="assets/planout-logo-negro.png" alt="Planout" style="height:18px; object-fit:contain; opacity:.4;" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADO: ventas abiertas (oculto hasta el 31/03/2026 12:00 ARG) -->
+      <div style="display:flex; justify-content:center;" id="salesOpenWrap" hidden>
+        <div class="sales-open-card">
+          <div style="font-size:10px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; color:#7f977f;">Pase General</div>
           <div style="font-size:clamp(22px,3vw,30px); font-weight:800; color:#232420; line-height:1.1;">
             <span style="font-size:12px; font-weight:400; color:#aaa; display:block; margin-bottom:6px; letter-spacing:.1em; text-transform:uppercase;">Precio</span>
             Próximamente
@@ -2450,6 +2630,7 @@
     setExternalLink(document.getElementById('btnWhatsapp'), waUrl);
     setExternalLink(document.getElementById('btnWhatsappFooter'), waUrl);
     setExternalLink(document.getElementById('btnInstagram'), CEP_CONTACT.instagramUrl);
+    setExternalLink(document.getElementById('btnInstagramEntradas'), CEP_CONTACT.instagramUrl);
     setExternalLink(document.getElementById('btnInstagramFooter'), CEP_CONTACT.instagramUrl);
 
     const nombreInput = document.getElementById('nombreInput');
@@ -2595,6 +2776,69 @@
         `).join('');
       }
     }
+
+    // ===== CONTADOR DE APERTURA DE VENTAS =====
+    (function(){
+      // Apertura: 31 de marzo de 2026 a las 12:00 ARG (UTC-3)
+      var salesTarget = new Date('2026-03-31T12:00:00-03:00').getTime();
+
+      var countdownWrap = document.getElementById('salesCountdownWrap');
+      var openWrap      = document.getElementById('salesOpenWrap');
+
+      var elDays  = document.getElementById('scd-days');
+      var elHours = document.getElementById('scd-hours');
+      var elMins  = document.getElementById('scd-mins');
+      var elSecs  = document.getElementById('scd-secs');
+
+      var prevVals = { d: null, h: null, m: null, s: null };
+
+      function pad(n){ return n < 10 ? '0' + n : String(n); }
+
+      function animateTick(el, val){
+        if (!el) return;
+        var padded = pad(val);
+        if (el.textContent === padded) return;
+        el.textContent = padded;
+        el.classList.remove('tick');
+        // force reflow
+        void el.offsetWidth;
+        el.classList.add('tick');
+        setTimeout(function(){ el.classList.remove('tick'); }, 150);
+      }
+
+      function reveal(){
+        if (countdownWrap) countdownWrap.hidden = true;
+        if (openWrap)      openWrap.hidden      = false;
+      }
+
+      function tick(){
+        var now  = Date.now();
+        var diff = salesTarget - now;
+
+        if (diff <= 0) {
+          reveal();
+          return;
+        }
+
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000)  / 60000);
+        var s = Math.floor((diff % 60000)    / 1000);
+
+        animateTick(elDays,  d);
+        animateTick(elHours, h);
+        animateTick(elMins,  m);
+        animateTick(elSecs,  s);
+      }
+
+      // Verificar estado inicial antes de arrancar el intervalo
+      if (Date.now() >= salesTarget) {
+        reveal();
+      } else {
+        tick();
+        setInterval(tick, 1000);
+      }
+    })();
   </script>
 </body>
 </html>
