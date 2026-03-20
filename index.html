@@ -2935,4 +2935,25 @@
           return;
         }
 
-        var d = Math.floor(dif
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor((diff % 86400000) / 3600000);
+        var m = Math.floor((diff % 3600000)  / 60000);
+        var s = Math.floor((diff % 60000)    / 1000);
+
+        animateTick(elDays,  d);
+        animateTick(elHours, h);
+        animateTick(elMins,  m);
+        animateTick(elSecs,  s);
+      }
+
+      // Verificar estado inicial antes de arrancar el intervalo
+      if (Date.now() >= salesTarget) {
+        reveal();
+      } else {
+        tick();
+        setInterval(tick, 1000);
+      }
+    })();
+  </script>
+</body>
+</html>
