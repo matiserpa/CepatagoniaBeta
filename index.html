@@ -2069,15 +2069,14 @@
         <!-- Izquierda: texto + CTA -->
         <div class="sales-band-left">
           <div class="sales-band-eyebrow">Apertura de ventas</div>
-          <p class="sales-band-title">Las entradas estarán<br>disponibles muy pronto</p>
+          <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+            <p class="sales-band-title" style="margin:0;">Las entradas estarán<br>disponibles muy pronto</p>
+            <img src="assets/planout-logo-negro.png" alt="Planout" style="height:22px; object-fit:contain; opacity:.40; filter:invert(1) brightness(2); flex-shrink:0;" />
+          </div>
           <div class="sales-band-date">31 de marzo · 12:00 hs (hora Argentina)</div>
           <div class="sales-band-cta">
             <a class="sales-band-btn sales-band-btn-primary" id="btnInstagramEntradas" href="#" target="_blank" rel="noopener noreferrer">Seguinos en Instagram</a>
             <a class="sales-band-btn sales-band-btn-ghost" href="#contacto">Consultanos</a>
-          </div>
-          <div class="sales-band-planout" style="margin-top:2px;">
-            <span>Venta a través de</span>
-            <img src="assets/planout-logo-negro.png" alt="Planout" />
           </div>
         </div>
 
@@ -2277,9 +2276,9 @@
           <p class="muted" style="margin:0; font-size:13px;">Para reservas de hotel, traslados y excursiones contactate directamente con nuestro equipo de turismo.</p>
         </div>
         <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
-          <a href="mailto:turismocepatagonia@gmail.com" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
+          <a href="/cdn-cgi/l/email-protection#265253544f554b494543564752474149484f4766414b474f4a0845494b" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
             <span style="width:32px; height:32px; border-radius:50%; background:rgba(127,151,127,.15); display:flex; align-items:center; justify-content:center; font-size:15px;">✉️</span>
-            turismocepatagonia@gmail.com
+            <span class="__cf_email__" data-cfemail="f185848398829c9e929481908590969e9f9890b1969c90989ddf929e9c">[email&#160;protected]</span>
           </a>
           <a href="https://wa.me/5492944534720" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
             <span style="width:32px; height:32px; border-radius:50%; background:rgba(127,151,127,.15); display:flex; align-items:center; justify-content:center; font-size:15px;">💬</span>
@@ -2338,7 +2337,7 @@
           <div style="display:grid; gap:10px;">
             <div class="kicker" style="justify-content:space-between;">
               <b>Email</b>
-              <a href="mailto:infocepatagonia@gmail.com" style="color:var(--text); font-weight:720; letter-spacing:0;">infocepatagonia@gmail.com</a>
+              <a href="/cdn-cgi/l/email-protection#e78e8981888482978693868088898e86a7808a868e8bc984888a" style="color:var(--text); font-weight:720; letter-spacing:0;"><span class="__cf_email__" data-cfemail="11787f777e727461706570767e7f787051767c70787d3f727e7c">[email&#160;protected]</span></a>
             </div>
             <div class="kicker" style="justify-content:space-between;">
               <b>Tel</b>
@@ -2411,7 +2410,7 @@
             <button class="btn btn-primary" type="submit">Enviar consulta</button>
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
             <div class="help" style="margin-top:10px;">
-              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></b>.
+              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="/cdn-cgi/l/email-protection#84edeae2ebe7e1f4e5f0e5e3ebeaede5c4e3e9e5ede8aae7ebe9"><span class="__cf_email__" data-cfemail="6d04030b020e081d0c190c0a0203040c2d0a000c0401430e0200">[email&#160;protected]</span></a></b>.
             </div>
           </form>
         </div>
@@ -2458,7 +2457,7 @@
     </div>
   </div>
 
-  <script>
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   window.CEP = {
     meta: {
       fecha: "10 y 11 de Octubre 2026",
@@ -2936,25 +2935,4 @@
           return;
         }
 
-        var d = Math.floor(diff / 86400000);
-        var h = Math.floor((diff % 86400000) / 3600000);
-        var m = Math.floor((diff % 3600000)  / 60000);
-        var s = Math.floor((diff % 60000)    / 1000);
-
-        animateTick(elDays,  d);
-        animateTick(elHours, h);
-        animateTick(elMins,  m);
-        animateTick(elSecs,  s);
-      }
-
-      // Verificar estado inicial antes de arrancar el intervalo
-      if (Date.now() >= salesTarget) {
-        reveal();
-      } else {
-        tick();
-        setInterval(tick, 1000);
-      }
-    })();
-  </script>
-</body>
-</html>
+        var d = Math.floor(dif
