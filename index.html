@@ -2011,9 +2011,9 @@
           <p class="muted" style="margin:0; font-size:13px;">Para reservas de hotel, traslados y excursiones contactate directamente con nuestro equipo de turismo.</p>
         </div>
         <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
-          <a href="mailto:info@cepatagonia.com" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
+          <a href="mailto:turismo@cepatagonia.com" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
             <span style="width:32px; height:32px; border-radius:50%; background:rgba(127,151,127,.15); display:flex; align-items:center; justify-content:center; font-size:15px;">✉️</span>
-            <span>info@cepatagonia.com</span>
+            turismo@cepatagonia.com
           </a>
           <a href="https://wa.me/5492944534720" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
             <span style="width:32px; height:32px; border-radius:50%; background:rgba(127,151,127,.15); display:flex; align-items:center; justify-content:center; font-size:15px;">💬</span>
@@ -2160,7 +2160,7 @@
     <div class="container">
       <div style="border-top:1px solid var(--line); padding-top:20px; padding-bottom:8px; display:grid; grid-template-columns:1fr auto; align-items:center; gap:24px;">
 
-        <!-- Copyright — izquierda -->
+        <!-- Copyright -->
         <div style="display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center;">
           <div style="display:flex; align-items:center; gap:10px;">
             <img src="assets/cepatagonia-logo-transparente.webp" alt="CEPATAGONIA" style="height:24px; opacity:.4; object-fit:contain;" />
@@ -2170,9 +2170,9 @@
         </div>
 
         <!-- Impulso Creativo — derecha -->
-        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; opacity:.80; min-width:0;">
+        <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px; opacity:.80;">
           <span style="font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted2); font-family:'Montserrat',sans-serif; font-weight:500; white-space:nowrap;">Diseño &amp; comunicación por</span>
-          <img src="assets/impulso-creativo-transparente-dark.svg" alt="Impulso Creativo Studio" style="height:64px; width:auto; max-width:320px; display:block;" />
+          <img src="assets/impulso-creativo-transparente-dark.svg" alt="Impulso Creativo Studio" style="height:64px; width:auto; display:block;" />
         </div>
 
       </div>
@@ -2189,7 +2189,7 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
   window.CEP = {
     meta: { fecha: "10 y 11 de Octubre 2026", ciudad: "San Martín de los Andes", modalidad: "Presencial" },
     copy: {
@@ -2331,4 +2331,13 @@
       var salesTarget = new Date('2026-03-31T12:00:00-03:00').getTime();
       var countdownWrap = document.getElementById('salesCountdownWrap');
       var openWrap = document.getElementById('salesOpenWrap');
-      var elDay
+      var elDays=document.getElementById('scd-days'), elHours=document.getElementById('scd-hours'), elMins=document.getElementById('scd-mins'), elSecs=document.getElementById('scd-secs');
+      function pad(n){ return n<10?'0'+n:String(n); }
+      function animateTick(el,val){ if(!el)return; var p=pad(val); if(el.textContent===p)return; el.textContent=p; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); setTimeout(function(){el.classList.remove('tick');},150); }
+      function reveal(){ if(countdownWrap)countdownWrap.hidden=true; if(openWrap)openWrap.hidden=false; }
+      function tick(){ var diff=salesTarget-Date.now(); if(diff<=0){reveal();return;} animateTick(elDays,Math.floor(diff/86400000)); animateTick(elHours,Math.floor((diff%86400000)/3600000)); animateTick(elMins,Math.floor((diff%3600000)/60000)); animateTick(elSecs,Math.floor((diff%60000)/1000)); }
+      if(Date.now()>=salesTarget){reveal();}else{tick();setInterval(tick,1000);}
+    })();
+  </script>
+</body>
+</html>
