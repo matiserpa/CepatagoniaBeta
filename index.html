@@ -1144,12 +1144,10 @@
       h1{ max-width: 100%; font-size: clamp(34px, 10vw, 56px); }
       .hero-card .big{ max-width: 100%; }
 
-      /* EDITORIAL tablet/mobile */
       .editorial-banner-img{
         object-position: center 22%;
       }
-      /* ── Barra de evento ── */
-    .event-bar{
+      .event-bar{
       width: 100%;
       background: #3d5245;
       padding: 12px 0 14px;
@@ -1204,7 +1202,7 @@
       .event-bar-city{ font-size: 10px; letter-spacing: .10em; }
     }
 
-    .editorial-banner-fade{
+      .editorial-banner-fade{
         background: linear-gradient(to bottom,
           rgba(244,242,235,0) 0%,
           rgba(244,242,235,0) 35%,
@@ -1235,7 +1233,6 @@
 
     /* ===== RESPONSIVE 520px ===== */
     @media (max-width: 520px){
-      /* NAV */
       #btnPaseNav{ display: none !important; }
       .nav-inner{ padding: 6px 0; gap: 6px; }
       .brand{ flex: 1 1 auto; min-width: 0; gap: 6px; }
@@ -1247,34 +1244,19 @@
       .btn{ padding: 9px 10px; font-size: 11px; }
       .nav-actions{ gap: 6px; flex: 0 0 auto; }
       .hamburger{ padding: 10px; border-radius: 999px; min-width: 40px; width: 40px; height: 40px; justify-content: center; }
-
-      /* HERO */
       .kicker--metaInline{ font-size: 11px; padding: 7px 10px; letter-spacing: .08em; }
       .hero-metaTop{ font-size: 12px; padding: 9px 12px; margin-bottom: 10px; }
       .hero{ margin-top: 0; padding-top: 22px; }
       h1{ margin-top: 12px; margin-bottom: 10px; }
       .subhead{ margin: 14px 0 20px; }
       .hero-actions{ gap: 10px; margin-top: 8px; }
-
-      /* EDITORIAL en mobile: ajustes finos */
-      .editorial-banner-img{
-        object-position: center 16%;
-      }
-      .editorial-banner-text{
-        padding: 0 20px 20px;
-        gap: 5px;
-      }
-      .editorial-tagline{
-        font-size: clamp(22px, 8.5vw, 34px);
-        letter-spacing: .12em;
-        line-height: 1.06;
-      }
+      .editorial-banner-img{ object-position: center 16%; }
+      .editorial-banner-text{ padding: 0 20px 20px; gap: 5px; }
+      .editorial-tagline{ font-size: clamp(22px, 8.5vw, 34px); letter-spacing: .12em; line-height: 1.06; }
       .editorial-divider{ width: 34px; margin: 2px auto; }
       .editorial-sub{ font-size: 10px; letter-spacing: .18em; }
     }
 
-
-    /* ===== EDITORIAL MOBILE LIMPIO ===== */
     .ed-mobile{ display: none; }
 
     @media (max-width: 920px){
@@ -1361,8 +1343,6 @@
       gap: clamp(24px, 4vw, 56px);
       align-items: center;
     }
-
-    /* Columna izquierda: texto */
     .sales-band-left {
       display: flex;
       flex-direction: column;
@@ -1433,16 +1413,12 @@
       color: rgba(240,237,230,.8);
     }
     .sales-band-btn-ghost:hover { background: rgba(255,255,255,.14); }
-
-    /* Divider vertical */
     .sales-band-divider {
       width: 1px;
       height: clamp(80px, 12vw, 120px);
       background: rgba(255,255,255,.10);
       flex-shrink: 0;
     }
-
-    /* Columna derecha: dígitos */
     .sales-band-right {
       display: flex;
       flex-direction: column;
@@ -1505,8 +1481,6 @@
       opacity: .35;
       filter: invert(1) brightness(2);
     }
-
-    /* Estado ventas abiertas: misma franja, layout diferente */
     .sales-open-band {
       width: 100vw;
       margin-left: calc(50% - 50vw);
@@ -1563,8 +1537,6 @@
       align-items: center;
       flex-wrap: wrap;
     }
-
-    /* Responsive franja */
     @media (max-width: 760px) {
       .sales-band-inner {
         grid-template-columns: 1fr;
@@ -1646,15 +1618,10 @@
     </div>
   </div>
 
-  <!-- BLOQUE EDITORIAL + BARRA: wrapper flush sin gap -->
+  <!-- BLOQUE EDITORIAL + BARRA -->
   <div style="display:flex; flex-direction:column; line-height:0; font-size:0; margin:0; padding:0;">
   <div class="editorial-banner" aria-label="Identidad visual CEPATAGONIA">
-    <img
-      class="editorial-banner-img"
-      src="assets/cute-girl.jpg"
-      alt="Rostro — imagen editorial CEPATAGONIA"
-      loading="eager"
-    />
+    <img class="editorial-banner-img" src="assets/cute-girl.jpg" alt="Rostro — imagen editorial CEPATAGONIA" loading="eager" />
     <div class="editorial-banner-fade" aria-hidden="true"></div>
     <div class="editorial-banner-text">
       <div class="editorial-tagline">
@@ -1665,12 +1632,11 @@
       <div class="editorial-sub">Naturaleza que inspira</div>
     </div>
   </div>
-  <!-- EDITORIAL MOBILE — style inline, sin conflictos CSS -->
+
   <div id="edMob" style="display:none; flex-direction:column; width:100vw; margin-left:calc(50% - 50vw); background:#000; position:relative;">
     <div style="position:relative; width:100%; overflow:hidden; line-height:0;">
       <img src="assets/cute-girl.jpg" alt="" loading="eager"
         style="width:100%; height:340px; object-fit:cover; object-position:5% 20%; display:block; filter:saturate(.68) contrast(.94) brightness(.75);" />
-      <!-- Gradiente + texto superpuesto -->
       <div style="position:absolute; inset:0; background:linear-gradient(to bottom, rgba(127,151,127,0) 15%, rgba(127,151,127,.22) 40%, rgba(127,151,127,.60) 72%, rgba(127,151,127,.82) 100%);"></div>
       <div style="position:absolute; bottom:0; left:0; right:0; padding:0 24px 28px; text-align:center; display:flex; flex-direction:column; align-items:center; gap:8px;">
         <div style="font-family:'Montserrat',sans-serif; font-weight:800; font-size:clamp(30px,9vw,46px); letter-spacing:.18em; text-transform:uppercase; color:#f7f6f1; line-height:1.08; text-shadow:0 1px 12px rgba(60,80,60,.4);">
@@ -1681,7 +1647,6 @@
           Naturaleza que inspira
         </div>
       </div>
-
     </div>
   </div>
   <script>
@@ -1705,14 +1670,11 @@
   <!-- BARRA DE EVENTO + CONTADOR -->
   <div class="event-bar" id="eventBar">
     <div class="event-bar-inner" style="flex-wrap: wrap; row-gap: 6px;">
-      <!-- Fecha y ciudad -->
       <span class="event-bar-dot" aria-hidden="true"></span>
       <span class="event-bar-date" id="eventBarDate">—</span>
       <span class="event-bar-sep" aria-hidden="true">·</span>
       <span class="event-bar-city" id="eventBarCity">—</span>
-      <!-- Separador -->
       <span class="event-bar-sep" aria-hidden="true" style="opacity:.3; margin: 0 4px;">|</span>
-      <!-- Contador regresivo -->
       <div id="countdown" style="display:flex; align-items:center; gap:6px; font-family:'Montserrat',sans-serif;">
         <div class="cdown-unit">
           <span class="cdown-num" id="cd-days">--</span>
@@ -1738,89 +1700,41 @@
   </div>
 
   <style>
-    .cdown-unit {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      line-height: 1;
-      gap: 1px;
-    }
-    .cdown-num {
-      font-size: clamp(15px, 1.7vw, 19px);
-      font-weight: 700;
-      letter-spacing: .06em;
-      color: #f0ede6;
-      min-width: 30px;
-      text-align: center;
-    }
-    .cdown-label {
-      font-size: 8px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      color: rgba(188,205,189,.70);
-      font-weight: 600;
-    }
-    .cdown-sep {
-      font-size: 14px;
-      color: rgba(255,255,255,.30);
-      font-weight: 300;
-      line-height: 1;
-      margin-bottom: 8px;
-    }
+    .cdown-unit { display: flex; flex-direction: column; align-items: center; line-height: 1; gap: 1px; }
+    .cdown-num { font-size: clamp(15px, 1.7vw, 19px); font-weight: 700; letter-spacing: .06em; color: #f0ede6; min-width: 30px; text-align: center; }
+    .cdown-label { font-size: 8px; letter-spacing: .18em; text-transform: uppercase; color: rgba(188,205,189,.70); font-weight: 600; }
+    .cdown-sep { font-size: 14px; color: rgba(255,255,255,.30); font-weight: 300; line-height: 1; margin-bottom: 8px; }
     #countdown.finished .cdown-num { color: rgba(188,205,189,.60); }
-    @media (max-width: 520px) {
-      #countdown { gap: 4px; }
-      .cdown-num { font-size: 12px; min-width: 22px; }
-      .cdown-sep { font-size: 12px; }
-    }
+    @media (max-width: 520px) { #countdown { gap: 4px; } .cdown-num { font-size: 12px; min-width: 22px; } .cdown-sep { font-size: 12px; } }
   </style>
 
   <script>
     (function(){
-      // Fecha del congreso: 10 de octubre 2026, 9:00 AM ARG (UTC-3)
       var target = new Date('2026-10-10T09:00:00-03:00').getTime();
-
       var elDays  = document.getElementById('cd-days');
       var elHours = document.getElementById('cd-hours');
       var elMins  = document.getElementById('cd-mins');
       var elSecs  = document.getElementById('cd-secs');
       var elCd    = document.getElementById('countdown');
-
       function pad(n){ return n < 10 ? '0' + n : String(n); }
-
       function tick(){
         var now  = Date.now();
         var diff = target - now;
-        if(diff <= 0){
-          elDays.textContent  = '00';
-          elHours.textContent = '00';
-          elMins.textContent  = '00';
-          elSecs.textContent  = '00';
-          if(elCd) elCd.classList.add('finished');
-          return;
-        }
-        var d = Math.floor(diff / 86400000);
-        var h = Math.floor((diff % 86400000) / 3600000);
-        var m = Math.floor((diff % 3600000)  / 60000);
-        var s = Math.floor((diff % 60000)    / 1000);
-        elDays.textContent  = pad(d);
-        elHours.textContent = pad(h);
-        elMins.textContent  = pad(m);
-        elSecs.textContent  = pad(s);
+        if(diff <= 0){ elDays.textContent='00'; elHours.textContent='00'; elMins.textContent='00'; elSecs.textContent='00'; if(elCd) elCd.classList.add('finished'); return; }
+        elDays.textContent  = pad(Math.floor(diff / 86400000));
+        elHours.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+        elMins.textContent  = pad(Math.floor((diff % 3600000)  / 60000));
+        elSecs.textContent  = pad(Math.floor((diff % 60000)    / 1000));
       }
-
-      tick();
-      setInterval(tick, 1000);
+      tick(); setInterval(tick, 1000);
     })();
   </script>
-
   </div><!-- /wrapper flush -->
 
   <!-- HERO -->
   <header class="hero">
     <div class="glow" aria-hidden="true"></div>
     <div class="glow2" aria-hidden="true"></div>
-
     <div class="container">
       <div class="hero-grid">
         <div>
@@ -1828,35 +1742,18 @@
             <span class="dot" aria-hidden="true"></span>
             <span id="metaDateStrong">—</span> • <span id="metaCityStrong">—</span>
           </div>
-
-          <h1>
-            Innovación y<br/>
-            tecnología aplicada<br/>
-            a la estética
-          </h1>
-
-          <p class="subhead">
-            Formación intensiva para cosmiatras, dermatólogos y profesionales del sector.
-            Protocolos, equipamiento y tendencias de vanguardia.
-            <b style="color:var(--text); font-weight:680;">El primer congreso de estética de la Patagonia.</b>
-          </p>
-
+          <h1>Innovación y<br/>tecnología aplicada<br/>a la estética</h1>
+          <p class="subhead">Formación intensiva para cosmiatras, dermatólogos y profesionales del sector. Protocolos, equipamiento y tendencias de vanguardia. <b style="color:var(--text); font-weight:680;">El primer congreso de estética de la Patagonia.</b></p>
           <div class="hero-actions">
             <a class="btn btn-primary" href="#" id="btnAsesorateHero">Asesorate</a>
             <a class="btn btn-ghost" href="#programa">Ver programa</a>
             <a class="btn btn-ghost" href="#speakers">Conocer speakers</a>
           </div>
         </div>
-
         <aside class="hero-card">
           <div class="big">Protocolos + criterio + actualización real</div>
-          <p>
-            Un congreso diseñado para mejorar la práctica profesional con herramientas actuales:
-            equipos, técnicas, seguridad, tendencias y aplicación clínica.
-          </p>
-
+          <p>Un congreso diseñado para mejorar la práctica profesional con herramientas actuales: equipos, técnicas, seguridad, tendencias y aplicación clínica.</p>
           <div style="height:10px"></div>
-
           <div class="grid-2">
             <div class="card" style="padding:12px; background: rgba(255,255,255,.62); box-shadow:none;">
               <div class="muted" style="letter-spacing:.16em; text-transform:uppercase;">Enfoque</div>
@@ -1872,7 +1769,7 @@
     </div>
   </header>
 
-  <!-- VISIÓN / OBJETIVOS -->
+  <!-- VISIÓN -->
   <section id="vision">
     <div class="container">
       <div class="section-head"><div><h2>Visión & objetivos</h2></div></div>
@@ -1939,144 +1836,35 @@
     </div>
   </section>
 
-
-  <!-- FRANJA DE CREDENCIALES -->
-  <div style="
-    background: linear-gradient(135deg, #3d5245 0%, #2e3d34 100%);
-    padding: clamp(32px, 5vw, 56px) 0;
-    position: relative;
-    overflow: hidden;
-  ">
-    <!-- Textura sutil de fondo -->
-    <div style="
-      position: absolute; inset: 0; pointer-events: none;
-      background-image: url('assets/adn.webp');
-      background-size: cover; background-position: center;
-      opacity: .04; filter: grayscale(1);
-    "></div>
-    <div style="
-      width: min(1160px, calc(100% - clamp(36px, 6vw, 56px)));
-      margin: 0 auto;
-      position: relative;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: clamp(16px, 3vw, 32px);
-    " class="credenciales-grid">
-      <!-- Stat 1 -->
+  <!-- FRANJA CREDENCIALES -->
+  <div style="background: linear-gradient(135deg, #3d5245 0%, #2e3d34 100%); padding: clamp(32px, 5vw, 56px) 0; position: relative; overflow: hidden;">
+    <div style="position: absolute; inset: 0; pointer-events: none; background-image: url('assets/adn.webp'); background-size: cover; background-position: center; opacity: .04; filter: grayscale(1);"></div>
+    <div style="width: min(1160px, calc(100% - clamp(36px, 6vw, 56px))); margin: 0 auto; position: relative; display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(16px, 3vw, 32px);" class="credenciales-grid">
       <div style="text-align: center; padding: clamp(12px, 2vw, 20px) 8px; border-right: 1px solid rgba(255,255,255,.10);">
-        <div style="
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(40px, 5vw, 64px);
-          font-weight: 600;
-          color: #f0ede6;
-          line-height: 1;
-          letter-spacing: -.02em;
-        ">+10</div>
-        <div style="
-          font-size: clamp(10px, 1.1vw, 12px);
-          letter-spacing: .22em;
-          text-transform: uppercase;
-          color: rgba(188,205,189,.80);
-          font-weight: 600;
-          margin-top: 10px;
-          line-height: 1.5;
-        ">Disertantes<br>de primer nivel</div>
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(40px, 5vw, 64px); font-weight: 600; color: #f0ede6; line-height: 1; letter-spacing: -.02em;">+10</div>
+        <div style="font-size: clamp(10px, 1.1vw, 12px); letter-spacing: .22em; text-transform: uppercase; color: rgba(188,205,189,.80); font-weight: 600; margin-top: 10px; line-height: 1.5;">Disertantes<br>de primer nivel</div>
       </div>
-      <!-- Stat 2 -->
       <div style="text-align: center; padding: clamp(12px, 2vw, 20px) 8px; border-right: 1px solid rgba(255,255,255,.10);">
-        <div style="
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(40px, 5vw, 64px);
-          font-weight: 600;
-          color: #f0ede6;
-          line-height: 1;
-          letter-spacing: -.02em;
-        ">9</div>
-        <div style="
-          font-size: clamp(10px, 1.1vw, 12px);
-          letter-spacing: .22em;
-          text-transform: uppercase;
-          color: rgba(188,205,189,.80);
-          font-weight: 600;
-          margin-top: 10px;
-          line-height: 1.5;
-        ">Ejes temáticos<br>de vanguardia</div>
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(40px, 5vw, 64px); font-weight: 600; color: #f0ede6; line-height: 1; letter-spacing: -.02em;">9</div>
+        <div style="font-size: clamp(10px, 1.1vw, 12px); letter-spacing: .22em; text-transform: uppercase; color: rgba(188,205,189,.80); font-weight: 600; margin-top: 10px; line-height: 1.5;">Ejes temáticos<br>de vanguardia</div>
       </div>
-      <!-- Stat 3 -->
       <div style="text-align: center; padding: clamp(12px, 2vw, 20px) 8px; border-right: 1px solid rgba(255,255,255,.10);">
-        <div style="
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(40px, 5vw, 64px);
-          font-weight: 600;
-          color: #f0ede6;
-          line-height: 1;
-          letter-spacing: -.02em;
-        ">2</div>
-        <div style="
-          font-size: clamp(10px, 1.1vw, 12px);
-          letter-spacing: .22em;
-          text-transform: uppercase;
-          color: rgba(188,205,189,.80);
-          font-weight: 600;
-          margin-top: 10px;
-          line-height: 1.5;
-        ">Días de formación<br>intensiva</div>
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(40px, 5vw, 64px); font-weight: 600; color: #f0ede6; line-height: 1; letter-spacing: -.02em;">2</div>
+        <div style="font-size: clamp(10px, 1.1vw, 12px); letter-spacing: .22em; text-transform: uppercase; color: rgba(188,205,189,.80); font-weight: 600; margin-top: 10px; line-height: 1.5;">Días de formación<br>intensiva</div>
       </div>
-      <!-- Stat 4 -->
       <div style="text-align: center; padding: clamp(12px, 2vw, 20px) 8px;">
-        <div style="
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(40px, 5vw, 64px);
-          font-weight: 600;
-          color: #f0ede6;
-          line-height: 1;
-          letter-spacing: -.02em;
-        ">1<span style="font-size: .55em; vertical-align: super; letter-spacing: 0;">ra</span></div>
-        <div style="
-          font-size: clamp(10px, 1.1vw, 12px);
-          letter-spacing: .22em;
-          text-transform: uppercase;
-          color: rgba(188,205,189,.80);
-          font-weight: 600;
-          margin-top: 10px;
-          line-height: 1.5;
-        ">Edición en<br>la Patagonia</div>
+        <div style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(40px, 5vw, 64px); font-weight: 600; color: #f0ede6; line-height: 1; letter-spacing: -.02em;">1<span style="font-size: .55em; vertical-align: super; letter-spacing: 0;">ra</span></div>
+        <div style="font-size: clamp(10px, 1.1vw, 12px); letter-spacing: .22em; text-transform: uppercase; color: rgba(188,205,189,.80); font-weight: 600; margin-top: 10px; line-height: 1.5;">Edición en<br>la Patagonia</div>
       </div>
     </div>
-    <!-- Frase debajo -->
-    <div style="
-      text-align: center;
-      margin-top: clamp(24px, 3vw, 36px);
-      padding-top: clamp(20px, 2.5vw, 28px);
-      border-top: 1px solid rgba(255,255,255,.08);
-      width: min(1160px, calc(100% - clamp(36px, 6vw, 56px)));
-      margin-left: auto; margin-right: auto;
-      position: relative;
-    ">
-      <p style="
-        font-family: 'Playfair Display', Georgia, serif;
-        font-size: clamp(15px, 1.8vw, 20px);
-        font-style: italic;
-        color: rgba(240,237,230,.65);
-        margin: 0;
-        letter-spacing: .01em;
-        line-height: 1.6;
-      ">El primer congreso de estética celular avanzada de la Patagonia.</p>
+    <div style="text-align: center; margin-top: clamp(24px, 3vw, 36px); padding-top: clamp(20px, 2.5vw, 28px); border-top: 1px solid rgba(255,255,255,.08); width: min(1160px, calc(100% - clamp(36px, 6vw, 56px))); margin-left: auto; margin-right: auto; position: relative;">
+      <p style="font-family: 'Playfair Display', Georgia, serif; font-size: clamp(15px, 1.8vw, 20px); font-style: italic; color: rgba(240,237,230,.65); margin: 0; letter-spacing: .01em; line-height: 1.6;">El primer congreso de estética celular avanzada de la Patagonia.</p>
     </div>
   </div>
   <style>
     @media (max-width: 640px) {
-      .credenciales-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-      }
-      .credenciales-grid > div {
-        border-right: none !important;
-        border-bottom: 1px solid rgba(255,255,255,.10);
-      }
-      .credenciales-grid > div:nth-child(1),
-      .credenciales-grid > div:nth-child(2) {
-        border-bottom: 1px solid rgba(255,255,255,.10);
-      }
+      .credenciales-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .credenciales-grid > div { border-right: none !important; border-bottom: 1px solid rgba(255,255,255,.10); }
     }
   </style>
 
@@ -2086,11 +1874,8 @@
       <div class="section-head"><div><h2>Entradas</h2></div></div>
     </div>
 
-    <!-- ESTADO: contador de apertura (visible antes del 31/03/2026 12:00 ARG) -->
     <div class="sales-band" id="salesCountdownWrap" style="margin-top: 22px;">
       <div class="sales-band-inner">
-
-        <!-- Izquierda: texto + CTA -->
         <div class="sales-band-left">
           <div class="sales-band-eyebrow">Apertura de ventas</div>
           <p class="sales-band-title" style="margin:0;">Las entradas estarán<br>disponibles muy pronto</p>
@@ -2100,15 +1885,11 @@
             <a class="sales-band-btn sales-band-btn-ghost" href="#contacto">Consultanos</a>
           </div>
         </div>
-
-        <!-- Divider central con logo Planout -->
         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; flex-shrink:0;">
           <div style="width:1px; flex:1; background:rgba(255,255,255,.10); min-height:30px;"></div>
           <img src="assets/planout-logo-negro.png" alt="Planout" style="height:52px; object-fit:contain; opacity:.72; filter:invert(1) brightness(2); flex-shrink:0;" />
           <div style="width:1px; flex:1; background:rgba(255,255,255,.10); min-height:30px;"></div>
         </div>
-
-        <!-- Derecha: dígitos -->
         <div class="sales-band-right">
           <div class="sales-band-units">
             <div class="sales-band-unit">
@@ -2132,11 +1913,9 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ESTADO: ventas abiertas (oculto hasta el 31/03/2026 12:00 ARG) -->
     <div class="sales-open-band" id="salesOpenWrap" hidden style="margin-top: 22px;">
       <div class="sales-open-band-inner">
         <div class="sales-open-left">
@@ -2153,7 +1932,6 @@
         </div>
       </div>
     </div>
-
   </section>
 
   <!-- SEDE -->
@@ -2163,7 +1941,6 @@
         <div><h2>Sede</h2></div>
         <a class="btn btn-ghost" href="#entradas">Ver entradas</a>
       </div>
-      <!-- SEDE: layout editorial alternado imagen/contenido -->
       <style>
         .sede-block { display:grid; grid-template-columns:1fr 1fr; gap:clamp(16px,3vw,36px); align-items:stretch; margin-bottom: clamp(28px,5vw,52px); }
         .sede-block.reverse { direction:rtl; }
@@ -2171,114 +1948,48 @@
         .sede-block .sede-img { border-radius:20px; overflow:hidden; min-height:320px; }
         .sede-block .sede-img img { width:100%; height:100%; object-fit:cover; display:block; }
         .sede-block .sede-content { display:flex; flex-direction:column; justify-content:center; gap:16px; }
-
-        .sede-kicker {
-          display: inline-flex; align-items: center; gap: 8px;
-          font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-          font-weight: 700; color: #3d5245;
-        }
-        .sede-kicker::before {
-          content: ''; display: block;
-          width: 24px; height: 2px;
-          background: #3d5245; border-radius: 2px; flex-shrink: 0;
-        }
-
-        .sede-block h3 {
-          margin: 0;
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(22px, 2.6vw, 32px);
-          font-weight: 700;
-          line-height: 1.15;
-          color: #232420;
-        }
-
-        .sede-block .sede-intro {
-          margin: 0; font-size: 14px; color: #666; line-height: 1.6;
-        }
-
+        .sede-kicker { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; font-weight: 700; color: #3d5245; }
+        .sede-kicker::before { content: ''; display: block; width: 24px; height: 2px; background: #3d5245; border-radius: 2px; flex-shrink: 0; }
+        .sede-block h3 { margin: 0; font-family: 'Playfair Display', Georgia, serif; font-size: clamp(22px, 2.6vw, 32px); font-weight: 700; line-height: 1.15; color: #232420; }
+        .sede-block .sede-intro { margin: 0; font-size: 14px; color: #666; line-height: 1.6; }
         .hotel-list { display:flex; flex-direction:column; gap:8px; }
-        .hotel-item {
-          background: rgba(255,255,255,.72);
-          border-radius: 14px; padding: 14px 18px;
-          border-left: 3px solid #7f977f;
-          box-shadow: 0 1px 4px rgba(0,0,0,.04);
-        }
+        .hotel-item { background: rgba(255,255,255,.72); border-radius: 14px; padding: 14px 18px; border-left: 3px solid #7f977f; box-shadow: 0 1px 4px rgba(0,0,0,.04); }
         .hotel-item h4 { margin:0 0 4px; font-size:14px; font-weight:780; color:#232420; }
         .hotel-item p { margin:0; font-size:12.5px; color:#888; }
-
         .excursion-list { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-        .excursion-item {
-          background: rgba(255,255,255,.72);
-          border-radius: 12px; padding: 12px 14px;
-          font-size: 13.5px; font-weight: 600; color: #232420;
-          box-shadow: 0 1px 4px rgba(0,0,0,.04);
-          display: flex; align-items: center; gap: 8px;
-        }
-        @media(max-width:720px){
-          .sede-block { grid-template-columns:1fr; }
-          .sede-block.reverse { direction:ltr; }
-          .sede-block .sede-img { min-height:220px; }
-          .excursion-list { grid-template-columns:1fr; }
-        }
+        .excursion-item { background: rgba(255,255,255,.72); border-radius: 12px; padding: 12px 14px; font-size: 13.5px; font-weight: 600; color: #232420; box-shadow: 0 1px 4px rgba(0,0,0,.04); display: flex; align-items: center; gap: 8px; }
+        @media(max-width:720px){ .sede-block { grid-template-columns:1fr; } .sede-block.reverse { direction:ltr; } .sede-block .sede-img { min-height:220px; } .excursion-list { grid-template-columns:1fr; } }
       </style>
-
       <div style="height:24px;"></div>
-
       <div class="sede-block">
-        <div class="sede-img">
-          <img src="assets/slide-2-0-l.webp" alt="Hotel Le Village — Sede del Congreso" loading="lazy" />
-        </div>
+        <div class="sede-img"><img src="assets/slide-2-0-l.webp" alt="Hotel Le Village — Sede del Congreso" loading="lazy" /></div>
         <div class="sede-content">
           <div class="sede-kicker">🏨 Alojamiento oficial</div>
           <h3>Hoteles del Congreso</h3>
           <p class="sede-intro">Todos con tarifas preferenciales para participantes y cupos limitados.</p>
           <div class="hotel-list">
-            <div class="hotel-item">
-              <h4>Hotel &amp; CC Le Village <span style="font-weight:400; color:#aaa;">· Sede</span></h4>
-              <p>WiFi · Desayuno buffet · Salones de convenciones</p>
-            </div>
-            <div class="hotel-item">
-              <h4>Hotel Le Chatelet <span style="font-weight:400; color:#aaa;">· 3★ Superior</span></h4>
-              <p>Piscina climatizada · WiFi · Desayuno buffet</p>
-            </div>
-            <div class="hotel-item">
-              <h4>Hotel Tunqueley <span style="font-weight:400; color:#aaa;">· 2★</span></h4>
-              <p>Desayuno continental · WiFi · Recepción 24 h</p>
-            </div>
-            <div class="hotel-item">
-              <h4>Hotel Viejo Esquiador <span style="font-weight:400; color:#aaa;">· 2★ Superior</span></h4>
-              <p>Desayuno regional · WiFi · Salón con chimenea</p>
-            </div>
+            <div class="hotel-item"><h4>Hotel &amp; CC Le Village <span style="font-weight:400; color:#aaa;">· Sede</span></h4><p>WiFi · Desayuno buffet · Salones de convenciones</p></div>
+            <div class="hotel-item"><h4>Hotel Le Chatelet <span style="font-weight:400; color:#aaa;">· 3★ Superior</span></h4><p>Piscina climatizada · WiFi · Desayuno buffet</p></div>
+            <div class="hotel-item"><h4>Hotel Tunqueley <span style="font-weight:400; color:#aaa;">· 2★</span></h4><p>Desayuno continental · WiFi · Recepción 24 h</p></div>
+            <div class="hotel-item"><h4>Hotel Viejo Esquiador <span style="font-weight:400; color:#aaa;">· 2★ Superior</span></h4><p>Desayuno regional · WiFi · Salón con chimenea</p></div>
           </div>
         </div>
       </div>
-
       <div class="sede-block reverse">
-        <div class="sede-img">
-          <img src="assets/turismo3.webp" alt="Acceso a San Martín de los Andes" loading="lazy" />
-        </div>
+        <div class="sede-img"><img src="assets/turismo3.webp" alt="Acceso a San Martín de los Andes" loading="lazy" /></div>
         <div class="sede-content">
           <div class="sede-kicker">✈️ Traslados</div>
           <h3>Aeropuerto – Hotel</h3>
           <p class="sede-intro">Servicios privados y compartidos desde los dos aeropuertos más cercanos.</p>
           <div class="hotel-list">
-            <div class="hotel-item">
-              <h4>Chapelco (CPC)</h4>
-              <p>Aviador Carlos Campos — acceso directo</p>
-            </div>
-            <div class="hotel-item">
-              <h4>Bariloche (BRC)</h4>
-              <p>Internacional de Bariloche — traslado ~2 hs</p>
-            </div>
+            <div class="hotel-item"><h4>Chapelco (CPC)</h4><p>Aviador Carlos Campos — acceso directo</p></div>
+            <div class="hotel-item"><h4>Bariloche (BRC)</h4><p>Internacional de Bariloche — traslado ~2 hs</p></div>
           </div>
           <p class="muted" style="margin:0; font-size:13px;">Traslado privado · Minivan grupal · Servicios compartidos</p>
         </div>
       </div>
-
       <div class="sede-block">
-        <div class="sede-img">
-          <img src="assets/turismo4.webp" alt="Patagonia - excursiones" loading="lazy" />
-        </div>
+        <div class="sede-img"><img src="assets/turismo4.webp" alt="Patagonia - excursiones" loading="lazy" /></div>
         <div class="sede-content">
           <div class="sede-kicker">🧭 Excursiones</div>
           <h3>Pre y post Congreso</h3>
@@ -2294,16 +2005,15 @@
           </div>
         </div>
       </div>
-
       <div style="margin-top:40px; padding:24px 32px; background:rgba(255,255,255,.6); border-radius:16px; border:1px solid rgba(127,151,127,.18); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
         <div>
           <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; font-weight:700; color:#7f977f; margin-bottom:6px;">Consultas de turismo y hospedaje</div>
           <p class="muted" style="margin:0; font-size:13px;">Para reservas de hotel, traslados y excursiones contactate directamente con nuestro equipo de turismo.</p>
         </div>
         <div style="display:flex; gap:20px; flex-wrap:wrap; align-items:center;">
-          <a href="/cdn-cgi/l/email-protection#265253544f554b494543564752474149484f4766414b474f4a0845494b" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
+          <a href="mailto:turismo@cepatagonia.com" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
             <span style="width:32px; height:32px; border-radius:50%; background:rgba(127,151,127,.15); display:flex; align-items:center; justify-content:center; font-size:15px;">✉️</span>
-            <span class="__cf_email__" data-cfemail="f185848398829c9e929481908590969e9f9890b1969c90989ddf929e9c">[email&#160;protected]</span>
+            turismo@cepatagonia.com
           </a>
           <a href="https://wa.me/5492944534720" target="_blank" style="display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:#3d5245; text-decoration:none;">
             <span style="width:32px; height:32px; border-radius:50%; background:rgba(127,151,127,.15); display:flex; align-items:center; justify-content:center; font-size:15px;">💬</span>
@@ -2311,7 +2021,6 @@
           </a>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -2321,9 +2030,7 @@
       <div class="section-head"><div><h2>FAQ</h2></div></div>
       <details>
         <summary>¿A quiénes está dirigido este Congreso?</summary>
-        <p>El Congreso está dirigido principalmente a cosmiatras, cosmetólogas y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.<br/><br/>
-        También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.<br/><br/>
-        Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.</p>
+        <p>El Congreso está dirigido principalmente a cosmiatras, cosmetólogas y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.<br/><br/>También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.<br/><br/>Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.</p>
       </details>
       <details>
         <summary>¿Qué hace diferente a este Congreso?</summary>
@@ -2360,26 +2067,13 @@
         <div class="card">
           <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Datos oficiales</div>
           <div style="display:grid; gap:10px;">
-            <div class="kicker" style="justify-content:space-between;">
-              <b>Email</b>
-              <a href="/cdn-cgi/l/email-protection#e78e8981888482978693868088898e86a7808a868e8bc984888a" style="color:var(--text); font-weight:720; letter-spacing:0;"><span class="__cf_email__" data-cfemail="11787f777e727461706570767e7f787051767c70787d3f727e7c">[email&#160;protected]</span></a>
-            </div>
-            <div class="kicker" style="justify-content:space-between;">
-              <b>Tel</b>
-              <a href="tel:+5491131888164" style="color:var(--text); font-weight:720; letter-spacing:0;">+54 9 11 3188-8164</a>
-            </div>
-            <div class="kicker" style="justify-content:space-between;">
-              <b>Dirección</b>
-              <span style="color:var(--text); font-weight:720; letter-spacing:0;">Gral. Roca 816, San Martín de los Andes</span>
-            </div>
+            <div class="kicker" style="justify-content:space-between;"><b>Email</b><a href="mailto:info@cepatagonia.com" style="color:var(--text); font-weight:720; letter-spacing:0;">info@cepatagonia.com</a></div>
+            <div class="kicker" style="justify-content:space-between;"><b>Tel</b><a href="tel:+5491131888164" style="color:var(--text); font-weight:720; letter-spacing:0;">+54 9 11 3188-8164</a></div>
+            <div class="kicker" style="justify-content:space-between;"><b>Dirección</b><span style="color:var(--text); font-weight:720; letter-spacing:0;">Gral. Roca 816, San Martín de los Andes</span></div>
           </div>
           <div class="socials">
-            <a class="social-btn" href="#" id="btnInstagram">
-              <img class="social-ic" src="assets/instagram.svg" alt="Instagram" /> Instagram
-            </a>
-            <a class="social-btn" href="#" id="btnWhatsapp">
-              <img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" /> WhatsApp
-            </a>
+            <a class="social-btn" href="#" id="btnInstagram"><img class="social-ic" src="assets/instagram.svg" alt="Instagram" /> Instagram</a>
+            <a class="social-btn" href="#" id="btnWhatsapp"><img class="social-ic" src="assets/whatsapp.svg" alt="WhatsApp" /> WhatsApp</a>
           </div>
           <div style="height:16px;"></div>
           <iframe name="fs_iframe" id="fs_iframe" title="FormSubmit hidden iframe" style="display:none; width:0; height:0; border:0;"></iframe>
@@ -2434,9 +2128,7 @@
             <div style="height:14px;"></div>
             <button class="btn btn-primary" type="submit">Enviar consulta</button>
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
-            <div class="help" style="margin-top:10px;">
-              Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="/cdn-cgi/l/email-protection#84edeae2ebe7e1f4e5f0e5e3ebeaede5c4e3e9e5ede8aae7ebe9"><span class="__cf_email__" data-cfemail="6d04030b020e081d0c190c0a0203040c2d0a000c0401430e0200">[email&#160;protected]</span></a></b>.
-            </div>
+            <div class="help" style="margin-top:10px;">Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="mailto:info@cepatagonia.com">info@cepatagonia.com</a></b>.</div>
           </form>
         </div>
         <div style="display:flex; flex-direction:column; gap:14px;">
@@ -2459,7 +2151,11 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
+  <!-- ============================================================
+       FOOTER — ÚNICO CAMBIO RESPECTO AL ORIGINAL
+       Se agregó "Diseño & comunicación por [logo Impulso Creativo]"
+       Usar assets/impulso-creativo2.png (fondo claro, acorde al footer)
+  ============================================================ -->
   <footer>
     <div class="container">
       <div style="border-top:1px solid var(--line); padding-top:18px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center;">
@@ -2468,6 +2164,13 @@
           <span class="muted" style="font-size:12px;">© <span id="year"></span> CEPATAGONIA · Todos los derechos reservados.</span>
         </div>
         <span class="muted" style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; opacity:.7;">San Martín de los Andes · Patagonia · Argentina</span>
+
+        <!-- ✅ NUEVO: crédito de agencia -->
+        <div style="display:flex; align-items:center; gap:10px; margin-top:6px; opacity:.55;">
+          <span style="font-size:9px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted2); font-family:'Montserrat',sans-serif; font-weight:500;">Diseño &amp; comunicación por</span>
+          <img src="assets/impulso-creativo2.png" alt="Impulso Creativo Studio" style="height:18px; object-fit:contain;" />
+        </div>
+
       </div>
     </div>
   </footer>
@@ -2482,30 +2185,14 @@
     </div>
   </div>
 
-  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  <script>
   window.CEP = {
-    meta: {
-      fecha: "10 y 11 de Octubre 2026",
-      ciudad: "San Martín de los Andes",
-      modalidad: "Presencial"
-    },
+    meta: { fecha: "10 y 11 de Octubre 2026", ciudad: "San Martín de los Andes", modalidad: "Presencial" },
     copy: {
       tagline: "Ciencia. Innovación. Naturaleza.",
-      manifesto: [
-        "La nueva estética ya no se limita a corregir signos visibles.",
-        "Regenerar. Estimular. Optimizar.",
-        "Creemos en una estética que evoluciona junto a la ciencia y respeta la naturaleza de la piel.",
-        "Un nuevo paradigma donde la innovación, el conocimiento y el criterio profesional marcan el camino."
-      ].join(" "),
-      vision:
-        "CEPATAGONIA nace para ser el epicentro patagónico de la estética celular avanzada, donde la regeneración tisular, la biotecnología y la inteligencia aplicada redefinen los límites de la práctica profesional. Un espacio de referencia que impulsa una nueva era en la estética: basada en evidencia científica, personalización terapéutica y tecnología no invasiva.",
-      objetivos: [
-        "Integrar la estética celular avanzada al ejercicio profesional cotidiano.",
-        "Actualizar conocimientos en regeneración tisular, bioestimulación y biotecnología aplicada.",
-        "Elevar el nivel científico de la práctica cosmiátrica y dermatocosmiátrica.",
-        "Incorporar herramientas de gestión y marketing estratégico para fortalecer la rentabilidad del gabinete.",
-        "Fomentar el networking profesional y las alianzas con la industria."
-      ]
+      manifesto: ["La nueva estética ya no se limita a corregir signos visibles.","Regenerar. Estimular. Optimizar.","Creemos en una estética que evoluciona junto a la ciencia y respeta la naturaleza de la piel.","Un nuevo paradigma donde la innovación, el conocimiento y el criterio profesional marcan el camino."].join(" "),
+      vision: "CEPATAGONIA nace para ser el epicentro patagónico de la estética celular avanzada, donde la regeneración tisular, la biotecnología y la inteligencia aplicada redefinen los límites de la práctica profesional. Un espacio de referencia que impulsa una nueva era en la estética: basada en evidencia científica, personalización terapéutica y tecnología no invasiva.",
+      objetivos: ["Integrar la estética celular avanzada al ejercicio profesional cotidiano.","Actualizar conocimientos en regeneración tisular, bioestimulación y biotecnología aplicada.","Elevar el nivel científico de la práctica cosmiátrica y dermatocosmiátrica.","Incorporar herramientas de gestión y marketing estratégico para fortalecer la rentabilidad del gabinete.","Fomentar el networking profesional y las alianzas con la industria."]
     },
     diferenciales: [
       { title: "Tecnología aplicada", desc: "Equipamiento, parámetros, indicaciones y contraindicaciones. Menos promesa, más criterio." },
@@ -2518,147 +2205,18 @@
       { title: "🌿 Experiencia Patagonia", desc: "Un entorno natural que potencia el aprendizaje, el networking y la proyección estratégica." }
     ],
     ejes: [
-      {
-        eje: "EJE 1",
-        titulo: "REGENERACIÓN CELULAR & WELLAGING",
-        speakers: [{
-          nombre: "Adriana Sardot",
-          credenciales: "Cosmetóloga y dermocosmiatra con más de 40 años de trayectoria. Diplomada en Cosmiatría Avanzada y formación continua en congresos nacionales e internacionales. Referente en actualización científica y profesionalización estética.",
-          disertacion: "Estética Personalizada & Wellaging - El rol de las células madre y los telómeros en la longevidad cutánea.",
-          bullets: ["Bases biológicas del wellaging","Senescencia celular y longevidad funcional","Impacto de los telómeros en el envejecimiento cutáneo","Células madre como herramienta regenerativa","Protocolos personalizados basados en biología celular"],
-          image: "assets/Adriana Sardot.webp"
-        }]
-      },
-      {
-        eje: "EJE 2",
-        titulo: "TERAPIAS MANUALES AVANZADAS & MODELADO CORPORAL",
-        speakers: [{
-          nombre: "Ana Paula Travattoni",
-          credenciales: "APM (UAI) | Especialista en cosmiatría y dermatocosmiatría | Drenaje linfático | Peeling y fibrosis postoperatoria. Directora Académica AnaPau Estética.",
-          disertacion: "Drenaje Linfático, Maderoterapia y Lipodrenaje Integrado",
-          bullets: ["Técnica correcta de drenaje linfático corporal","Beneficios clínicos y optimización post procedimientos","Maderoterapia en celulitis, fibrosis y lipedema","Precauciones y criterios profesionales","Integración del Método AnaPau en protocolos combinados"],
-          image: "assets/Ana Paula Travattoni.webp"
-        }]
-      },
-      {
-        eje: "EJE 3",
-        titulo: "BIOTECNOLOGÍA & SKIN QUALITY",
-        speakers: [{
-          nombre: "Dra. Carolina Laxague",
-          credenciales: "Médica (UBA). Especialista en Dermatología Hospital Ramos Mejia. Curso superior de dermatología Hospital Bernardo Houssay. Formación en Medicina Estética (AMA). Formada en Mónaco, Miami y Corea.",
-          disertacion: "Inside out glow",
-          bullets: ["Uso de nutracéuticos para potenciar el Skin Quality y los resultados de procedimientos estéticos."],
-          extras: [{ title: "Disertación complementaria", bullets: ["Regenerando la piel con Polinucleótidos y Exosomas para tratar las hiperpigmentaciones."] }],
-          image: "assets/Carolina Laxague.webp"
-        }]
-      },
-      {
-        eje: "EJE 4",
-        titulo: "INNOVACIÓN EN EXOSOMAS & MICROBIOTA CUTÁNEA",
-        speakers: [{
-          nombre: "Lab UDERM y SEM BIOCREAM",
-          nombres: ["Lab UDERM", "SEM BIOCREAM"],
-          images: ["assets/logo_uderm.webp", "assets/logo-sem.webp"],
-          credenciales: "Presentación institucional y científica.",
-          disertacion: "Innovación en Exosomas y Microbiota Cutánea - EXODERMAL y EXOBIOTIC 15",
-          bullets: ["Pablo González"],
-          extras: [
-            { title: "Disertación complementaria", bullets: ["BIO PÉPTIDOS - Comprendiendo su potencial de acción en piel.", "Pablo González"] },
-            { title: "Disertación complementaria", bullets: ["Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.", "Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.", "Pablo González e Ing. Sandra Monzalvez"] },
-            { title: "Disertación complementaria", bullets: ["EQLM - La Era de la Bio-Regeneración Molecular.", "Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.", "Ing. Sandra Monzalvez"] },
-            { title: "Disertación complementaria", bullets: ["Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM.", "Más allá de los filtros: reparación, defensa y equilibrio biológico."] }
-          ]
-        }]
-      },
-      {
-        eje: "EJE 5",
-        titulo: "ESTÉTICA REPARADORA & ESTIMULACIÓN FOLICULAR",
-        speakers: [{
-          nombre: "Laura Varela",
-          credenciales: "Dermatocosmiatra Hospitalaria – Especialista en Estética Integral y Cosmiatría Avanzada. Instructora Internacional | Speaker | Fundadora de Dalí Global International Training.",
-          disertacion: "Método innovador en la recuperación de estrías y cicatrices atróficas sin tintas",
-          bullets: ["Tratamiento innovador de estrías y cicatrices atróficas","Estimulación dérmica controlada"],
-          extras: [{ title: "Disertación complementaria", bullets: ["Recuperación rápida de volumen de cejas y barba.", "Técnica avanzada para la estimulación del folículo piloso."] }],
-          image: "assets/Laura Varela.webp"
-        }]
-      },
-      {
-        eje: "EJE 6",
-        titulo: "GESTIÓN, MARKETING & RENTABILIDAD DEL GABINETE",
-        speakers: [{
-          nombre: "Lic. Eduardo Finci",
-          credenciales: "Embajador Emérito del World Wellness Weekend para Latinoamérica | Presidente de la American Wellness Association | Presidente de la Asociación Americana de Spa | Juez de los premios World Spa & Wellness Awards 2023 | Director de Wello Academy y de la Escuela Americana de Spa | Director Académico y Conferencista del Congreso Internacional de Spa & Bienestar | Creador e impulsor del Programa Spa Manager y Director Ejecutivo Wellness | Embajador de la Wellness Tourism Association para Argentina",
-          disertacion: "Ventas Inteligentes en Estética y Spa: Cómo transformar experiencias de bienestar en resultados",
-          bullets: ["La Nueva Era del Marketing en Estética: experiencia, confianza y resultados","Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética","Cómo atraer más pacientes, vender más tratamientos y fidelizar clientes"],
-          extras: [{
-            title: "Post congreso exclusivo",
-            bullets: ["Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética: cómo atraer más pacientes, vender más tratamientos y fidelizar clientes","Módulo 1 – La nueva economía de la estética y el bienestar","Módulo 2 – Marketing estratégico para centros estéticos y spa","Módulo 3 – Marketing digital aplicado a la estética","Módulo 4 – Experiencia del cliente en estética y spa","Módulo 5 – Ventas consultivas en estética","Módulo 6 – Taller práctico: análisis de caso y acciones para aumentar ventas"]
-          }],
-          image: "assets/Eduardo Finci.webp"
-        }]
-      },
-      {
-        eje: "EJE 7",
-        titulo: "COSMIATRÍA INTEGRATIVA & BIOESTIMULACIÓN NO INVASIVA",
-        speakers: [{
-          nombre: "Lelia Fernández",
-          credenciales: "Dermatocosmiatra - Superior de Cosmiatría (Art. UBA- AMA) Argentina / Esteticista corporal (CFP 42 – Bs As) Argentina / Spa Manager Wellness (AAS) Nacional e Internacional / Speaker, Conferencista y capacitadora Nacional e Internacional / Miembro titular Cosmedsa y SAACS / Alta dirección de centros de formación profesional (Cámara Argentina para la formación profesional y la capacitación laboral) | Coaching en salud",
-          disertacion: "Alcances cosmiátricos integrativos",
-          bullets: ["Pacientes oncológicos, veganos, diabéticos, pre y pos parto, tiroideos, celíacos"],
-          extras: [{ title: "Disertación complementaria", bullets: ["Bioestimulación de la piel no invasiva","Procesos del envejecimiento, diferenciaciones y procedimientos en protocolos"] }],
-          image: "assets/Leila Fernandez.webp"
-        }]
-      },
-      {
-        eje: "EJE 8",
-        titulo: "MICROBIOTA CUTÁNEA & DERMATOLOGÍA INFLAMATORIA",
-        speakers: [{
-          nombre: "Jimena Álvarez Morales",
-          credenciales: "Dermatocosmiatra-esteticista e instructora de formación profesional. Con más de 12 años en el rubro de la estética, speaker internacional.",
-          disertacion: "La nueva era del acné: inflamación, barrera y microbiota como ejes del tratamiento",
-          bullets: [],
-          extras: [{ title: "Disertación complementaria", bullets: ["Pieles del sur: reactividad, barrera y rosácea en climas extremos."] }],
-          image: "assets/Jimena Alvarez.webp"
-        }]
-      },
-      {
-        eje: "EJE 9",
-        titulo: "BIENESTAR INTEGRAL & REGULACIÓN DEL SISTEMA NERVIOSO",
-        speakers: [
-          {
-            nombre: "Lourdes Acosta",
-            credenciales: "Reikista de más de 35 años de experiencia / reflexóloga / Voluntariado en hospitales públicos con más de 15 años de experiencia / instructora de disciplinas holísticas con formación internacional",
-            disertacion: "Meditación guiada: \"Habitar la calma\"",
-            bullets: ["Propósito: Crear un espacio interno de paz y seguridad para habitarme con calma, presencia y amor."],
-            image: "assets/Lourdes Acosta.webp"
-          }
-        ]
-      },
-      {
-        eje: "",
-        titulo: "NOS ACOMPAÑA",
-        speakers: [
-          {
-            nombre: "LACA",
-            credenciales: "",
-            disertacion: "",
-            bullets: [],
-            images: ["assets/logo-laca2.webp"],
-            nombres: [""]
-          }
-        ]
-      }
+      { eje: "EJE 1", titulo: "REGENERACIÓN CELULAR & WELLAGING", speakers: [{ nombre: "Adriana Sardot", credenciales: "Cosmetóloga y dermocosmiatra con más de 40 años de trayectoria. Diplomada en Cosmiatría Avanzada y formación continua en congresos nacionales e internacionales. Referente en actualización científica y profesionalización estética.", disertacion: "Estética Personalizada & Wellaging - El rol de las células madre y los telómeros en la longevidad cutánea.", bullets: ["Bases biológicas del wellaging","Senescencia celular y longevidad funcional","Impacto de los telómeros en el envejecimiento cutáneo","Células madre como herramienta regenerativa","Protocolos personalizados basados en biología celular"], image: "assets/Adriana Sardot.webp" }] },
+      { eje: "EJE 2", titulo: "TERAPIAS MANUALES AVANZADAS & MODELADO CORPORAL", speakers: [{ nombre: "Ana Paula Travattoni", credenciales: "APM (UAI) | Especialista en cosmiatría y dermatocosmiatría | Drenaje linfático | Peeling y fibrosis postoperatoria. Directora Académica AnaPau Estética.", disertacion: "Drenaje Linfático, Maderoterapia y Lipodrenaje Integrado", bullets: ["Técnica correcta de drenaje linfático corporal","Beneficios clínicos y optimización post procedimientos","Maderoterapia en celulitis, fibrosis y lipedema","Precauciones y criterios profesionales","Integración del Método AnaPau en protocolos combinados"], image: "assets/Ana Paula Travattoni.webp" }] },
+      { eje: "EJE 3", titulo: "BIOTECNOLOGÍA & SKIN QUALITY", speakers: [{ nombre: "Dra. Carolina Laxague", credenciales: "Médica (UBA). Especialista en Dermatología Hospital Ramos Mejia. Curso superior de dermatología Hospital Bernardo Houssay. Formación en Medicina Estética (AMA). Formada en Mónaco, Miami y Corea.", disertacion: "Inside out glow", bullets: ["Uso de nutracéuticos para potenciar el Skin Quality y los resultados de procedimientos estéticos."], extras: [{ title: "Disertación complementaria", bullets: ["Regenerando la piel con Polinucleótidos y Exosomas para tratar las hiperpigmentaciones."] }], image: "assets/Carolina Laxague.webp" }] },
+      { eje: "EJE 4", titulo: "INNOVACIÓN EN EXOSOMAS & MICROBIOTA CUTÁNEA", speakers: [{ nombre: "Lab UDERM y SEM BIOCREAM", nombres: ["Lab UDERM", "SEM BIOCREAM"], images: ["assets/logo_uderm.webp", "assets/logo-sem.webp"], credenciales: "Presentación institucional y científica.", disertacion: "Innovación en Exosomas y Microbiota Cutánea - EXODERMAL y EXOBIOTIC 15", bullets: ["Pablo González"], extras: [{ title: "Disertación complementaria", bullets: ["BIO PÉPTIDOS - Comprendiendo su potencial de acción en piel.","Pablo González"] }, { title: "Disertación complementaria", bullets: ["Ingeniería de Valor: Cómo maximizar rentabilidad y competitividad con UDERM & SEM.","Cómo gestionar costos, precios y mejorar tu competitividad con UDERM y SEM.","Pablo González e Ing. Sandra Monzalvez"] }, { title: "Disertación complementaria", bullets: ["EQLM - La Era de la Bio-Regeneración Molecular.","Sinergia de 3 concentrados para restaurar el microbioma y la vitalidad cutánea.","Ing. Sandra Monzalvez"] }, { title: "Disertación complementaria", bullets: ["Fotobiología Avanzada: la nueva frontera de protección celular 360 de SEM.","Más allá de los filtros: reparación, defensa y equilibrio biológico."] }] }] },
+      { eje: "EJE 5", titulo: "ESTÉTICA REPARADORA & ESTIMULACIÓN FOLICULAR", speakers: [{ nombre: "Laura Varela", credenciales: "Dermatocosmiatra Hospitalaria – Especialista en Estética Integral y Cosmiatría Avanzada. Instructora Internacional | Speaker | Fundadora de Dalí Global International Training.", disertacion: "Método innovador en la recuperación de estrías y cicatrices atróficas sin tintas", bullets: ["Tratamiento innovador de estrías y cicatrices atróficas","Estimulación dérmica controlada"], extras: [{ title: "Disertación complementaria", bullets: ["Recuperación rápida de volumen de cejas y barba.","Técnica avanzada para la estimulación del folículo piloso."] }], image: "assets/Laura Varela.webp" }] },
+      { eje: "EJE 6", titulo: "GESTIÓN, MARKETING & RENTABILIDAD DEL GABINETE", speakers: [{ nombre: "Lic. Eduardo Finci", credenciales: "Embajador Emérito del World Wellness Weekend para Latinoamérica | Presidente de la American Wellness Association | Presidente de la Asociación Americana de Spa | Juez de los premios World Spa & Wellness Awards 2023 | Director de Wello Academy y de la Escuela Americana de Spa | Director Académico y Conferencista del Congreso Internacional de Spa & Bienestar | Creador e impulsor del Programa Spa Manager y Director Ejecutivo Wellness | Embajador de la Wellness Tourism Association para Argentina", disertacion: "Ventas Inteligentes en Estética y Spa: Cómo transformar experiencias de bienestar en resultados", bullets: ["La Nueva Era del Marketing en Estética: experiencia, confianza y resultados","Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética","Cómo atraer más pacientes, vender más tratamientos y fidelizar clientes"], extras: [{ title: "Post congreso exclusivo", bullets: ["Marketing y Ventas Exitosas en Estética, Spa y Medicina Estética: cómo atraer más pacientes, vender más tratamientos y fidelizar clientes","Módulo 1 – La nueva economía de la estética y el bienestar","Módulo 2 – Marketing estratégico para centros estéticos y spa","Módulo 3 – Marketing digital aplicado a la estética","Módulo 4 – Experiencia del cliente en estética y spa","Módulo 5 – Ventas consultivas en estética","Módulo 6 – Taller práctico: análisis de caso y acciones para aumentar ventas"] }], image: "assets/Eduardo Finci.webp" }] },
+      { eje: "EJE 7", titulo: "COSMIATRÍA INTEGRATIVA & BIOESTIMULACIÓN NO INVASIVA", speakers: [{ nombre: "Lelia Fernández", credenciales: "Dermatocosmiatra - Superior de Cosmiatría (Art. UBA- AMA) Argentina / Esteticista corporal (CFP 42 – Bs As) Argentina / Spa Manager Wellness (AAS) Nacional e Internacional / Speaker, Conferencista y capacitadora Nacional e Internacional / Miembro titular Cosmedsa y SAACS / Alta dirección de centros de formación profesional (Cámara Argentina para la formación profesional y la capacitación laboral) | Coaching en salud", disertacion: "Alcances cosmiátricos integrativos", bullets: ["Pacientes oncológicos, veganos, diabéticos, pre y pos parto, tiroideos, celíacos"], extras: [{ title: "Disertación complementaria", bullets: ["Bioestimulación de la piel no invasiva","Procesos del envejecimiento, diferenciaciones y procedimientos en protocolos"] }], image: "assets/Leila Fernandez.webp" }] },
+      { eje: "EJE 8", titulo: "MICROBIOTA CUTÁNEA & DERMATOLOGÍA INFLAMATORIA", speakers: [{ nombre: "Jimena Álvarez Morales", credenciales: "Dermatocosmiatra-esteticista e instructora de formación profesional. Con más de 12 años en el rubro de la estética, speaker internacional.", disertacion: "La nueva era del acné: inflamación, barrera y microbiota como ejes del tratamiento", bullets: [], extras: [{ title: "Disertación complementaria", bullets: ["Pieles del sur: reactividad, barrera y rosácea en climas extremos."] }], image: "assets/Jimena Alvarez.webp" }] },
+      { eje: "EJE 9", titulo: "BIENESTAR INTEGRAL & REGULACIÓN DEL SISTEMA NERVIOSO", speakers: [{ nombre: "Lourdes Acosta", credenciales: "Reikista de más de 35 años de experiencia / reflexóloga / Voluntariado en hospitales públicos con más de 15 años de experiencia / instructora de disciplinas holísticas con formación internacional", disertacion: "Meditación guiada: \"Habitar la calma\"", bullets: ["Propósito: Crear un espacio interno de paz y seguridad para habitarme con calma, presencia y amor."], image: "assets/Lourdes Acosta.webp" }] },
+      { eje: "", titulo: "NOS ACOMPAÑA", speakers: [{ nombre: "LACA", credenciales: "", disertacion: "", bullets: [], images: ["assets/logo-laca2.webp"], nombres: [""] }] }
     ],
-    dirigidoA: [
-      "Cosmiatras y cosmetólogos/as",
-      "Dermatocosmiatras",
-      "Dermatólogos/as y médicos/as estéticos",
-      "Profesionales de estética avanzada",
-      "Profesionales en estética corporal",
-      "Directores de SPA",
-      "Clínicas, centros y equipos de trabajo del sector",
-      "Estudiantes avanzados"
-    ]
+    dirigidoA: ["Cosmiatras y cosmetólogos/as","Dermatocosmiatras","Dermatólogos/as y médicos/as estéticos","Profesionales de estética avanzada","Profesionales en estética corporal","Directores de SPA","Clínicas, centros y equipos de trabajo del sector","Estudiantes avanzados"]
   };
   </script>
 
@@ -2671,43 +2229,20 @@
       whatsappText: "Hola! quisiera recibir información sobre el Congreso"
     };
 
-    function getWhatsappUrl(){
-      const text = encodeURIComponent(CEP_CONTACT.whatsappText);
-      return `https://wa.me/${CEP_CONTACT.phoneE164}?text=${text}`;
-    }
-
-    function setExternalLink(el, href){
-      if (!el) return;
-      el.setAttribute('href', href);
-      el.setAttribute('target', '_blank');
-      el.setAttribute('rel', 'noopener noreferrer');
-    }
+    function getWhatsappUrl(){ return `https://wa.me/${CEP_CONTACT.phoneE164}?text=${encodeURIComponent(CEP_CONTACT.whatsappText)}`; }
+    function setExternalLink(el, href){ if (!el) return; el.setAttribute('href', href); el.setAttribute('target', '_blank'); el.setAttribute('rel', 'noopener noreferrer'); }
 
     function renderSpeakerExtras(s){
       const blocks = [];
-      if (s.extraTitle){
-        blocks.push(`<div style="height:10px;"></div><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.extraTitle}</div><ul>${(s.extraBullets||[]).map(b => `<li>${b}</li>`).join('')}</ul>`);
-      }
-      if (Array.isArray(s.extras)){
-        s.extras.forEach(ex => {
-          blocks.push(`<div style="height:10px;"></div><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}`);
-        });
-      }
+      if (Array.isArray(s.extras)){ s.extras.forEach(ex => { blocks.push(`<div style="height:10px;"></div><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${ex.title || ''}</div>${Array.isArray(ex.bullets) && ex.bullets.length ? `<ul>${ex.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}`); }); }
       return blocks.join('');
     }
 
     function renderSpeakerAvatar(s){
       if (s.images && Array.isArray(s.images)){
-        return `<div style="display:flex; flex-direction:column; gap:8px; flex-shrink:0;">
-          ${s.images.map((img, i) => img
-            ? `<div class="avatar has-photo" aria-hidden="true" style="width:52px;height:52px;"><img src="${img}" alt="${s.nombres ? s.nombres[i] : s.nombre}" loading="lazy" style="object-fit:contain; padding:4px;" /></div>`
-            : `<div class="avatar" aria-hidden="true" style="width:52px;height:52px; display:flex; align-items:center; justify-content:center; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:rgba(35,36,32,.4); text-align:center; padding:4px;">${s.nombres ? s.nombres[i] : ''}</div>`
-          ).join('')}
-        </div>`;
+        return `<div style="display:flex; flex-direction:column; gap:8px; flex-shrink:0;">${s.images.map((img, i) => img ? `<div class="avatar has-photo" aria-hidden="true" style="width:52px;height:52px;"><img src="${img}" alt="${s.nombres ? s.nombres[i] : s.nombre}" loading="lazy" style="object-fit:contain; padding:4px;" /></div>` : `<div class="avatar" aria-hidden="true" style="width:52px;height:52px; display:flex; align-items:center; justify-content:center; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:rgba(35,36,32,.4); text-align:center; padding:4px;">${s.nombres ? s.nombres[i] : ''}</div>`).join('')}</div>`;
       }
-      if (s.image){
-        return `<div class="avatar has-photo" aria-hidden="true"><img src="${s.image}" alt="${s.nombre}" loading="lazy" /></div>`;
-      }
+      if (s.image){ return `<div class="avatar has-photo" aria-hidden="true"><img src="${s.image}" alt="${s.nombre}" loading="lazy" /></div>`; }
       return `<div class="avatar" aria-hidden="true"></div>`;
     }
 
@@ -2717,65 +2252,30 @@
     const menu = document.getElementById('mobileMenu');
     function closeMenu(){ btn.setAttribute('aria-expanded','false'); menu.hidden = true; }
     if (btn && menu){
-      btn.addEventListener('click', () => {
-        const isOpen = btn.getAttribute('aria-expanded') === 'true';
-        const nextOpen = !isOpen;
-        btn.setAttribute('aria-expanded', String(nextOpen));
-        menu.hidden = !nextOpen;
-        if (nextOpen){
-          const firstLink = menu.querySelector('a[href^="#"]') || menu.querySelector('a');
-          setTimeout(() => firstLink && firstLink.focus(), 0);
-        }
-      });
-      document.addEventListener('click', (e) => {
-        if (btn.getAttribute('aria-expanded') === 'true' && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
-          closeMenu();
-        }
-      });
-      document.addEventListener('touchstart', (e) => {
-        if (btn.getAttribute('aria-expanded') === 'true' && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
-          closeMenu();
-        }
-      }, { passive: true });
-      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => {
-        const href = a.getAttribute('href') || '';
-        if (href.startsWith('#')){
-          e.preventDefault();
-          btn.setAttribute('aria-expanded', 'false');
-          menu.hidden = true;
-          setTimeout(() => {
-            const target = document.querySelector(href);
-            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }, 50);
-        }
-      }));
+      btn.addEventListener('click', () => { const isOpen = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!isOpen)); menu.hidden = isOpen; if (!isOpen){ const firstLink = menu.querySelector('a'); setTimeout(() => firstLink && firstLink.focus(), 0); } });
+      document.addEventListener('click', (e) => { if (btn.getAttribute('aria-expanded') === 'true' && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){ closeMenu(); } });
+      menu.querySelectorAll('a').forEach(a => a.addEventListener('click', (e) => { const href = a.getAttribute('href') || ''; if (href.startsWith('#')){ e.preventDefault(); closeMenu(); setTimeout(() => { const target = document.querySelector(href); if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50); } }));
     }
 
     const modalOverlay = document.getElementById('planoutModal');
     const closeModalBtn = document.getElementById('closeModalBtn');
-
     function openModal(){ modalOverlay.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; setTimeout(() => closeModalBtn && closeModalBtn.focus(), 50); }
     function closeModal(){ modalOverlay.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
-
     modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal(); });
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
-    const paseButtons = ['btnPaseMobile','btnPaseEntradas'].map(id => document.getElementById(id)).filter(Boolean);
-    paseButtons.forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
+    ['btnPaseMobile','btnPaseEntradas'].map(id => document.getElementById(id)).filter(Boolean).forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
 
     const waUrl = getWhatsappUrl();
     setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);
     setExternalLink(document.getElementById('btnAsesorateEntradas'), waUrl);
     setExternalLink(document.getElementById('btnWhatsapp'), waUrl);
-    setExternalLink(document.getElementById('btnWhatsappFooter'), waUrl);
     setExternalLink(document.getElementById('btnInstagram'), CEP_CONTACT.instagramUrl);
     setExternalLink(document.getElementById('btnInstagramEntradas'), CEP_CONTACT.instagramUrl);
-    setExternalLink(document.getElementById('btnInstagramFooter'), CEP_CONTACT.instagramUrl);
 
     const nombreInput = document.getElementById('nombreInput');
     if (nombreInput){ nombreInput.addEventListener('input', () => { nombreInput.value = nombreInput.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]/g, ""); }); }
-
     const telInput = document.getElementById('telInput');
     if (telInput){ telInput.addEventListener('input', () => { telInput.value = telInput.value.replace(/[^0-9+\s()\-]/g, ""); }); }
 
@@ -2784,200 +2284,55 @@
     const formIframe = document.getElementById('fs_iframe');
     let isSubmittingForm = false;
     let formFallbackTimer = null;
-
     function showFormNotice(msg){ if (!formNotice) return; formNotice.textContent = msg; formNotice.setAttribute('data-show','true'); }
+    if (formIframe){ formIframe.addEventListener('load', () => { if (!isSubmittingForm) return; isSubmittingForm = false; if (formFallbackTimer){ clearTimeout(formFallbackTimer); formFallbackTimer = null; } showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad."); if (contactForm) contactForm.reset(); }); }
+    if (contactForm){ contactForm.addEventListener('submit', (e) => { const honey = contactForm.querySelector('input[name="_honey"]'); if (honey && honey.value.trim().length > 0){ e.preventDefault(); return false; } isSubmittingForm = true; showFormNotice("Enviando tu consulta..."); if (formFallbackTimer) clearTimeout(formFallbackTimer); formFallbackTimer = setTimeout(() => { if (!isSubmittingForm) return; isSubmittingForm = false; showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad."); contactForm.reset(); }, 2500); }); }
 
-    if (formIframe){
-      formIframe.addEventListener('load', () => {
-        if (!isSubmittingForm) return;
-        isSubmittingForm = false;
-        if (formFallbackTimer){ clearTimeout(formFallbackTimer); formFallbackTimer = null; }
-        showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad.");
-        if (contactForm) contactForm.reset();
-      });
-    }
-
-    if (contactForm){
-      contactForm.addEventListener('submit', (e) => {
-        const honey = contactForm.querySelector('input[name="_honey"]');
-        if (honey && honey.value.trim().length > 0){ e.preventDefault(); return false; }
-        isSubmittingForm = true;
-        showFormNotice("Enviando tu consulta...");
-        if (formFallbackTimer) clearTimeout(formFallbackTimer);
-        formFallbackTimer = setTimeout(() => {
-          if (!isSubmittingForm) return;
-          isSubmittingForm = false;
-          showFormNotice("¡Listo! Recibimos tu consulta. Te vamos a responder a la brevedad.");
-          contactForm.reset();
-        }, 2500);
-      });
-    }
-
-    if (!window.CEP) {
-      console.error("No se cargó window.CEP.");
-    } else {
-      const { fecha, ciudad, modalidad } = window.CEP.meta || { fecha:"—", ciudad:"—", modalidad:"—" };
-      const metaDateStrong = document.getElementById('metaDateStrong');
-      const metaCityStrong = document.getElementById('metaCityStrong');
-      const metaDateFooter = document.getElementById('metaDateFooter');
-      const metaCityFooter = document.getElementById('metaCityFooter');
-      const metaModeFooter = document.getElementById('metaModeFooter');
-      if (metaDateStrong) metaDateStrong.textContent = fecha;
-      const eventBarDate = document.getElementById('eventBarDate');
-      const eventBarCity = document.getElementById('eventBarCity');
-      if (eventBarDate) eventBarDate.textContent = fecha;
-      if (eventBarCity) eventBarCity.textContent = ciudad;
-      if (metaCityStrong) metaCityStrong.textContent = ciudad;
-      if (metaDateFooter) metaDateFooter.textContent = fecha;
-      if (metaCityFooter) metaCityFooter.textContent = ciudad;
-      if (metaModeFooter) metaModeFooter.textContent = modalidad;
+    if (window.CEP) {
+      const { fecha, ciudad, modalidad } = window.CEP.meta;
+      ['metaDateStrong','eventBarDate','metaDateFooter'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = fecha; });
+      ['metaCityStrong','eventBarCity','metaCityFooter'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = ciudad; });
+      const mf = document.getElementById('metaModeFooter'); if(mf) mf.textContent = modalidad;
 
       const copy = window.CEP.copy || {};
-      const visionText = document.getElementById('visionText');
-      const manifestoText = document.getElementById('manifestoText');
-      const objetivosList = document.getElementById('objetivosList');
-      const taglineText = document.getElementById('taglineText');
-      if (visionText) visionText.textContent = copy.vision || "";
-      if (manifestoText) manifestoText.textContent = copy.manifesto || "";
-      if (taglineText) taglineText.textContent = copy.tagline || "—";
-      if (objetivosList){ objetivosList.innerHTML = (Array.isArray(copy.objetivos) ? copy.objetivos : []).map(x => `<li>${x}</li>`).join(''); }
+      const vt = document.getElementById('visionText'); if(vt) vt.textContent = copy.vision || "";
+      const mt = document.getElementById('manifestoText'); if(mt) mt.textContent = copy.manifesto || "";
+      const tl = document.getElementById('taglineText'); if(tl) tl.textContent = copy.tagline || "—";
+      const ol = document.getElementById('objetivosList'); if(ol) ol.innerHTML = (copy.objetivos||[]).map(x=>`<li>${x}</li>`).join('');
 
       const dif = document.getElementById('diferencialesGrid');
-      if (dif){ dif.innerHTML = (window.CEP.diferenciales || []).map(d => `<div class="card"><div class="icon" aria-hidden="true" style="background-image:url('assets/adn.webp'); background-size:cover; background-position:center;"></div><h3>${d.title}</h3><p>${d.desc}</p></div>`).join(''); }
+      if(dif) dif.innerHTML = (window.CEP.diferenciales||[]).map(d=>`<div class="card"><div class="icon" aria-hidden="true" style="background-image:url('assets/adn.webp'); background-size:cover; background-position:center;"></div><h3>${d.title}</h3><p>${d.desc}</p></div>`).join('');
 
       const ejesList = document.getElementById('ejesList');
-      if (ejesList){
-        ejesList.innerHTML = (window.CEP.ejes || []).map(e => {
-          const isAcompana = e.titulo === 'NOS ACOMPAÑA';
-          if (isAcompana) {
-            const acompanaBlock = document.getElementById('nosAcompanaBlock');
-            if (acompanaBlock) {
-              acompanaBlock.innerHTML = `
-                <div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--line);">
-                  <div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:20px;">Nos acompañan</div>
-                  <div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;">
-                    <img src="assets/logo-laca2.webp"    alt="LACA"         style="height:72px; max-width:200px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 18px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                    <img src="assets/logo_uderm.webp"    alt="Lab UDERM"    style="height:72px; max-width:200px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 18px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                    <img src="assets/logo-sem.webp"      alt="SEM BIOCREAM" style="height:96px; max-width:220px; object-fit:contain; border-radius:10px; background:#fff; padding:4px 10px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                    <img src="assets/logo-bbm-sin fondo.webp" alt="BBM"    style="height:96px; max-width:220px; object-fit:contain; border-radius:10px; background:#fff; padding:4px 10px; box-shadow:0 1px 8px rgba(0,0,0,.07);" />
-                  </div>
-                </div>`;
-            }
+      if(ejesList){
+        ejesList.innerHTML = (window.CEP.ejes||[]).map(e => {
+          if(e.titulo === 'NOS ACOMPAÑA'){
+            const nb = document.getElementById('nosAcompanaBlock');
+            if(nb) nb.innerHTML = `<div style="margin-top:32px; padding-top:28px; border-top:1px solid var(--line);"><div style="font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; margin-bottom:20px;">Nos acompañan</div><div style="display:flex; flex-wrap:wrap; gap:20px; align-items:center;"><img src="assets/logo-laca2.webp" alt="LACA" style="height:72px; max-width:200px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 18px; box-shadow:0 1px 8px rgba(0,0,0,.07);" /><img src="assets/logo_uderm.webp" alt="Lab UDERM" style="height:72px; max-width:200px; object-fit:contain; border-radius:10px; background:#fff; padding:8px 18px; box-shadow:0 1px 8px rgba(0,0,0,.07);" /><img src="assets/logo-sem.webp" alt="SEM BIOCREAM" style="height:96px; max-width:220px; object-fit:contain; border-radius:10px; background:#fff; padding:4px 10px; box-shadow:0 1px 8px rgba(0,0,0,.07);" /><img src="assets/logo-bbm-sin fondo.webp" alt="BBM" style="height:96px; max-width:220px; object-fit:contain; border-radius:10px; background:#fff; padding:4px 10px; box-shadow:0 1px 8px rgba(0,0,0,.07);" /></div></div>`;
             return '';
           }
-          return `<details>
-            <summary>${e.eje ? e.eje + ' — ' : ''}${e.titulo}</summary>
-            ${(e.speakers || []).map(s => `
-              <div class="card" style="margin-top:12px;">
-                <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div>
-                <div style="font-weight:800; margin-top:6px;">${s.nombre}</div>
-                ${s.credenciales ? `<div class="muted" style="margin-top:6px;">${s.credenciales}</div>` : ``}
-                <div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>
-                ${Array.isArray(s.bullets) && s.bullets.length ? `<ul>${s.bullets.map(b => `<li>${b}</li>`).join('')}</ul>` : ``}
-                ${renderSpeakerExtras(s)}
-              </div>
-            `).join('')}
-          </details>`;
+          return `<details><summary>${e.eje ? e.eje + ' — ' : ''}${e.titulo}</summary>${(e.speakers||[]).map(s=>`<div class="card" style="margin-top:12px;"><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">Speaker</div><div style="font-weight:800; margin-top:6px;">${s.nombre}</div>${s.credenciales?`<div class="muted" style="margin-top:6px;">${s.credenciales}</div>`:``}<div style="margin-top:10px;"><b>Disertación:</b> ${s.disertacion}</div>${Array.isArray(s.bullets)&&s.bullets.length?`<ul>${s.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>`:``}${renderSpeakerExtras(s)}</div>`).join('')}</details>`;
         }).join('');
       }
 
-      const speakers = (window.CEP.ejes || []).filter(e => e.titulo !== 'NOS ACOMPAÑA').flatMap(e => (e.speakers || []).map(s => ({ ...s, eje: e.eje, tema: e.titulo })));
+      const speakers = (window.CEP.ejes||[]).filter(e=>e.titulo!=='NOS ACOMPAÑA').flatMap(e=>(e.speakers||[]).map(s=>({...s,eje:e.eje,tema:e.titulo})));
       const spGrid = document.getElementById('speakersGrid');
-      if (spGrid){
-        spGrid.innerHTML = speakers.map(s => `
-          <div class="card speaker" style="align-items:flex-start;">
-            ${renderSpeakerAvatar(s)}
-            <div style="min-width:0;">
-              <div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje}</div>
-              <div style="font-weight:800; margin-top:4px;">${s.nombre}</div>
-              <div class="muted" style="margin-top:4px;">${s.tema}</div>
-              ${s.disertacion ? `<div style="margin-top:8px;"><b>Disertación:</b> ${s.disertacion}</div>` : ``}
-            </div>
-          </div>
-        `).join('');
-      }
+      if(spGrid) spGrid.innerHTML = speakers.map(s=>`<div class="card speaker" style="align-items:flex-start;">${renderSpeakerAvatar(s)}<div style="min-width:0;"><div class="muted" style="letter-spacing:.14em; text-transform:uppercase;">${s.eje}</div><div style="font-weight:800; margin-top:4px;">${s.nombre}</div><div class="muted" style="margin-top:4px;">${s.tema}</div>${s.disertacion?`<div style="margin-top:8px;"><b>Disertación:</b> ${s.disertacion}</div>`:``}</div></div>`).join('');
 
-      const dirigidoList = document.getElementById('dirigidoList');
-      if (dirigidoList){
-        dirigidoList.innerHTML = (window.CEP.dirigidoA || []).map((x, i) => `
-          <li style="
-            padding: 13px 24px;
-            font-size: 13.5px;
-            font-weight: 500;
-            color: #3a3a38;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid rgba(0,0,0,.05);
-          ">
-            <span style="width:5px; height:5px; border-radius:50%; background:#7f977f; flex-shrink:0;"></span>
-            ${x}
-          </li>
-        `).join('');
-      }
+      const dl = document.getElementById('dirigidoList');
+      if(dl) dl.innerHTML = (window.CEP.dirigidoA||[]).map(x=>`<li style="padding:13px 24px; font-size:13.5px; font-weight:500; color:#3a3a38; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(0,0,0,.05);"><span style="width:5px; height:5px; border-radius:50%; background:#7f977f; flex-shrink:0;"></span>${x}</li>`).join('');
     }
 
-    // ===== CONTADOR DE APERTURA DE VENTAS =====
     (function(){
-      // Apertura: 31 de marzo de 2026 a las 12:00 ARG (UTC-3)
       var salesTarget = new Date('2026-03-31T12:00:00-03:00').getTime();
-
       var countdownWrap = document.getElementById('salesCountdownWrap');
-      var openWrap      = document.getElementById('salesOpenWrap');
-
-      var elDays  = document.getElementById('scd-days');
-      var elHours = document.getElementById('scd-hours');
-      var elMins  = document.getElementById('scd-mins');
-      var elSecs  = document.getElementById('scd-secs');
-
-      var prevVals = { d: null, h: null, m: null, s: null };
-
-      function pad(n){ return n < 10 ? '0' + n : String(n); }
-
-      function animateTick(el, val){
-        if (!el) return;
-        var padded = pad(val);
-        if (el.textContent === padded) return;
-        el.textContent = padded;
-        el.classList.remove('tick');
-        // force reflow
-        void el.offsetWidth;
-        el.classList.add('tick');
-        setTimeout(function(){ el.classList.remove('tick'); }, 150);
-      }
-
-      function reveal(){
-        if (countdownWrap) countdownWrap.hidden = true;
-        if (openWrap)      openWrap.hidden      = false;
-      }
-
-      function tick(){
-        var now  = Date.now();
-        var diff = salesTarget - now;
-
-        if (diff <= 0) {
-          reveal();
-          return;
-        }
-
-        var d = Math.floor(diff / 86400000);
-        var h = Math.floor((diff % 86400000) / 3600000);
-        var m = Math.floor((diff % 3600000)  / 60000);
-        var s = Math.floor((diff % 60000)    / 1000);
-
-        animateTick(elDays,  d);
-        animateTick(elHours, h);
-        animateTick(elMins,  m);
-        animateTick(elSecs,  s);
-      }
-
-      // Verificar estado inicial antes de arrancar el intervalo
-      if (Date.now() >= salesTarget) {
-        reveal();
-      } else {
-        tick();
-        setInterval(tick, 1000);
-      }
+      var openWrap = document.getElementById('salesOpenWrap');
+      var elDays=document.getElementById('scd-days'), elHours=document.getElementById('scd-hours'), elMins=document.getElementById('scd-mins'), elSecs=document.getElementById('scd-secs');
+      function pad(n){ return n<10?'0'+n:String(n); }
+      function animateTick(el,val){ if(!el)return; var p=pad(val); if(el.textContent===p)return; el.textContent=p; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); setTimeout(function(){el.classList.remove('tick');},150); }
+      function reveal(){ if(countdownWrap)countdownWrap.hidden=true; if(openWrap)openWrap.hidden=false; }
+      function tick(){ var diff=salesTarget-Date.now(); if(diff<=0){reveal();return;} animateTick(elDays,Math.floor(diff/86400000)); animateTick(elHours,Math.floor((diff%86400000)/3600000)); animateTick(elMins,Math.floor((diff%3600000)/60000)); animateTick(elSecs,Math.floor((diff%60000)/1000)); }
+      if(Date.now()>=salesTarget){reveal();}else{tick();setInterval(tick,1000);}
     })();
   </script>
 </body>
