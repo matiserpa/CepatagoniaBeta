@@ -1537,6 +1537,24 @@
       align-items: center;
       flex-wrap: wrap;
     }
+
+    /* ===== WIDGET PLANOUT ===== */
+    .planout-widget-wrap {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      background: #f4f2eb;
+      padding: clamp(24px, 4vw, 40px) 0 clamp(32px, 5vw, 52px);
+      border-top: 1px solid rgba(35,36,32,.06);
+    }
+    .planout-widget-inner {
+      width: min(1160px, calc(100% - clamp(36px, 6vw, 56px)));
+      margin: 0 auto;
+    }
+    .planout-widget-inner #palco4_widget {
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
     @media (max-width: 760px) {
       .sales-band-inner {
         grid-template-columns: 1fr;
@@ -1629,7 +1647,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
           <a href="#faq">FAQ</a>
           <a href="#contacto">Contacto</a>
           <div style="height:10px"></div>
-          <a href="#" id="btnPaseMobile" style="margin-top:4px; display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:999px; background:linear-gradient(135deg,rgba(127,151,127,.92),rgba(155,179,163,.92)); border:1px solid rgba(127,151,127,.28); color:#f7f6f1; font-weight:700; font-size:12px; letter-spacing:.08em; text-transform:uppercase;">Adquirí tu pase</a>
+          <a href="#entradas" id="btnPaseMobile" style="margin-top:4px; display:inline-flex; align-items:center; justify-content:center; padding:12px 18px; border-radius:999px; background:linear-gradient(135deg,rgba(127,151,127,.92),rgba(155,179,163,.92)); border:1px solid rgba(127,151,127,.28); color:#f7f6f1; font-weight:700; font-size:12px; letter-spacing:.08em; text-transform:uppercase;">Adquirí tu pase</a>
         </div>
       </div>
     </div>
@@ -1891,6 +1909,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       <div class="section-head"><div><h2>Entradas</h2></div></div>
     </div>
 
+    <!-- COUNTDOWN — se oculta automáticamente el 31/03 a las 12hs -->
     <div class="sales-band" id="salesCountdownWrap" style="margin-top: 22px;">
       <div class="sales-band-inner">
         <div class="sales-band-left">
@@ -1933,6 +1952,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       </div>
     </div>
 
+    <!-- FRANJA "VENTAS ABIERTAS" — aparece cuando el countdown llega a 0 -->
     <div class="sales-open-band" id="salesOpenWrap" hidden style="margin-top: 22px;">
       <div class="sales-open-band-inner">
         <div class="sales-open-left">
@@ -1941,14 +1961,31 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
           <div class="sales-open-sub">Venta a través de Planout · Cupos limitados</div>
         </div>
         <div class="sales-open-actions">
-          <a class="sales-band-btn sales-band-btn-primary" href="#" id="btnPaseEntradas">Adquirí tu pase</a>
-          <a class="sales-band-btn sales-band-btn-ghost" href="#" id="btnAsesorateEntradas">Asesorate</a>
+          <a class="sales-band-btn sales-band-btn-ghost" href="#contacto" id="btnAsesorateEntradas">Asesorate</a>
           <div style="display:flex; align-items:center; gap:8px; margin-left: 6px;">
             <img src="assets/planout-logo-negro.png" alt="Planout" style="height:18px; object-fit:contain; opacity:.35; filter:invert(1) brightness(2);" />
           </div>
         </div>
       </div>
     </div>
+
+    <!-- WIDGET PLANOUT — aparece junto con la franja de ventas abiertas -->
+    <div class="planout-widget-wrap" id="planoutWidgetWrap" hidden>
+      <div class="planout-widget-inner">
+        <div id="palco4_widget"
+          data-url-chn-event="http://po-ar.palco4.com/tickets-congresodeesteticadelapatagonia/"
+          data-id-event="793"
+          data-lng="0"
+          data-visual-mode="1"
+          data-seamless-mode="false"
+          data-auto-acceptance-cookies="false"
+          data-auto-height="true"
+          data-url-page-event="buyEvent"
+          data-width="100%">
+        </div>
+      </div>
+    </div>
+
   </section>
 
   <!-- SEDE -->
@@ -2047,7 +2084,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       <div class="section-head"><div><h2>FAQ</h2></div></div>
       <details>
         <summary>¿A quiénes está dirigido este Congreso?</summary>
-        <p>El Congreso está dirigido principalmente a cosmiatras, cosmetólogas y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.<br/><br/>También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.<br/><br/>Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.</p>
+        <p>El Congreso está dirigido principalmente a cosmiatras, cosmetólogos/as y dermocosmiatras, así como a esteticistas avanzados que buscan profundizar su práctica con un enfoque científico y actualizado.<br/><br/>También está abierto a médicos dermatólogos y esteticistas interesados en la estética celular avanzada y en las nuevas tecnologías aplicadas al cuidado de la piel.<br/><br/>Está pensado para profesionales que desean elevar el nivel de sus tratamientos, incorporar conocimiento validado y diferenciarse en un mercado cada vez más exigente.</p>
       </details>
       <details>
         <summary>¿Qué hace diferente a este Congreso?</summary>
@@ -2168,11 +2205,6 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     </div>
   </section>
 
-  <!-- ============================================================
-       FOOTER — ÚNICO CAMBIO RESPECTO AL ORIGINAL
-       Se agregó "Diseño & comunicación por [logo Impulso Creativo]"
-       Usar assets/impulso-creativo2.png (fondo claro, acorde al footer)
-  ============================================================ -->
   <footer>
     <div class="container">
       <div style="border-top:1px solid var(--line); padding-top:20px; padding-bottom:8px;">
@@ -2191,7 +2223,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     </div>
   </footer>
 
-  <!-- MODAL PLANOUT -->
+  <!-- MODAL PLANOUT (ya no se usa para compra, queda como fallback) -->
   <div class="modal-overlay" id="planoutModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Planout - Próximamente">
     <div class="modal">
       <img class="planout" src="assets/planout-logo-negro.png" alt="Planout" />
@@ -2281,8 +2313,6 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal(); });
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
-    ['btnPaseMobile','btnPaseEntradas'].map(id => document.getElementById(id)).filter(Boolean).forEach(b => b.addEventListener('click', (e) => { e.preventDefault(); openModal(); }));
-
     const waUrl = getWhatsappUrl();
     setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);
     setExternalLink(document.getElementById('btnAsesorateEntradas'), waUrl);
@@ -2339,17 +2369,40 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       if(dl) dl.innerHTML = (window.CEP.dirigidoA||[]).map(x=>`<li style="padding:13px 24px; font-size:13.5px; font-weight:500; color:#3a3a38; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(0,0,0,.05);"><span style="width:5px; height:5px; border-radius:50%; background:#7f977f; flex-shrink:0;"></span>${x}</li>`).join('');
     }
 
+    // ===== COUNTDOWN VENTAS + REVEAL WIDGET =====
     (function(){
       var salesTarget = new Date('2026-03-31T12:00:00-03:00').getTime();
       var countdownWrap = document.getElementById('salesCountdownWrap');
       var openWrap = document.getElementById('salesOpenWrap');
+      var widgetWrap = document.getElementById('planoutWidgetWrap');
       var elDays=document.getElementById('scd-days'), elHours=document.getElementById('scd-hours'), elMins=document.getElementById('scd-mins'), elSecs=document.getElementById('scd-secs');
       function pad(n){ return n<10?'0'+n:String(n); }
       function animateTick(el,val){ if(!el)return; var p=pad(val); if(el.textContent===p)return; el.textContent=p; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); setTimeout(function(){el.classList.remove('tick');},150); }
-      function reveal(){ if(countdownWrap)countdownWrap.hidden=true; if(openWrap)openWrap.hidden=false; }
+      function reveal(){
+        if(countdownWrap) countdownWrap.hidden=true;
+        if(openWrap) openWrap.hidden=false;
+        if(widgetWrap) widgetWrap.hidden=false;
+      }
       function tick(){ var diff=salesTarget-Date.now(); if(diff<=0){reveal();return;} animateTick(elDays,Math.floor(diff/86400000)); animateTick(elHours,Math.floor((diff%86400000)/3600000)); animateTick(elMins,Math.floor((diff%3600000)/60000)); animateTick(elSecs,Math.floor((diff%60000)/1000)); }
       if(Date.now()>=salesTarget){reveal();}else{tick();setInterval(tick,1000);}
     })();
   </script>
+
+  <!-- Widget Planout — se carga al final para no bloquear el render -->
+  <script>
+    (function(){
+      var jpal, rp, dp=document, gip=dp.getElementById, ce=dp.createElement, gt=dp.getElementsByTagName,
+          id="palco_jpalco_widget",
+          bp="http://po-ar.palco4.com/tickets-congresodeesteticadelapatagonia/js/";
+      if(!gip.call(dp,id)){
+        jpal=ce.call(dp,"script");
+        jpal.id=id;
+        jpal.src=bp+"widgetIframePalco.js";
+        rp=gt.call(dp,"script")[0];
+        rp.parentNode.insertBefore(jpal,rp);
+      }
+    })();
+  </script>
+
 </body>
 </html>
