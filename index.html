@@ -2389,7 +2389,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       function animateTick(el,val){ if(!el)return; var p=pad(val); if(el.textContent===p)return; el.textContent=p; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); setTimeout(function(){el.classList.remove('tick');},150); }
       function reveal(){
         if(countdownWrap) countdownWrap.hidden=true;
-        if(openWrap) openWrap.hidden=false;
+        // if(openWrap) openWrap.hidden=false;
         if(widgetWrap) widgetWrap.hidden=false;
       }
       function tick(){ var diff=salesTarget-Date.now(); if(diff<=0){reveal();return;} animateTick(elDays,Math.floor(diff/86400000)); animateTick(elHours,Math.floor((diff%86400000)/3600000)); animateTick(elMins,Math.floor((diff%3600000)/60000)); animateTick(elSecs,Math.floor((diff%60000)/1000)); }
