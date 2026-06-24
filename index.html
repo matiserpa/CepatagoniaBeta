@@ -2656,8 +2656,9 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
   var dismiss  = document.getElementById('cepaLeadDismiss');
   var btn      = document.getElementById('cepaLeadBtn');
 
-  function show(){
-    if(!overlay||hasCookie()) return;
+  function show(force){
+    if(!overlay) return;
+    if(!force && hasCookie()) return;
     overlay.classList.add('is-open');
     document.body.style.overflow='hidden';
     setTimeout(function(){ var f=overlay.querySelector('.input'); if(f) f.focus(); },120);
@@ -2680,7 +2681,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
   fab.innerHTML = '💚';
   fab.title = 'Quiero más información';
   fab.style.cssText = 'position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,rgba(127,151,127,.92),rgba(155,179,163,.92));border:none;font-size:22px;cursor:pointer;z-index:2999;box-shadow:0 4px 20px rgba(48,45,37,.22);transition:transform .15s,opacity .15s;display:none;align-items:center;justify-content:center;';
-  fab.addEventListener('click', show);
+  fab.addEventListener('click', function(){ show(true); });
   fab.addEventListener('mouseenter', function(){ fab.style.transform='scale(1.1)'; });
   fab.addEventListener('mouseleave', function(){ fab.style.transform='scale(1)'; });
   document.body.appendChild(fab);
