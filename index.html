@@ -1610,7 +1610,140 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
 </head>
+<!-- ======= POPUP LEADS CEPATAGONIA ======= -->
+<style>
+  #cepaLeadOverlay{position:fixed;inset:0;background:rgba(24,23,19,.34);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:3000;display:none;align-items:center;justify-content:center;padding:18px;}
+  #cepaLeadOverlay.is-open{display:flex;}
+  .cepa-lead-card{width:min(400px,100%);border-radius:28px;border:1px solid rgba(35,36,32,.08);background:var(--bg-2,#f6f4ee);box-shadow:0 32px 96px rgba(48,45,37,.22);padding:30px 26px 22px;position:relative;animation:cepaIn .22s ease;}
+  @keyframes cepaIn{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .cepa-lead-x{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.52);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--muted);transition:background .15s;}
+  .cepa-lead-x:hover{background:rgba(255,255,255,.9);color:var(--text);}
+  .cepa-lead-bar{width:28px;height:3px;background:var(--a1);border-radius:2px;margin-bottom:16px;}
+  .cepa-lead-h{font-family:"Playfair Display",Georgia,serif;font-size:21px;font-weight:600;color:var(--text);line-height:1.3;margin:0 0 8px;letter-spacing:-.02em;padding-right:20px;}
+  .cepa-lead-p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 20px;}
+  .cepa-lead-fields{display:flex;flex-direction:column;gap:9px;margin-bottom:14px;}
+  .cepa-lead-ok{display:none;text-align:center;padding:16px 0 8px;}
+  .cepa-lead-ok-ico{font-size:36px;margin-bottom:10px;}
+  .cepa-lead-ok p{font-size:14px;color:var(--muted);line-height:1.65;margin:0;}
+  .cepa-lead-dismiss{display:block;text-align:center;font-size:12px;color:var(--muted2);cursor:pointer;margin-top:10px;text-decoration:none;}
+  .cepa-lead-dismiss:hover{color:var(--muted);}
+  .cepa-lead-footer{text-align:center;font-size:11px;color:var(--muted2);margin-top:9px;}
+</style>
 
+<div id="cepaLeadOverlay" role="dialog" aria-modal="true" aria-label="Suscribite al Congreso">
+  <div class="cepa-lead-card">
+    <button class="cepa-lead-x" id="cepaLeadX" aria-label="Cerrar">✕</button>
+    <div class="cepa-lead-bar" aria-hidden="true"></div>
+    <h2 class="cepa-lead-h">Sumate al Congreso<br>antes de que se llene</h2>
+    <p class="cepa-lead-p">San Martín de los Andes · 10 y 11 de octubre<br>Te avisamos de precios especiales antes que al público.</p>
+    <div id="cepaLeadFormWrap">
+      <div class="cepa-lead-fields">
+        <input class="input" id="cepaNombre" type="text" placeholder="Nombre" autocomplete="given-name" />
+        <input class="input" id="cepaWA" type="tel" placeholder="WhatsApp (con código de área)" autocomplete="tel" inputmode="tel" />
+        <select class="select" id="cepaEsp">
+          <option value="">Especialidad (opcional)</option>
+          <option>Médico/a estética</option>
+          <option>Cosmetóloga/o</option>
+          <option>Dermocosmiatra</option>
+          <option>Dueño/a de clínica o spa</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <button class="btn btn-primary" id="cepaLeadBtn" type="button" style="width:100%;justify-content:center;">Quiero más información 💚</button>
+      <a class="cepa-lead-dismiss" id="cepaLeadDismiss">Ahora no, gracias</a>
+      <p class="cepa-lead-footer">Sin spam · Solo novedades del congreso</p>
+    </div>
+    <div class="cepa-lead-ok" id="cepaLeadOk">
+      <div class="cepa-lead-ok-ico">💚</div>
+      <p><strong>¡Perfecto!</strong> Ya tenemos tus datos.<br>Te escribimos por WhatsApp muy pronto.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var ENDPOINT   = 'REEMPLAZAR_CON_URL_APPS_SCRIPT';
+  var DELAY_MS   = 15000;
+  var COOKIE     = 'cepa_lead_v1';
+  var COOKIE_TTL = 30;
+
+  function setCookie(){ var d=new Date(); d.setTime(d.getTime()+COOKIE_TTL*864e5); document.cookie=COOKIE+'=1;expires='+d.toUTCString()+';path=/;SameSite=Lax'; }
+  function hasCookie(){ return document.cookie.indexOf(COOKIE+'=')>-1; }
+
+  var overlay  = document.getElementById('cepaLeadOverlay');
+  var formWrap = document.getElementById('cepaLeadFormWrap');
+  var okScreen = document.getElementById('cepaLeadOk');
+  var xBtn     = document.getElementById('cepaLeadX');
+  var dismiss  = document.getElementById('cepaLeadDismiss');
+  var btn      = document.getElementById('cepaLeadBtn');
+
+  function show(){
+    if(!overlay||hasCookie()) return;
+    overlay.classList.add('is-open');
+    document.body.style.overflow='hidden';
+    setTimeout(function(){ var f=overlay.querySelector('.input'); if(f) f.focus(); },120);
+  }
+  function hide(){
+    if(!overlay) return;
+    overlay.classList.remove('is-open');
+    document.body.style.overflow='';
+    setCookie();
+  }
+
+  function init(){
+    if(hasCookie()) return;
+    if(window.innerWidth>768){
+      var done=false;
+      document.addEventListener('mouseleave',function(e){
+        if(done||e.clientY>10) return;
+        done=true; show();
+      });
+    } else {
+      setTimeout(show,DELAY_MS);
+    }
+  }
+
+  if(xBtn)    xBtn.addEventListener('click',hide);
+  if(dismiss) dismiss.addEventListener('click',function(e){ e.preventDefault(); hide(); });
+  overlay&&overlay.addEventListener('click',function(e){ if(e.target===overlay) hide(); });
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') hide(); });
+
+  if(btn){
+    btn.addEventListener('click',function(){
+      var nombre=(document.getElementById('cepaNombre').value||'').trim();
+      var wa=(document.getElementById('cepaWA').value||'').trim();
+      var esp=(document.getElementById('cepaEsp').value||'');
+      var err=false;
+      if(!nombre){ flash('cepaNombre'); err=true; }
+      if(!wa)    { flash('cepaWA');     err=true; }
+      if(err) return;
+      btn.disabled=true; btn.textContent='Enviando…';
+      var payload={ nombre:nombre, whatsapp:wa, especialidad:esp, origen:'Popup Web', fecha:new Date().toLocaleString('es-AR') };
+      fetch(ENDPOINT,{ method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain;charset=UTF-8'}, body:JSON.stringify(payload) })
+        .then(success_).catch(success_);
+    });
+  }
+
+  function flash(id){
+    var el=document.getElementById(id); if(!el) return;
+    el.style.borderColor='rgba(180,60,60,.5)';
+    setTimeout(function(){ el.style.borderColor=''; },2000);
+  }
+
+  function success_(){
+    if(typeof fbq==='function')  fbq('track','Lead');
+    if(typeof gtag==='function') gtag('event','generate_lead',{event_category:'popup'});
+    if(formWrap) formWrap.style.display='none';
+    if(okScreen) okScreen.style.display='block';
+    setTimeout(hide,3000);
+  }
+
+  document.readyState==='loading'
+    ? document.addEventListener('DOMContentLoaded',init)
+    : init();
+})();
+</script>
+<!-- ======= FIN POPUP LEADS ======= -->
 <body>
   <div id="top" aria-hidden="true"></div>
 
