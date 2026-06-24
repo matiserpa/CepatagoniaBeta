@@ -2684,7 +2684,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
   fab.addEventListener('click', function(){ show(true); });
   fab.addEventListener('mouseenter', function(){ fab.style.transform='scale(1.1)'; });
   fab.addEventListener('mouseleave', function(){ fab.style.transform='scale(1)'; });
-  document.body.appendChild(fab);
+  document.body.appendChild(fab);   setTimeout(function(){ fab.style.opacity='1'; }, 3000);
 
   if(xBtn)    xBtn.addEventListener('click',hide);
   if(dismiss) dismiss.addEventListener('click',function(e){ e.preventDefault(); hide(); });
