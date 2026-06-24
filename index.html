@@ -2641,7 +2641,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
 
 <script>
 (function(){
-  var ENDPOINT   = 'REEMPLAZAR_CON_URL_APPS_SCRIPT';
+  var ENDPOINT   = 'https://script.google.com/macros/s/AKfycbwDy0-b6JWLffaqTo4Wu5nogw9-NKla_nux-A8iMp2WWOvQbHPhMf02KYyfZ1tCcm3H/exec';
   var DELAY_MS   = 0;
   var COOKIE     = 'cepa_lead_v1';
   var COOKIE_TTL = 30;
@@ -2663,7 +2663,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     setTimeout(function(){ var f=overlay.querySelector('.input'); if(f) f.focus(); },120);
   }
   function hide(){
-    if(!overlay) return;
+    if(!overlay||!overlay.classList.contains('is-open')) return;
     overlay.classList.remove('is-open');
     document.body.style.overflow='';
     setCookie();
