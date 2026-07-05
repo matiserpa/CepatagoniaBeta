@@ -144,7 +144,7 @@
   .viewport{
     position:relative;overflow:hidden;border:1px solid rgba(14,20,16,.15);
     border-radius:var(--radius);background:#f4f3ea;
-    max-width:420px;margin:0 auto;touch-action:none;
+    max-width:420px;margin:0 auto;touch-action:pan-y;
     user-select:none;-webkit-user-select:none;
   }
   .zoomer{transform-origin:0 0;will-change:transform}
@@ -354,7 +354,7 @@
       </label>
     </div>
 
-    <p style="font-size:11.5px;color:rgba(14,20,16,.45)">Precios por zona a confirmar. Hasta 3 cuotas sin interés con Mercado Pago.</p>
+    <p style="font-size:11.5px;color:rgba(14,20,16,.45)">Precios de prueba — no son los valores finales. Hasta 3 cuotas sin interés con Mercado Pago.</p>
 
     <div class="actions">
       <span></span>
@@ -525,7 +525,7 @@ const ROWS = 'ABCDEFGHIJKLMNOPQRST'.split('');
 const COLS = 14;
 const GOLD_ROWS = 'ABCDEF';
 const GAP_AFTER_ROW = 'J';
-const PRICES = { GOLD: null, GENERAL: null, POST_FINCI: null, POST_FERREIRA: null }; // a definir
+const PRICES = { GOLD: 10, GENERAL: 5, POST_FINCI: 10, POST_FERREIRA: 10 }; // precios de prueba
 
 const state = { qty: 1, post: false, post2: false, selected: [], step: 1, timerId: null, pollId: null, orderId: null };
 
@@ -603,7 +603,6 @@ function buildGrid(){
 }
 
 // ================== TOOLTIP ==================
-const tip = null;
 function showTip(e, id, el){
   if(window.matchMedia('(pointer:coarse)').matches) return;
   if(el.classList.contains('occupied') || el.classList.contains('hold')) return;
@@ -616,16 +615,19 @@ function showTip(e, id, el){
 }
 function hideTip(){ document.getElementById('seatTip').style.display = 'none'; }
 
-// ================== ZOOM Y PANEO ==================
+// ================== ZOOM Y PANEO (sin pointer capture: los clicks llegan a butacas y botones) ==================
 const vp = document.getElementById('vp');
 const zoomer = document.getElementById('zoomer');
 let zs = 1, ztx = 0, zty = 0;
 let justPanned = false;
 const ptrs = new Map();
 let lastPinchDist = 0, lastMid = null, lastPan = null, moveAcc = 0;
+let lastTap = { t: 0, x: 0, y: 0 };
 
 function applyZoom(){
   zoomer.style.transform = 'translate(' + ztx + 'px,' + zty + 'px) scale(' + zs + ')';
+  // Sin zoom: un dedo scrollea la página. Con zoom: un dedo panea el plano.
+  vp.style.touchAction = zs > 1 ? 'none' : 'pan-y';
 }
 function clampPan(){
   const w = vp.clientWidth, h = vp.clientHeight;
@@ -640,31 +642,36 @@ function zoomAt(f, cx, cy){
   if(zs === 1){ ztx = 0; zty = 0; }
   clampPan(); applyZoom();
 }
-function zoomBtn(f){ zoomAt(f, vp.clientWidth/2, vp.clientHeight/2); }
+function zoomBtn(f){ zoomAt(f, vp.clientWidth / 2, vp.clientHeight / 2); }
 function zoomReset(){ zs = 1; ztx = 0; zty = 0; applyZoom(); }
+function toggleZoomAt(clientX, clientY){
+  const vr = vp.getBoundingClientRect();
+  if(zs > 1.5) zoomReset();
+  else zoomAt(2.2 / zs, clientX - vr.left, clientY - vr.top);
+}
 
 vp.addEventListener('pointerdown', e=>{
-  vp.setPointerCapture(e.pointerId);
-  ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  if(e.target.closest('.zoom-controls')) return; // los botones se manejan solos
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
   moveAcc = 0;
   if(ptrs.size === 2){
     const p = [...ptrs.values()];
-    lastPinchDist = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
-    lastMid = { x:(p[0].x+p[1].x)/2, y:(p[0].y+p[1].y)/2 };
+    lastPinchDist = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+    lastMid = { x: (p[0].x + p[1].x) / 2, y: (p[0].y + p[1].y) / 2 };
   } else {
-    lastPan = { x:e.clientX, y:e.clientY };
+    lastPan = { x: e.clientX, y: e.clientY };
   }
 });
 vp.addEventListener('pointermove', e=>{
   if(!ptrs.has(e.pointerId)) return;
   const prev = ptrs.get(e.pointerId);
-  moveAcc += Math.hypot(e.clientX-prev.x, e.clientY-prev.y);
-  ptrs.set(e.pointerId, {x:e.clientX, y:e.clientY});
+  moveAcc += Math.hypot(e.clientX - prev.x, e.clientY - prev.y);
+  ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY });
   const vr = vp.getBoundingClientRect();
   if(ptrs.size === 2){
     const p = [...ptrs.values()];
-    const dist = Math.hypot(p[0].x-p[1].x, p[0].y-p[1].y);
-    const mid = { x:(p[0].x+p[1].x)/2, y:(p[0].y+p[1].y)/2 };
+    const dist = Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y);
+    const mid = { x: (p[0].x + p[1].x) / 2, y: (p[0].y + p[1].y) / 2 };
     if(lastPinchDist > 0) zoomAt(dist / lastPinchDist, mid.x - vr.left, mid.y - vr.top);
     ztx += mid.x - lastMid.x; zty += mid.y - lastMid.y;
     clampPan(); applyZoom();
@@ -672,37 +679,50 @@ vp.addEventListener('pointermove', e=>{
     justPanned = true;
   } else if(ptrs.size === 1 && zs > 1 && lastPan){
     ztx += e.clientX - lastPan.x; zty += e.clientY - lastPan.y;
-    lastPan = { x:e.clientX, y:e.clientY };
+    lastPan = { x: e.clientX, y: e.clientY };
     clampPan(); applyZoom();
     if(moveAcc > 7) justPanned = true;
   }
 });
 function endPtr(e){
+  if(!ptrs.has(e.pointerId)) return;
   ptrs.delete(e.pointerId);
   if(ptrs.size < 2) lastPinchDist = 0;
-  if(ptrs.size === 1){ const p=[...ptrs.values()][0]; lastPan = {x:p.x, y:p.y}; }
-  setTimeout(()=>{ justPanned = false; }, 60);
+  if(ptrs.size === 1){ const p = [...ptrs.values()][0]; lastPan = { x: p.x, y: p.y }; }
+  // doble tap en táctil (los móviles no siempre emiten dblclick)
+  if(e.pointerType === 'touch' && moveAcc < 10 && !justPanned){
+    const now = Date.now();
+    if(now - lastTap.t < 320 && Math.hypot(e.clientX - lastTap.x, e.clientY - lastTap.y) < 30){
+      toggleZoomAt(e.clientX, e.clientY);
+      lastTap = { t: 0, x: 0, y: 0 };
+    } else {
+      lastTap = { t: now, x: e.clientX, y: e.clientY };
+    }
+  }
+  if(justPanned) setTimeout(()=>{ justPanned = false; }, 60);
 }
 vp.addEventListener('pointerup', endPtr);
 vp.addEventListener('pointercancel', endPtr);
+window.addEventListener('pointerup', endPtr);     // red de seguridad si el dedo sale del plano
+window.addEventListener('pointercancel', endPtr);
 vp.addEventListener('click', e=>{
-  if(justPanned){ e.stopPropagation(); e.preventDefault(); }
+  if(justPanned){ e.stopPropagation(); e.preventDefault(); justPanned = false; }
 }, true);
 vp.addEventListener('dblclick', e=>{
-  const vr = vp.getBoundingClientRect();
-  if(zs > 1.5) zoomReset();
-  else zoomAt(2.2 / zs, e.clientX - vr.left, e.clientY - vr.top);
+  if(e.target.closest('.zoom-controls')) return;
+  toggleZoomAt(e.clientX, e.clientY);
 });
 vp.addEventListener('wheel', e=>{
   if(!e.ctrlKey) return;
   e.preventDefault();
   const vr = vp.getBoundingClientRect();
   zoomAt(e.deltaY < 0 ? 1.15 : 1/1.15, e.clientX - vr.left, e.clientY - vr.top);
-}, { passive:false });
+}, { passive: false });
 
 // hint en móviles
 if(window.matchMedia('(pointer:coarse)').matches){
   const h = document.getElementById('zoomHint');
+  h.textContent = 'Usá +, doble tap o pellizco para acercar';
   setTimeout(()=>h.classList.add('visible'), 600);
   setTimeout(()=>h.classList.remove('visible'), 4800);
 }
