@@ -63,9 +63,9 @@
   }
   .nav-cta:hover{background:var(--charcoal)}
   .nav-impulso{display:flex;align-items:center;padding-left:16px;margin-left:4px;border-left:1px solid rgba(14,20,16,.15)}
-  .nav-impulso img{height:30px;display:block;opacity:.85;transition:opacity .15s}
+  .nav-impulso img{height:44px;display:block;opacity:.9;transition:opacity .15s}
   .nav-impulso:hover img{opacity:1}
-  @media(max-width:840px){.nav-impulso{border-left:none;padding-left:6px}.nav-impulso img{height:24px}}
+  @media(max-width:840px){.nav-impulso{border-left:none;padding-left:6px}.nav-impulso img{height:32px}}
   .nav-back{display:none}
   @media(max-width:840px){
     .nav-links a{display:none}
@@ -78,21 +78,14 @@
     text-align:center;padding:30px 20px 22px;
     border-bottom:1px solid rgba(14,20,16,.12);
   }
-  .horizon{width:120px;height:1px;background:var(--dark-green);margin:0 auto 14px;position:relative}
-  .horizon::after{
-    content:'';position:absolute;left:50%;top:-7px;transform:translateX(-50%) rotate(45deg);
-    width:10px;height:10px;border-top:1px solid var(--dark-green);border-left:1px solid var(--dark-green);
-    background:var(--cream);
-  }
   .page-hero h1{font-family:var(--font-display);font-weight:600;font-size:27px;letter-spacing:.06em}
   .page-hero p{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dark-green);margin-top:6px}
 
   /* --- footer del sitio --- */
   .site-footer{
     border-top:1px solid rgba(14,20,16,.12);background:var(--white);
-    text-align:center;padding:36px 20px 30px;margin-top:20px;
+    text-align:center;padding:24px 20px 20px;margin-top:20px;
   }
-  .site-footer img.logo{height:110px;margin-bottom:10px}
   .site-footer p{font-size:12.5px;color:rgba(14,20,16,.6);line-height:1.7}
   .site-footer .credit{
     display:inline-flex;align-items:center;gap:8px;margin-top:16px;
@@ -333,7 +326,6 @@
 </nav>
 
 <header class="page-hero">
-  <div class="horizon"></div>
   <h1>Entradas</h1>
   <p>Ciencia que regenera · Naturaleza que inspira</p>
   <nav class="stepper" aria-label="Progreso de compra">
@@ -376,14 +368,14 @@
     <div class="addon">
       <input type="checkbox" id="post" onchange="state.post=this.checked;renderBar()">
       <label for="post" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;margin:0">
-        Sumar <b>Post Congreso con Eduardo Finci</b> — 12 de octubre · cupos limitados
+        Sumar <b>Post Congreso con Eduardo Finci</b> — 12 de octubre · cupos limitados · <b><span id="pp-FINCI"></span> por persona</b>
       </label>
     </div>
 
     <div class="addon">
       <input type="checkbox" id="post2" onchange="state.post2=this.checked;renderBar()">
       <label for="post2" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;margin:0">
-        Sumar <b>Post Congreso con Julio Ferreira</b> — 12 de octubre · cupos limitados
+        Sumar <b>Post Congreso con Julio Ferreira</b> — 12 de octubre · cupos limitados · <b><span id="pp-FERREIRA"></span> por persona</b>
       </label>
     </div>
 
@@ -497,6 +489,11 @@
     <label for="f-prof">Profesión / Matrícula (opcional)</label>
     <input type="text" id="f-prof">
 
+    <div id="asistentesWrap" style="display:none">
+      <label for="f-asistentes">Nombres de los demás asistentes (uno por línea)</label>
+      <textarea id="f-asistentes" rows="3" style="width:100%;padding:11px 13px;border:1px solid rgba(14,20,16,.18);border-radius:7px;font-family:var(--font-body);font-size:14px;background:var(--white);margin-bottom:14px;resize:vertical"></textarea>
+    </div>
+
     <div class="actions">
       <button class="btn btn-ghost" onclick="goTo(2)">Volver</button>
       <button class="btn btn-primary" id="btnOrden" onclick="crearOrden()">Reservar y revisar</button>
@@ -535,7 +532,6 @@
 </main>
 
 <footer class="site-footer">
-  <img class="logo" src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
   <p>© CEPATAGONIA · Todos los derechos reservados.<br>San Martín de los Andes · Patagonia · Argentina</p>
   <a class="credit" href="https://www.impulsocreativo.com.ar" target="_blank" rel="noopener">
     Diseño &amp; comunicación por
@@ -818,6 +814,7 @@ function toggleSeat(id, el){
 function chgQty(d){
   state.qty = Math.min(6, Math.max(1, state.qty + d));
   document.getElementById('qty').textContent = state.qty;
+  document.getElementById('asistentesWrap').style.display = state.qty > 1 ? 'block' : 'none';
   while(state.selected.length > state.qty){
     const old = state.selected.pop();
     const el = document.querySelector('[data-id="' + old + '"]');
@@ -844,7 +841,10 @@ function goTo(n){
 async function crearOrden(){
   const nombre = document.getElementById('f-nombre').value.trim();
   const email = document.getElementById('f-email').value.trim();
-  if(!nombre || !email){ alert('Completá al menos nombre y email.'); return; }
+  const dni = document.getElementById('f-dni').value.trim();
+  const asistentes = document.getElementById('f-asistentes').value.trim();
+  if(!nombre || !email || !dni){ alert('Completá nombre, DNI y email para continuar.'); return; }
+  if(state.qty > 1 && !asistentes){ alert('Ingresá los nombres de los demás asistentes (uno por línea).'); return; }
   const btn = document.getElementById('btnOrden');
   btn.disabled = true; btn.textContent = 'Reservando…';
 
@@ -860,9 +860,10 @@ async function crearOrden(){
         comprador: {
           nombre: nombre,
           apellido: document.getElementById('f-apellido').value.trim(),
-          dni: document.getElementById('f-dni').value.trim(),
+          dni: dni,
           email: email,
-          telefono: document.getElementById('f-tel').value.trim()
+          telefono: document.getElementById('f-tel').value.trim(),
+          asistentes: asistentes
         }
       })
     });
@@ -943,7 +944,7 @@ function reiniciarDemo(){
   state.selected = []; state.orderId = null; state.post = false; state.post2 = false;
   document.getElementById('post').checked = false;
   document.getElementById('post2').checked = false;
-  ['f-nombre','f-apellido','f-dni','f-tel','f-email','f-prof'].forEach(id=>document.getElementById(id).value = '');
+  ['f-nombre','f-apellido','f-dni','f-tel','f-email','f-prof','f-asistentes'].forEach(id=>document.getElementById(id).value = '');
   cargarPlano(true);
   goTo(2);
 }
@@ -969,6 +970,8 @@ function buildSummary(){
 
 document.getElementById('zp-GOLD').textContent = money(PRICES.GOLD);
 document.getElementById('zp-GENERAL').textContent = money(PRICES.GENERAL);
+document.getElementById('pp-FINCI').textContent = money(PRICES.POST_FINCI);
+document.getElementById('pp-FERREIRA').textContent = money(PRICES.POST_FERREIRA);
 buildGrid();
 renderBar();
 cargarPlano(true);
