@@ -95,10 +95,10 @@ async function init(){
     '<div class="sum-line"><span>A nombre de</span><b>' + esc(orden.nombre || '—') + '</b></div>' +
     '<div class="sum-line"><span>Asientos</span><b>' + esc(orden.asientos) + '</b></div>' +
     (extras ? '<div class="sum-line"><span>Adicionales</span><b>' + esc(extras) + '</b></div>' : '') +
-    '<div class="sum-line"><span>Total</span><b>' + money(orden.monto) + '</b></div>' +
+    (Number(orden.monto) > 0 ? '<div class="sum-line"><span>Total</span><b>' + money(orden.monto) + '</b></div>' : '') +
     '</div>';
 
-  const qr = '<div class="qr-box"><img alt="QR de tu entrada" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent(orden.orderId) + '"><p>Presentá este código en la acreditación</p></div>';
+  const qr = '<div class="qr-box"><img alt="QR de tu entrada" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent('https://cepatagonia.com/gracias.html?external_reference=' + orden.orderId + '&status=approved') + '"><p>Presentá este código en la acreditación</p></div>';
 
   if(orden.estado === 'PAGADO' || orden.estado === 'CORTESIA'){
     render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
