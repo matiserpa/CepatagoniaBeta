@@ -264,6 +264,13 @@
       </label>
     </div>
 
+    <div class="addon">
+      <input type="checkbox" id="post2" onchange="state.post2=this.checked;renderBar()">
+      <label for="post2" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;margin:0">
+        Sumar <b>Post Congreso con Julio Ferreira</b> — 12 de octubre · cupos limitados
+      </label>
+    </div>
+
     <p style="font-size:11.5px;color:rgba(14,20,16,.45)">Precios por zona a confirmar. Hasta 3 cuotas sin interés con Mercado Pago.</p>
 
     <div class="actions">
@@ -382,9 +389,9 @@ const ROWS = 'ABCDEFGHIJKLMNOPQRST'.split('');
 const COLS = 14;
 const GOLD_ROWS = 'ABCDEF';
 const GAP_AFTER_ROW = 'J';
-const PRICES = { GOLD: null, GENERAL: null, POST: null }; // a definir
+const PRICES = { GOLD: null, GENERAL: null, POST_FINCI: null, POST_FERREIRA: null }; // a definir
 
-const state = { qty: 1, post: false, selected: [], step: 1, timerId: null, pollId: null, orderId: null };
+const state = { qty: 1, post: false, post2: false, selected: [], step: 1, timerId: null, pollId: null, orderId: null };
 
 // Estado del plano: se carga desde el backend
 let occupied = new Set();
@@ -456,7 +463,8 @@ function money(n){ return n == null ? 'a definir' : '$ ' + n.toLocaleString('es-
 function currentTotal(){
   if(PRICES.GOLD == null || PRICES.GENERAL == null) return null;
   let t = state.selected.reduce((a, id)=>a + PRICES[zone(id)], 0);
-  if(state.post && PRICES.POST != null) t += PRICES.POST * state.selected.length;
+  if(state.post && PRICES.POST_FINCI != null) t += PRICES.POST_FINCI * state.selected.length;
+  if(state.post2 && PRICES.POST_FERREIRA != null) t += PRICES.POST_FERREIRA * state.selected.length;
   return t;
 }
 function renderBar(){
@@ -470,7 +478,10 @@ function renderBar(){
     let z = [];
     if(golds) z.push(golds + ' GOLD');
     if(gens) z.push(gens + ' General');
-    info.textContent = 'Asientos: ' + state.selected.join(', ') + ' (' + z.join(' + ') + ')' + (state.post ? ' · + Post Congreso' : '');
+    let extras = [];
+    if(state.post) extras.push('Post Finci');
+    if(state.post2) extras.push('Post Ferreira');
+    info.textContent = 'Asientos: ' + state.selected.join(', ') + ' (' + z.join(' + ') + ')' + (extras.length ? ' · + ' + extras.join(' + ') : '');
     tot.textContent = PRICES.GOLD == null ? 'Precio a definir' : money(currentTotal());
   }
   document.getElementById('toStep3').disabled = state.selected.length !== state.qty;
@@ -528,7 +539,8 @@ async function crearOrden(){
       body: JSON.stringify({
         action: 'crearOrden',
         asientos: state.selected,
-        postCongreso: state.post,
+        postFinci: state.post,
+        postFerreira: state.post2,
         comprador: {
           nombre: nombre,
           apellido: document.getElementById('f-apellido').value.trim(),
@@ -575,7 +587,6 @@ function startHoldTimer(){
       state.selected = []; state.orderId = null;
       cargarPlano(true); goTo(2);
     }
-    
   };
   tick();
   state.timerId = setInterval(tick, 1000);
@@ -613,8 +624,9 @@ async function pagarSimulado(){
 
 function reiniciarDemo(){
   document.getElementById('overlay').classList.remove('visible');
-  state.selected = []; state.orderId = null; state.post = false;
+  state.selected = []; state.orderId = null; state.post = false; state.post2 = false;
   document.getElementById('post').checked = false;
+  document.getElementById('post2').checked = false;
   ['f-nombre','f-apellido','f-dni','f-tel','f-email','f-prof'].forEach(id=>document.getElementById(id).value = '');
   cargarPlano(true);
   goTo(2);
@@ -627,7 +639,10 @@ function buildSummary(){
     html += '<div class="sum-line"><span>Entrada Congreso · Asiento ' + id + ' (' + (zone(id) === 'GOLD' ? 'GOLD' : 'General') + ')</span><span>' + money(PRICES[zone(id)]) + '</span></div>';
   });
   if(state.post){
-    html += '<div class="sum-line"><span>Post Congreso E. Finci × ' + state.selected.length + '</span><span>' + money(PRICES.POST) + '</span></div>';
+    html += '<div class="sum-line"><span>Post Congreso E. Finci × ' + state.selected.length + '</span><span>' + money(PRICES.POST_FINCI) + '</span></div>';
+  }
+  if(state.post2){
+    html += '<div class="sum-line"><span>Post Congreso J. Ferreira × ' + state.selected.length + '</span><span>' + money(PRICES.POST_FERREIRA) + '</span></div>';
   }
   const nombre = document.getElementById('f-nombre').value || '—';
   const email = document.getElementById('f-email').value || '—';
