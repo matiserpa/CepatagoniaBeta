@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>CEPATAGONIA — Confirmación de compra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#E8E6D4; --sage:#91BBAE; --dark-green:#6B8F71;
+    --muted-green:#A1B2A3; --charcoal:#0E1410; --white:#FDFDF9;
+    --radius:10px;
+    --font-display:'Playfair Display',serif; --font-body:'Montserrat',sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font-body);background:var(--cream);color:var(--charcoal);min-height:100vh;font-size:15px;line-height:1.55}
+  header.site{border-bottom:1px solid rgba(14,20,16,.12);padding:26px 20px 20px;text-align:center}
+  .horizon{width:120px;height:1px;background:var(--dark-green);margin:0 auto 14px;position:relative}
+  .horizon::after{content:'';position:absolute;left:50%;top:-7px;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;border-top:1px solid var(--dark-green);border-left:1px solid var(--dark-green);background:var(--cream)}
+  h1{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.32em;text-indent:.32em}
+  header.site p{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dark-green);margin-top:6px}
+  main{max-width:620px;margin:0 auto;padding:36px 16px 80px}
+  .panel{background:var(--white);border:1px solid rgba(14,20,16,.08);border-radius:var(--radius);padding:34px 30px;text-align:center}
+  .badge{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center}
+  .badge.ok{background:var(--dark-green)}
+  .badge.warn{background:var(--muted-green)}
+  .badge.err{background:#B0654F}
+  .badge svg{width:30px;height:30px}
+  h2{font-family:var(--font-display);font-weight:600;font-size:23px;margin-bottom:8px}
+  .sub{color:rgba(14,20,16,.6);font-size:13.5px;margin-bottom:24px}
+  .resumen{text-align:left;background:var(--cream);border-radius:var(--radius);padding:6px 18px;margin:0 0 22px}
+  .sum-line{display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-bottom:1px solid rgba(14,20,16,.09);font-size:14px}
+  .sum-line:last-child{border:none}
+  .sum-line span:first-child{color:rgba(14,20,16,.6)}
+  .sum-line b{font-weight:600;text-align:right}
+  .qr-box{margin:6px auto 20px}
+  .qr-box img{width:190px;height:190px;border:1px solid rgba(14,20,16,.12);border-radius:8px;background:#fff;padding:8px}
+  .qr-box p{font-size:11.5px;color:rgba(14,20,16,.55);margin-top:8px;letter-spacing:.05em}
+  .nota{font-size:12.5px;color:rgba(14,20,16,.65);background:#f2f6f0;border:1px solid var(--sage);border-radius:var(--radius);padding:13px 16px;text-align:left}
+  .btn{display:inline-block;margin-top:24px;padding:13px 28px;border-radius:7px;background:var(--dark-green);color:var(--cream);text-decoration:none;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+  .btn:hover{background:var(--charcoal)}
+  .spinner{width:34px;height:34px;border:3px solid var(--muted-green);border-top-color:var(--dark-green);border-radius:50%;margin:30px auto;animation:spin .9s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="horizon"></div>
+  <h1>CEPATAGONIA</h1>
+  <p>Ciencia que regenera · Naturaleza que inspira</p>
+</header>
+<main>
+  <section class="panel" id="panel">
+    <div class="spinner"></div>
+    <p class="sub">Confirmando tu compra…</p>
+  </section>
+</main>
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
+
+const params = new URLSearchParams(location.search);
+const orderId = params.get('external_reference') || '';
+const status = (params.get('collection_status') || params.get('status') || '').toLowerCase();
+
+function money(n){ return '$ ' + Number(n).toLocaleString('es-AR'); }
+function esc(s){ const d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+
+function render(html){ document.getElementById('panel').innerHTML = html; }
+
+function pantallaError(msg){
+  render('<div class="badge err"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></div>' +
+    '<h2>El pago no se completó</h2>' +
+    '<p class="sub">' + esc(msg) + '</p>' +
+    '<a class="btn" href="/demo-entradas.html">Intentar de nuevo</a>');
+}
+
+async function init(){
+  if(!orderId){ pantallaError('No encontramos la referencia de la compra.'); return; }
+  let orden = null;
+  try{
+    const res = await fetch(API_URL + '?action=orden&id=' + encodeURIComponent(orderId));
+    const data = await res.json();
+    if(data.ok) orden = data.orden;
+  }catch(e){}
+  if(!orden){ pantallaError('No pudimos recuperar la orden ' + orderId + '. Si el pago se realizó, vas a recibir el email de confirmación igualmente.'); return; }
+
+  const extras = orden.post && orden.post !== 'NO' ? orden.post.replace('FINCI','Post Congreso E. Finci').replace('FERREIRA','Post Congreso J. Ferreira').replace('+',' · ') : null;
+
+  const resumen =
+    '<div class="resumen">' +
+    '<div class="sum-line"><span>Orden</span><b>' + esc(orden.orderId) + '</b></div>' +
+    '<div class="sum-line"><span>A nombre de</span><b>' + esc(orden.nombre || '—') + '</b></div>' +
+    '<div class="sum-line"><span>Asientos</span><b>' + esc(orden.asientos) + '</b></div>' +
+    (extras ? '<div class="sum-line"><span>Adicionales</span><b>' + esc(extras) + '</b></div>' : '') +
+    '<div class="sum-line"><span>Total</span><b>' + money(orden.monto) + '</b></div>' +
+    '</div>';
+
+  const qr = '<div class="qr-box"><img alt="QR de tu entrada" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent(orden.orderId) + '"><p>Presentá este código en la acreditación</p></div>';
+
+  if(orden.estado === 'PAGADO' || orden.estado === 'CORTESIA'){
+    render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
+      '<h2>¡Compra confirmada!</h2>' +
+      '<p class="sub">Congreso de Estética de la Patagonia · 10 y 11 de octubre 2026 · Hotel Le Village, San Martín de los Andes</p>' +
+      resumen + qr +
+      '<div class="nota">Te enviamos la entrada con este mismo QR a tu email. Si no llega en unos minutos, revisá la carpeta de spam.</div>');
+  } else if(status === 'pending' || status === 'in_process' || orden.estado === 'HOLD'){
+    render('<div class="badge warn"><svg viewBox="0 0 24 24" fill="none" stroke="#0E1410" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>' +
+      '<h2>Pago en proceso</h2>' +
+      '<p class="sub">Mercado Pago está procesando tu pago. Apenas se acredite, tus asientos quedan confirmados y te llega la entrada por email.</p>' +
+      resumen +
+      '<div class="nota">Guardá tu número de orden. Si en unas horas no recibiste novedades, escribinos a info@cepatagonia.com.</div>');
+  } else {
+    pantallaError('El pago fue rechazado o cancelado. Tus asientos se liberan automáticamente y podés volver a intentarlo.');
+  }
+}
+init();
+</script>
+</body>
+</html>
