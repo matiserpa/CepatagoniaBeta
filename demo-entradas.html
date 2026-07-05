@@ -32,6 +32,24 @@
     font-size:15px;
     line-height:1.55;
   }
+  .gate{
+    position:fixed;inset:0;background:var(--cream);z-index:100;
+    display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .gate-card{
+    max-width:400px;width:100%;background:var(--white);border:1px solid rgba(14,20,16,.1);
+    border-radius:var(--radius);padding:36px 30px;text-align:center;
+  }
+  .gate-card img{height:90px;margin-bottom:6px}
+  .gate-card h3{font-family:var(--font-display);font-size:21px;margin-bottom:8px}
+  .gate-card p{font-size:13px;color:rgba(14,20,16,.6);margin-bottom:18px}
+  .gate-card input{
+    width:100%;padding:12px 14px;border:1px solid rgba(14,20,16,.2);border-radius:7px;
+    font-family:var(--font-body);font-size:15px;text-align:center;letter-spacing:.15em;
+    margin-bottom:6px;
+  }
+  .gate-card .gate-err{display:none;color:#B0654F;font-size:12px;margin:4px 0 8px}
+  .gate-card .btn{width:100%;margin-top:8px}
   .mock-banner{
     background:var(--charcoal);color:var(--cream);text-align:center;
     font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:8px 12px;
@@ -47,8 +65,8 @@
     gap:20px;padding:10px 18px;
   }
   .brand{display:flex;align-items:center;text-decoration:none}
-  .brand img{height:96px;margin:-24px 0;display:block}
-  @media(max-width:840px){.brand img{height:72px;margin:-14px 0}}
+  .brand img{height:140px;margin:-40px 0;display:block}
+  @media(max-width:840px){.brand img{height:96px;margin:-22px 0}}
   .nav-links{display:flex;gap:22px;margin-left:auto;align-items:center}
   .nav-links a{
     font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;
@@ -136,6 +154,8 @@
   }
   .qty button:hover{background:var(--dark-green);color:var(--cream)}
   .qty span{min-width:20px;text-align:center;font-weight:600}
+  .asist-card{background:var(--cream);border-radius:var(--radius);padding:14px 16px 2px;margin-bottom:12px}
+  .asist-t{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--dark-green);margin-bottom:10px}
   .zone-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:rgba(14,20,16,.65);margin:2px 0 8px}
   .zone-btns{display:flex;gap:12px;margin:0 0 20px}
   .zone-btn{
@@ -150,6 +170,9 @@
   .zone-btn.active{border-color:var(--dark-green);background:#eef4ec;box-shadow:0 0 0 1.5px var(--dark-green)}
   @media(max-width:560px){.zone-btns{flex-direction:column}}
   .addon{display:flex;align-items:center;gap:10px;font-size:13px;margin:6px 0 20px}
+  .post-row{justify-content:space-between;gap:16px;margin:0 0 14px;background:var(--cream);border-radius:var(--radius);padding:12px 16px}
+  .qty.mini button{width:27px;height:27px;font-size:15px}
+  .qty.mini span{min-width:16px;font-size:14px}
   .addon input{accent-color:var(--dark-green);width:16px;height:16px}
 
   /* --- plano a escala real (proporciones de la sala de Planout) --- */
@@ -302,7 +325,18 @@
 </head>
 <body>
 
-<div class="mock-banner">DEMO INTERNA · Impulso Creativo · Los pagos son simulados, los asientos se reservan de verdad</div>
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
+    <h3>Demo interna</h3>
+    <p>Esta página es una prueba del sistema de entradas de CEPATAGONIA. Ingresá la clave del equipo para continuar.</p>
+    <input id="gateKey" type="password" placeholder="Clave de acceso" autocomplete="off">
+    <p class="gate-err" id="gateErr">Clave incorrecta</p>
+    <button class="btn btn-primary" id="gateBtn" type="button">Ingresar</button>
+  </div>
+</div>
+
+<div class="mock-banner">DEMO INTERNA · ACCESO RESTRINGIDO · Compras de prueba reembolsables — sin validez como entrada</div>
 
 <nav class="site-nav">
   <div class="inner">
@@ -315,9 +349,7 @@
       <a href="#" class="active">Entradas</a>
       <a href="https://cepatagonia.com/#turismo">Turismo</a>
       <a href="https://cepatagonia.com/#postcongreso">Post Congreso</a>
-      <a href="https://cepatagonia.com/#faq">FAQ</a>
       <a href="https://cepatagonia.com/" class="nav-back">← Volver al sitio</a>
-      <a href="#" class="nav-cta active-page">Adquirí tu pase</a>
       <a class="nav-impulso" href="https://www.impulsocreativo.com.ar" target="_blank" rel="noopener" aria-label="Impulso Creativo">
         <img src="https://cepatagonia.com/assets/impulso-creativo-transparente-web.png" alt="Impulso Creativo">
       </a>
@@ -365,18 +397,22 @@
       </button>
     </div>
 
-    <div class="addon">
-      <input type="checkbox" id="post" onchange="state.post=this.checked;renderBar()">
-      <label for="post" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;margin:0">
-        Sumar <b>Post Congreso con Eduardo Finci</b> — 12 de octubre · cupos limitados · <b><span id="pp-FINCI"></span> por persona</b>
-      </label>
+    <div class="addon post-row">
+      <span>Sumar <b>Post Congreso con Eduardo Finci</b> — 12 de octubre · cupos limitados · <b><span id="pp-FINCI"></span> por persona</b></span>
+      <div class="qty mini">
+        <button type="button" onclick="chgPost('FINCI',-1)" aria-label="Quitar lugar">−</button>
+        <span id="pq-FINCI">0</span>
+        <button type="button" onclick="chgPost('FINCI',1)" aria-label="Agregar lugar">+</button>
+      </div>
     </div>
 
-    <div class="addon">
-      <input type="checkbox" id="post2" onchange="state.post2=this.checked;renderBar()">
-      <label for="post2" style="text-transform:none;letter-spacing:0;font-size:13px;font-weight:500;margin:0">
-        Sumar <b>Post Congreso con Julio Ferreira</b> — 12 de octubre · cupos limitados · <b><span id="pp-FERREIRA"></span> por persona</b>
-      </label>
+    <div class="addon post-row">
+      <span>Sumar <b>Post Congreso con Julio Ferreira</b> — 12 de octubre · cupos limitados · <b><span id="pp-FERREIRA"></span> por persona</b></span>
+      <div class="qty mini">
+        <button type="button" onclick="chgPost('FERREIRA',-1)" aria-label="Quitar lugar">−</button>
+        <span id="pq-FERREIRA">0</span>
+        <button type="button" onclick="chgPost('FERREIRA',1)" aria-label="Agregar lugar">+</button>
+      </div>
     </div>
 
     <p style="font-size:11.5px;color:rgba(14,20,16,.45)">Precios de prueba — no son los valores finales. Hasta 3 cuotas sin interés con Mercado Pago.</p>
@@ -490,8 +526,8 @@
     <input type="text" id="f-prof">
 
     <div id="asistentesWrap" style="display:none">
-      <label for="f-asistentes">Nombres de los demás asistentes (uno por línea)</label>
-      <textarea id="f-asistentes" rows="3" style="width:100%;padding:11px 13px;border:1px solid rgba(14,20,16,.18);border-radius:7px;font-family:var(--font-body);font-size:14px;background:var(--white);margin-bottom:14px;resize:vertical"></textarea>
+      <p class="zone-label" style="margin-top:8px">Datos de los demás asistentes</p>
+      <div id="asistList"></div>
     </div>
 
     <div class="actions">
@@ -556,7 +592,7 @@ const GOLD_ROWS = 'ABCDEF';
 const GAP_AFTER_ROW = 'J';
 const PRICES = { GOLD: 2, GENERAL: 1, POST_FINCI: 1, POST_FERREIRA: 1 }; // precios de prueba
 
-const state = { qty: 1, post: false, post2: false, zona: null, selected: [], step: 1, timerId: null, pollId: null, orderId: null };
+const state = { qty: 1, postFinci: 0, postFerreira: 0, zona: null, selected: [], step: 1, timerId: null, pollId: null, orderId: null };
 
 // Estado del plano: se carga desde el backend
 let occupied = new Set();
@@ -591,6 +627,33 @@ async function cargarPlano(silencioso){
 function iniciarPolling(){
   if(state.pollId) clearInterval(state.pollId);
   state.pollId = setInterval(()=>{ if(state.step === 2) cargarPlano(true); }, 15000);
+}
+
+// ================== POST CONGRESOS ==================
+function chgPost(cual, d){
+  const key = cual === 'FINCI' ? 'postFinci' : 'postFerreira';
+  state[key] = Math.min(state.qty, Math.max(0, state[key] + d));
+  document.getElementById('pq-' + cual).textContent = state[key];
+  renderBar();
+}
+
+// ================== ASISTENTES ==================
+function renderAsistentes(){
+  const wrap = document.getElementById('asistentesWrap');
+  const list = document.getElementById('asistList');
+  if(state.qty < 2){ wrap.style.display = 'none'; list.innerHTML = ''; return; }
+  wrap.style.display = 'block';
+  const prev = {};
+  list.querySelectorAll('input').forEach(i => prev[i.id] = i.value);
+  let h = '';
+  for(let i = 2; i <= state.qty; i++){
+    h += '<div class="asist-card"><p class="asist-t">Asistente ' + i + '</p><div class="grid2">' +
+         '<div><label for="af-n-' + i + '">Nombre y apellido</label><input type="text" id="af-n-' + i + '"></div>' +
+         '<div><label for="af-d-' + i + '">DNI</label><input type="text" id="af-d-' + i + '" inputmode="numeric"></div>' +
+         '</div></div>';
+  }
+  list.innerHTML = h;
+  list.querySelectorAll('input').forEach(i => { if(prev[i.id]) i.value = prev[i.id]; });
 }
 
 // ================== ZONA ==================
@@ -775,8 +838,7 @@ function money(n){ return n == null ? 'a definir' : '$ ' + n.toLocaleString('es-
 function currentTotal(){
   if(PRICES.GOLD == null || PRICES.GENERAL == null) return null;
   let t = state.selected.reduce((a, id)=>a + PRICES[zone(id)], 0);
-  if(state.post && PRICES.POST_FINCI != null) t += PRICES.POST_FINCI * state.selected.length;
-  if(state.post2 && PRICES.POST_FERREIRA != null) t += PRICES.POST_FERREIRA * state.selected.length;
+  t += PRICES.POST_FINCI * state.postFinci + PRICES.POST_FERREIRA * state.postFerreira;
   return t;
 }
 function renderBar(){
@@ -791,8 +853,8 @@ function renderBar(){
     if(golds) z.push(golds + ' GOLD');
     if(gens) z.push(gens + ' General');
     let extras = [];
-    if(state.post) extras.push('Post Finci');
-    if(state.post2) extras.push('Post Ferreira');
+    if(state.postFinci) extras.push('Post Finci ×' + state.postFinci);
+    if(state.postFerreira) extras.push('Post Ferreira ×' + state.postFerreira);
     info.textContent = 'Asientos: ' + state.selected.join(', ') + ' (' + z.join(' + ') + ')' + (extras.length ? ' · + ' + extras.join(' + ') : '');
     tot.textContent = PRICES.GOLD == null ? 'Precio a definir' : money(currentTotal());
   }
@@ -814,7 +876,11 @@ function toggleSeat(id, el){
 function chgQty(d){
   state.qty = Math.min(6, Math.max(1, state.qty + d));
   document.getElementById('qty').textContent = state.qty;
-  document.getElementById('asistentesWrap').style.display = state.qty > 1 ? 'block' : 'none';
+  state.postFinci = Math.min(state.postFinci, state.qty);
+  state.postFerreira = Math.min(state.postFerreira, state.qty);
+  document.getElementById('pq-FINCI').textContent = state.postFinci;
+  document.getElementById('pq-FERREIRA').textContent = state.postFerreira;
+  renderAsistentes();
   while(state.selected.length > state.qty){
     const old = state.selected.pop();
     const el = document.querySelector('[data-id="' + old + '"]');
@@ -842,9 +908,18 @@ async function crearOrden(){
   const nombre = document.getElementById('f-nombre').value.trim();
   const email = document.getElementById('f-email').value.trim();
   const dni = document.getElementById('f-dni').value.trim();
-  const asistentes = document.getElementById('f-asistentes').value.trim();
   if(!nombre || !email || !dni){ alert('Completá nombre, DNI y email para continuar.'); return; }
-  if(state.qty > 1 && !asistentes){ alert('Ingresá los nombres de los demás asistentes (uno por línea).'); return; }
+  let asistentes = '';
+  if(state.qty > 1){
+    const partes = [];
+    for(let i = 2; i <= state.qty; i++){
+      const n = document.getElementById('af-n-' + i).value.trim();
+      const d = document.getElementById('af-d-' + i).value.trim();
+      if(!n || !d){ alert('Completá nombre y DNI del asistente ' + i + '.'); return; }
+      partes.push(n + ' (DNI ' + d + ')');
+    }
+    asistentes = partes.join(' · ');
+  }
   const btn = document.getElementById('btnOrden');
   btn.disabled = true; btn.textContent = 'Reservando…';
 
@@ -855,8 +930,8 @@ async function crearOrden(){
       body: JSON.stringify({
         action: 'crearOrden',
         asientos: state.selected,
-        postFinci: state.post,
-        postFerreira: state.post2,
+        postFinci: state.postFinci,
+        postFerreira: state.postFerreira,
         comprador: {
           nombre: nombre,
           apellido: document.getElementById('f-apellido').value.trim(),
@@ -941,10 +1016,11 @@ async function pagarSimulado(){
 
 function reiniciarDemo(){
   document.getElementById('overlay').classList.remove('visible');
-  state.selected = []; state.orderId = null; state.post = false; state.post2 = false;
-  document.getElementById('post').checked = false;
-  document.getElementById('post2').checked = false;
-  ['f-nombre','f-apellido','f-dni','f-tel','f-email','f-prof','f-asistentes'].forEach(id=>document.getElementById(id).value = '');
+  state.selected = []; state.orderId = null; state.postFinci = 0; state.postFerreira = 0;
+  document.getElementById('pq-FINCI').textContent = '0';
+  document.getElementById('pq-FERREIRA').textContent = '0';
+  ['f-nombre','f-apellido','f-dni','f-tel','f-email','f-prof'].forEach(id=>document.getElementById(id).value = '');
+  document.querySelectorAll('#asistList input').forEach(i=>i.value = '');
   cargarPlano(true);
   goTo(2);
 }
@@ -955,11 +1031,11 @@ function buildSummary(){
   state.selected.forEach(id=>{
     html += '<div class="sum-line"><span>Entrada Congreso · Asiento ' + id + ' (' + (zone(id) === 'GOLD' ? 'GOLD' : 'General') + ')</span><span>' + money(PRICES[zone(id)]) + '</span></div>';
   });
-  if(state.post){
-    html += '<div class="sum-line"><span>Post Congreso E. Finci × ' + state.selected.length + '</span><span>' + money(PRICES.POST_FINCI) + '</span></div>';
+  if(state.postFinci){
+    html += '<div class="sum-line"><span>Post Congreso E. Finci × ' + state.postFinci + '</span><span>' + money(PRICES.POST_FINCI * state.postFinci) + '</span></div>';
   }
-  if(state.post2){
-    html += '<div class="sum-line"><span>Post Congreso J. Ferreira × ' + state.selected.length + '</span><span>' + money(PRICES.POST_FERREIRA) + '</span></div>';
+  if(state.postFerreira){
+    html += '<div class="sum-line"><span>Post Congreso J. Ferreira × ' + state.postFerreira + '</span><span>' + money(PRICES.POST_FERREIRA * state.postFerreira) + '</span></div>';
   }
   const nombre = document.getElementById('f-nombre').value || '—';
   const email = document.getElementById('f-email').value || '—';
@@ -967,6 +1043,24 @@ function buildSummary(){
   html += '<div class="sum-line total"><span>Total</span><span>' + money(currentTotal()) + '</span></div>';
   box.innerHTML = html;
 }
+
+// ===== GATE de acceso a la demo =====
+const CLAVE_DEMO = 'Bauz@2026'; // ← clave del equipo
+(function(){
+  try{ if(sessionStorage.getItem('cepaDemoOk') === '1'){ document.getElementById('gate').remove(); return; } }catch(e){}
+  const btn = document.getElementById('gateBtn');
+  const key = document.getElementById('gateKey');
+  btn.onclick = function(){
+    if(key.value.trim().toUpperCase() === CLAVE_DEMO.toUpperCase()){
+      try{ sessionStorage.setItem('cepaDemoOk','1'); }catch(e){}
+      document.getElementById('gate').remove();
+    } else {
+      document.getElementById('gateErr').style.display = 'block';
+      key.value = ''; key.focus();
+    }
+  };
+  key.addEventListener('keydown', e=>{ if(e.key === 'Enter') btn.click(); });
+})();
 
 document.getElementById('zp-GOLD').textContent = money(PRICES.GOLD);
 document.getElementById('zp-GENERAL').textContent = money(PRICES.GENERAL);
