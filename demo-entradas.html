@@ -535,6 +535,10 @@
 
     <div class="actions">
       <button class="btn btn-ghost" onclick="goTo(2)">Volver</button>
+      <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;font-weight:400;text-transform:none;letter-spacing:0;margin-bottom:16px">
+      <input type="checkbox" id="aceptaTerminos" style="margin-top:3px;width:16px;height:16px;flex-shrink:0">
+      <span>Acepto los <a href="terminos.html" target="_blank" style="color:var(--dark-green);font-weight:700">términos y condiciones</a> y la política de datos personales.</span>
+    </label>
       <button class="btn btn-primary" id="btnOrden" onclick="crearOrden()">Reservar y revisar</button>
     </div>
   </section>
@@ -912,6 +916,7 @@ async function crearOrden(){
   const nombre = document.getElementById('f-nombre').value.trim();
   const email = document.getElementById('f-email').value.trim();
   const dni = document.getElementById('f-dni').value.trim();
+  if(!document.getElementById('aceptaTerminos').checked){ alert('Necesitás aceptar los términos y condiciones para continuar.'); return; }
   if(!nombre || !email || !dni){ alert('Completá nombre, DNI y email para continuar.'); return; }
   let asistentes = '';
   if(state.qty > 1){
