@@ -1913,58 +1913,14 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       <div class="section-head"><div><h2>Entradas</h2></div></div>
     </div>
 
-    <!-- COUNTDOWN — se oculta automáticamente el 31/03 a las 12hs -->
-    <div class="sales-band" id="salesCountdownWrap" style="margin-top: 22px;">
-      <div class="sales-band-inner">
-        <div class="sales-band-left">
-          <div class="sales-band-eyebrow">Apertura de ventas</div>
-          <p class="sales-band-title" style="margin:0;">Las entradas estarán<br>disponibles muy pronto</p>
-          <div class="sales-band-date">31 de marzo · 12:00 hs (hora Argentina)</div>
-          <div class="sales-band-cta">
-            <a class="sales-band-btn sales-band-btn-primary" id="btnInstagramEntradas" href="#" target="_blank" rel="noopener noreferrer">Seguinos en Instagram</a>
-            <a class="sales-band-btn sales-band-btn-ghost" href="#contacto">Consultanos</a>
-          </div>
-        </div>
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; flex-shrink:0;">
-          <div style="width:1px; flex:1; background:rgba(255,255,255,.10); min-height:30px;"></div>
-          <img src="assets/planout-logo-negro.png" alt="Planout" style="height:52px; object-fit:contain; opacity:.72; filter:invert(1) brightness(2); flex-shrink:0;" />
-          <div style="width:1px; flex:1; background:rgba(255,255,255,.10); min-height:30px;"></div>
-        </div>
-        <div class="sales-band-right">
-          <div class="sales-band-units">
-            <div class="sales-band-unit">
-              <span class="sales-band-num" id="scd-days">--</span>
-              <span class="sales-band-lbl">Días</span>
-            </div>
-            <span class="sales-band-sep">:</span>
-            <div class="sales-band-unit">
-              <span class="sales-band-num" id="scd-hours">--</span>
-              <span class="sales-band-lbl">Horas</span>
-            </div>
-            <span class="sales-band-sep">:</span>
-            <div class="sales-band-unit">
-              <span class="sales-band-num" id="scd-mins">--</span>
-              <span class="sales-band-lbl">Min</span>
-            </div>
-            <span class="sales-band-sep">:</span>
-            <div class="sales-band-unit">
-              <span class="sales-band-num" id="scd-secs">--</span>
-              <span class="sales-band-lbl">Seg</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FRANJA "VENTAS ABIERTAS" — aparece cuando el countdown llega a 0 -->
-    <div class="sales-open-band" id="salesOpenWrap" hidden style="margin-top: 22px;">
+    <!-- FRANJA "VENTAS ABIERTAS" -->
+    <div class="sales-open-band" id="salesOpenWrap" style="margin-top: 22px;">
       <div class="sales-open-band-inner" style="flex-direction:column; align-items:center; text-align:center; gap:18px;">
         <div class="sales-open-left" style="align-items:center;">
           <div class="sales-open-eyebrow">Pase General</div>
           <p class="sales-open-title">Adquirí tu entrada</p>
           <div class="sales-open-sub">Venta a través de Planout · Cupos limitados</div>
         </div>
-        <img src="assets/planout-logo-negro.png" alt="Planout" style="height:36px; object-fit:contain; opacity:.55; filter:invert(1) brightness(2);" />
         <div class="sales-open-actions" style="justify-content:center;">
           <a class="sales-band-btn sales-band-btn-primary" href="entrada.html">Adquirí tu entrada</a>
           <a class="sales-band-btn sales-band-btn-ghost" href="#contacto" id="btnAsesorateEntradas">Asesorate</a>
@@ -2627,10 +2583,8 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
 
     const waUrl = getWhatsappUrl();
     setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);
-    setExternalLink(document.getElementById('btnAsesorateEntradas'), waUrl);
     setExternalLink(document.getElementById('btnWhatsapp'), waUrl);
     setExternalLink(document.getElementById('btnInstagram'), CEP_CONTACT.instagramUrl);
-    setExternalLink(document.getElementById('btnInstagramEntradas'), CEP_CONTACT.instagramUrl);
 
     const nombreInput = document.getElementById('nombreInput');
     if (nombreInput){ nombreInput.addEventListener('input', () => { nombreInput.value = nombreInput.value.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]/g, ""); }); }
@@ -2681,21 +2635,6 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       if(dl) dl.innerHTML = (window.CEP.dirigidoA||[]).map(x=>`<li style="padding:13px 24px; font-size:13.5px; font-weight:500; color:#3a3a38; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(0,0,0,.05);"><span style="width:5px; height:5px; border-radius:50%; background:#7f977f; flex-shrink:0;"></span>${x}</li>`).join('');
     }
 
-    // ===== COUNTDOWN VENTAS + REVEAL WIDGET =====
-    (function(){
-      var salesTarget = new Date('2026-03-31T12:00:00-03:00').getTime();
-      var countdownWrap = document.getElementById('salesCountdownWrap');
-      var openWrap = document.getElementById('salesOpenWrap');
-      var elDays=document.getElementById('scd-days'), elHours=document.getElementById('scd-hours'), elMins=document.getElementById('scd-mins'), elSecs=document.getElementById('scd-secs');
-      function pad(n){ return n<10?'0'+n:String(n); }
-      function animateTick(el,val){ if(!el)return; var p=pad(val); if(el.textContent===p)return; el.textContent=p; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); setTimeout(function(){el.classList.remove('tick');},150); }
-      function reveal(){
-        if(countdownWrap) countdownWrap.hidden=true;
-        // if(openWrap) openWrap.hidden=false;
-      }
-      function tick(){ var diff=salesTarget-Date.now(); if(diff<=0){reveal();return;} animateTick(elDays,Math.floor(diff/86400000)); animateTick(elHours,Math.floor((diff%86400000)/3600000)); animateTick(elMins,Math.floor((diff%3600000)/60000)); animateTick(elSecs,Math.floor((diff%60000)/1000)); }
-      if(Date.now()>=salesTarget){reveal();}else{tick();setInterval(tick,1000);}
-    })();
   </script>
 
 
