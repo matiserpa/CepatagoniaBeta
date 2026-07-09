@@ -2141,7 +2141,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
         <div class="card">
           <div class="kicker" style="margin-bottom:12px;"><span class="dot" aria-hidden="true"></span> Datos oficiales</div>
           <div style="display:grid; gap:10px;">
-            <div class="kicker" style="justify-content:space-between;"><b>Email</b><a href="mailto:infocepatagonia@gmail.com" style="color:var(--text); font-weight:720; letter-spacing:0;">infocepatagonia@gmail.com</a></div>
+            <div class="kicker" style="justify-content:space-between;"><b>Email</b><a href="mailto:info@cepatagonia.com" style="color:var(--text); font-weight:720; letter-spacing:0;">info@cepatagonia.com</a></div>
             <div class="kicker" style="justify-content:space-between;"><b>Tel</b><a href="tel:+5491131888164" style="color:var(--text); font-weight:720; letter-spacing:0;">+54 9 11 3188-8164</a></div>
             <div class="kicker" style="justify-content:space-between;"><b>Dirección</b><span style="color:var(--text); font-weight:720; letter-spacing:0;">Gral. Roca 816, San Martín de los Andes</span></div>
           </div>
@@ -2151,7 +2151,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
           </div>
           <div style="height:16px;"></div>
           <iframe name="fs_iframe" id="fs_iframe" title="FormSubmit hidden iframe" style="display:none; width:0; height:0; border:0;"></iframe>
-          <form id="contactForm" method="POST" action="https://formsubmit.co/infocepatagonia@gmail.com" target="fs_iframe">
+          <form id="contactForm" method="POST" action="https://formsubmit.co/info@cepatagonia.com" target="fs_iframe">
             <input type="hidden" name="_subject" value="Nuevo contacto desde CEPATAGONIA">
             <input type="hidden" name="_template" value="table">
             <input type="hidden" name="_captcha" value="false">
@@ -2202,7 +2202,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
             <div style="height:14px;"></div>
             <button class="btn btn-primary" type="submit">Enviar consulta</button>
             <div id="formNotice" class="form-notice" role="status" aria-live="polite"></div>
-            <div class="help" style="margin-top:10px;">Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="mailto:infocepatagonia@gmail.com">infocepatagonia@gmail.com</a></b>.</div>
+            <div class="help" style="margin-top:10px;">Al enviar, tu consulta se deriva al mail oficial: <b style="color:var(--text);"><a href="mailto:info@cepatagonia.com">info@cepatagonia.com</a></b>.</div>
           </form>
         </div>
         <div style="display:flex; flex-direction:column; gap:14px;">
@@ -2339,7 +2339,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
         </div>
 
         <div style="margin-top:14px;">
-          <a href="https://www.instagram.com/cepatagoniaoficial" class="btn btn-primary" style="width:100%; justify-content:center; font-size:13px; padding:15px 20px; border-radius:16px;" target="_blank" rel="noopener">
+          <a href="entrada.html" class="btn btn-primary" style="width:100%; justify-content:center; font-size:13px; padding:15px 20px; border-radius:16px;">
             Asegurá tu lugar
           </a>
         </div>
@@ -2456,7 +2456,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     </div>
 
     <div style="margin-top:18px;">
-      <a href="https://www.instagram.com/cepatagoniaoficial" class="btn btn-primary" style="width:100%; justify-content:center; font-size:13px; padding:15px 20px; border-radius:16px;">
+      <a href="entrada.html" class="btn btn-primary" style="width:100%; justify-content:center; font-size:13px; padding:15px 20px; border-radius:16px;">
         Asegurá tu lugar
       </a>
     </div>
@@ -2477,7 +2477,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
           <span class="muted" style="font-size:11px; letter-spacing:.1em; text-transform:uppercase; opacity:.7;">San Martín de los Andes · Patagonia · Argentina</span>
         </div>
         <div style="margin-top:22px; text-align:center;">
-          <a href="mailto:info@cepatagonia.com?subject=Bot%C3%B3n%20de%20arrepentimiento" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:700; color:var(--a1); text-decoration:underline; text-underline-offset:3px;">
+          <a href="#" id="btnAbrirArrepentimiento" style="display:inline-flex; align-items:center; gap:6px; font-size:14px; font-weight:700; color:var(--a1); text-decoration:underline; text-underline-offset:3px;">
             ↩ Botón de arrepentimiento
           </a>
         </div>
@@ -2496,6 +2496,39 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       <h3>Próximamente</h3>
       <p>La venta de pases estará disponible muy pronto.</p>
       <button class="btn-modal" id="closeModalBtn" type="button">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- MODAL BOTÓN DE ARREPENTIMIENTO -->
+  <div class="modal-overlay" id="arrepentimientoModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Botón de arrepentimiento">
+    <div class="modal" style="text-align:left; max-width:480px;">
+      <button type="button" id="closeArrepentimientoBtn" aria-label="Cerrar" style="position:absolute; top:14px; right:14px; width:32px; height:32px; border-radius:50%; border:1px solid var(--line); background:rgba(255,255,255,.6); cursor:pointer; font-size:15px; line-height:1;">✕</button>
+      <h3 style="font-size:23px; margin:6px 0 8px; text-align:left;">Botón de arrepentimiento</h3>
+      <p class="help" style="margin-bottom:16px;">Completá tus datos y te contactamos para procesar tu pedido.</p>
+      <form id="arrepentimientoForm">
+        <div class="field">
+          <div class="label">Nombre y apellido</div>
+          <input class="input" type="text" id="arr-nombre" required maxlength="80" placeholder="Tu nombre y apellido" />
+        </div>
+        <div style="height:12px;"></div>
+        <div class="field">
+          <div class="label">Número de orden</div>
+          <input class="input" type="text" id="arr-orden" maxlength="40" placeholder="Ej: CEP-XXXXXXXX (si lo tenés)" />
+        </div>
+        <div style="height:12px;"></div>
+        <div class="field">
+          <div class="label">Email</div>
+          <input class="input" type="email" id="arr-email" required maxlength="80" placeholder="tu@email.com" />
+        </div>
+        <div style="height:12px;"></div>
+        <div class="field">
+          <div class="label">Motivo / mensaje</div>
+          <textarea class="textarea" id="arr-motivo" required minlength="10" maxlength="1200" placeholder="Contanos el motivo de tu arrepentimiento..."></textarea>
+        </div>
+        <div style="height:14px;"></div>
+        <button class="btn btn-primary" type="submit" style="width:100%; justify-content:center;">Enviar pedido</button>
+        <div id="arrepentimientoNotice" class="form-notice" role="status" aria-live="polite"></div>
+      </form>
     </div>
   </div>
 
@@ -2537,7 +2570,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
 
   <script>
     const CEP_CONTACT = {
-      email: "infocepatagonia@gmail.com",
+      email: "info@cepatagonia.com",
       phoneE164: "5491131888164",
       address: "Gral. Roca 816, San Martín de los Andes",
       instagramUrl: "https://instagram.com/cepatagoniaoficial",
@@ -2579,6 +2612,58 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modalOverlay.getAttribute('aria-hidden') === 'false') closeModal(); });
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+
+    // ===== MODAL BOTÓN DE ARREPENTIMIENTO =====
+    (function(){
+      const API_URL_ARREPENTIMIENTO = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
+      const modal = document.getElementById('arrepentimientoModal');
+      const openBtn = document.getElementById('btnAbrirArrepentimiento');
+      const closeBtn = document.getElementById('closeArrepentimientoBtn');
+      const form = document.getElementById('arrepentimientoForm');
+      const notice = document.getElementById('arrepentimientoNotice');
+      if (!modal || !form) return;
+
+      function abrir(e){ if (e) e.preventDefault(); notice.textContent = ''; notice.removeAttribute('data-show'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; setTimeout(() => { const f = modal.querySelector('.input'); if (f) f.focus(); }, 50); }
+      function cerrar(){ modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+
+      if (openBtn) openBtn.addEventListener('click', abrir);
+      if (closeBtn) closeBtn.addEventListener('click', cerrar);
+      modal.addEventListener('click', (e) => { if (e.target === modal) cerrar(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') cerrar(); });
+
+      function showNotice(msg){ notice.textContent = msg; notice.setAttribute('data-show', 'true'); }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = form.querySelector('button[type="submit"]');
+        const nombre = document.getElementById('arr-nombre').value.trim();
+        const orden  = document.getElementById('arr-orden').value.trim();
+        const email  = document.getElementById('arr-email').value.trim();
+        const motivo = document.getElementById('arr-motivo').value.trim();
+        if (!nombre || !email || !motivo) { showNotice('Completá todos los campos obligatorios.'); return; }
+
+        btn.disabled = true; btn.textContent = 'Enviando...';
+        try {
+          const res = await fetch(API_URL_ARREPENTIMIENTO, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'arrepentimiento', nombre, orden, email, motivo })
+          });
+          const data = await res.json();
+          if (data.ok) {
+            showNotice('¡Listo! Recibimos tu pedido, te contactamos a la brevedad.');
+            form.reset();
+            setTimeout(cerrar, 2200);
+          } else {
+            showNotice(data.error || 'No se pudo enviar. Probá de nuevo en un momento.');
+          }
+        } catch (err) {
+          showNotice('Error de conexión. Probá de nuevo en un momento.');
+        } finally {
+          btn.disabled = false; btn.textContent = 'Enviar pedido';
+        }
+      });
+    })();
 
     const waUrl = getWhatsappUrl();
     setExternalLink(document.getElementById('btnAsesorateHero'), waUrl);

@@ -332,7 +332,7 @@
     <h2>Elegí tus entradas</h2>
     <p class="sub">Congreso de Estética de la Patagonia · 10 y 11 de octubre 2026 · Hotel Le Village, San Martín de los Andes</p>
 
-    <div class="ticket">
+    <div class="ticket" id="ticketCongresoRow">
       <div>
         <h3>Entrada Congreso — 2 días</h3>
         <small>El precio depende de la zona que elijas abajo</small>
@@ -344,14 +344,16 @@
       </div>
     </div>
 
-    <p class="zone-label">Elegí tu zona</p>
-    <div class="zone-btns">
-      <button type="button" class="zone-btn" id="zb-GOLD" onclick="setZona('GOLD')">
-        <b>GOLD</b><small>Filas A–F · <span id="zp-GOLD"></span> por asiento</small>
-      </button>
-      <button type="button" class="zone-btn" id="zb-GENERAL" onclick="setZona('GENERAL')">
-        <b>General</b><small>Filas G–T · <span id="zp-GENERAL"></span> por asiento</small>
-      </button>
+    <div id="zonaWrap">
+      <p class="zone-label">Elegí tu zona</p>
+      <div class="zone-btns">
+        <button type="button" class="zone-btn" id="zb-GOLD" onclick="setZona('GOLD')">
+          <b>GOLD</b><small>Filas A–F · <span id="zp-GOLD"></span> por asiento</small>
+        </button>
+        <button type="button" class="zone-btn" id="zb-GENERAL" onclick="setZona('GENERAL')">
+          <b>General</b><small>Filas G–T · <span id="zp-GENERAL"></span> por asiento</small>
+        </button>
+      </div>
     </div>
 
     <div class="addon post-row">
@@ -363,14 +365,20 @@
       </div>
     </div>
 
-    <div class="addon post-row">
+    <label style="display:flex; align-items:flex-start; gap:8px; font-size:12.5px; margin:2px 0 14px; font-weight:500; text-transform:none; letter-spacing:0;">
+      <input type="checkbox" id="chkSoloFinci" onchange="toggleSoloFinci()" style="margin-top:2px; width:16px; height:16px; flex-shrink:0;">
+      <span>Quiero comprar <b>solo el Post Congreso con Eduardo Finci</b>, sin entrada al Congreso.</span>
+    </label>
+
+    <div class="addon post-row" id="ferreiraRow">
       <span>Sumar <b>Post Congreso con Julio Ferreira</b> — 12 de octubre · cupos limitados · <b><span id="pp-FERREIRA"></span> por persona</b></span>
       <div class="qty mini">
         <button type="button" onclick="chgPost('FERREIRA',-1)" aria-label="Quitar lugar">−</button>
         <span id="pq-FERREIRA">0</span>
-        <button type="button" onclick="chgPost('FERREIRA',1)" aria-label="Agregar lugar">+</button>
+        <button type="button" id="ferreiraPlusBtn" onclick="chgPost('FERREIRA',1)" aria-label="Agregar lugar">+</button>
       </div>
     </div>
+    <p id="ferreiraAviso" style="font-size:11.5px;color:rgba(14,20,16,.55);margin:-8px 0 12px;">Elegí tu zona (GOLD o General) para poder sumar este Post Congreso.</p>
 
     <p style="font-size:11.5px;color:rgba(14,20,16,.45)">Hasta 3 cuotas sin interés con Mercado Pago.</p>
 
@@ -491,7 +499,7 @@
     </div>
 
     <div class="actions">
-      <button class="btn btn-ghost" onclick="goTo(2)">Volver</button>
+      <button class="btn btn-ghost" onclick="goTo(state.soloFinci ? 1 : 2)">Volver</button>
       <label style="display:flex;align-items:flex-start;gap:8px;font-size:12.5px;font-weight:500;text-transform:none;letter-spacing:0;margin-bottom:16px">
       <input type="checkbox" id="aceptaTerminos" style="margin-top:3px;width:16px;height:16px;flex-shrink:0">
       <span>Acepto los <a href="terminos.html" target="_blank" style="color:var(--dark-green);font-weight:700">términos y condiciones</a> y la política de datos personales.</span>
@@ -550,7 +558,7 @@ const GOLD_ROWS = 'ABCDEF';
 const GAP_AFTER_ROW = 'J';
 const PRICES = { GOLD: 400000, GENERAL: 350000, POST_FINCI: 280000, POST_FERREIRA: 150000 };
 
-const state = { qty: 1, postFinci: 0, postFerreira: 0, zona: null, selected: [], step: 1, timerId: null, pollId: null, orderId: null, initPoint: null };
+const state = { qty: 1, postFinci: 0, postFerreira: 0, zona: null, selected: [], step: 1, timerId: null, pollId: null, orderId: null, initPoint: null, soloFinci: false };
 
 // Estado del plano: se carga desde el backend
 let occupied = new Set();
@@ -589,9 +597,46 @@ function iniciarPolling(){
 
 // ================== POST CONGRESOS ==================
 function chgPost(cual, d){
+  if(cual === 'FERREIRA' && d > 0 && !state.zona){
+    alert('Primero elegí tu zona (GOLD o General) para poder sumar el Post Congreso con Julio Ferreira. No se puede comprar sin entrada al Congreso.');
+    return;
+  }
   const key = cual === 'FINCI' ? 'postFinci' : 'postFerreira';
-  state[key] = Math.min(state.qty, Math.max(0, state[key] + d));
+  const tope = cual === 'FINCI' && state.soloFinci ? 6 : state.qty;
+  state[key] = Math.min(tope, Math.max(0, state[key] + d));
   document.getElementById('pq-' + cual).textContent = state[key];
+  renderBar();
+}
+
+// ================== SOLO POST CONGRESO FINCI (sin entrada al Congreso) ==================
+function actualizarDisponibilidadFerreira(){
+  const habilitado = !!state.zona && !state.soloFinci;
+  document.getElementById('ferreiraPlusBtn').disabled = !habilitado;
+  document.getElementById('ferreiraAviso').style.display = habilitado ? 'none' : 'block';
+}
+
+function toggleSoloFinci(){
+  state.soloFinci = document.getElementById('chkSoloFinci').checked;
+
+  document.getElementById('ticketCongresoRow').style.display = state.soloFinci ? 'none' : '';
+  document.getElementById('zonaWrap').style.display = state.soloFinci ? 'none' : '';
+  document.getElementById('ferreiraRow').style.display = state.soloFinci ? 'none' : '';
+  document.getElementById('ferreiraAviso').style.display = state.soloFinci ? 'none' : (state.zona ? 'none' : 'block');
+
+  const btn = document.getElementById('toStep2');
+  if(state.soloFinci){
+    state.postFerreira = 0;
+    document.getElementById('pq-FERREIRA').textContent = '0';
+    if(state.postFinci < 1){ state.postFinci = 1; document.getElementById('pq-FINCI').textContent = '1'; }
+    btn.textContent = 'Continuar';
+    btn.onclick = function(){ goTo(3); };
+    btn.disabled = state.postFinci < 1;
+  }else{
+    btn.textContent = 'Elegir asientos';
+    btn.onclick = function(){ goTo(2); };
+    btn.disabled = !state.zona;
+  }
+  actualizarDisponibilidadFerreira();
   renderBar();
 }
 
@@ -623,6 +668,7 @@ function setZona(z){
   document.getElementById('zonaSel').textContent = z === 'GOLD' ? 'GOLD' : 'General';
   // soltar asientos que no pertenecen a la zona elegida
   state.selected = state.selected.filter(id => zone(id) === z);
+  actualizarDisponibilidadFerreira();
   buildGrid(); renderBar();
 }
 
@@ -980,6 +1026,7 @@ document.getElementById('zp-GOLD').textContent = money(PRICES.GOLD);
 document.getElementById('zp-GENERAL').textContent = money(PRICES.GENERAL);
 document.getElementById('pp-FINCI').textContent = money(PRICES.POST_FINCI);
 document.getElementById('pp-FERREIRA').textContent = money(PRICES.POST_FERREIRA);
+actualizarDisponibilidadFerreira();
 buildGrid();
 renderBar();
 cargarPlano(true);
