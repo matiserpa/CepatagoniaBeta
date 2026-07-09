@@ -1548,22 +1548,6 @@
       flex-wrap: wrap;
     }
 
-    /* ===== WIDGET PLANOUT ===== */
-    .planout-widget-wrap {
-      width: 100vw;
-      margin-left: calc(50% - 50vw);
-      background: #f4f2eb;
-      padding: clamp(24px, 4vw, 40px) 0 clamp(32px, 5vw, 52px);
-      border-top: 1px solid rgba(35,36,32,.06);
-    }
-    .planout-widget-inner {
-      width: min(1160px, calc(100% - clamp(36px, 6vw, 56px)));
-      margin: 0 auto;
-    }
-    .planout-widget-inner #palco4_widget {
-      border-radius: 16px;
-      overflow: hidden;
-    }
 
     @media (max-width: 760px) {
       .sales-band-inner {
@@ -1675,7 +1659,7 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       <div class="editorial-divider"></div>
      <div class="editorial-sub">Naturaleza que inspira</div>
 <div style="margin-top:18px;">
-  <a href="https://planout.ar/eventos/es/comprarEvento?idEvento=793" target="_blank" rel="noopener noreferrer" style="display:inline-flex; align-items:center; justify-content:center; padding:12px 28px; border-radius:999px; background:linear-gradient(135deg,rgba(127,151,127,.92),rgba(155,179,163,.92)); border:1px solid rgba(127,151,127,.3); color:#f7f6f1; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; text-shadow:none; transition:transform .15s, background .15s;">Adquirí tu pase</a>
+  <a href="demo-entradas.html" style="display:inline-flex; align-items:center; justify-content:center; padding:12px 28px; border-radius:999px; background:linear-gradient(135deg,rgba(127,151,127,.92),rgba(155,179,163,.92)); border:1px solid rgba(127,151,127,.3); color:#f7f6f1; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; text-shadow:none; transition:transform .15s, background .15s;">Adquirí tu pase</a>
 </div>
     </div>
   </div>
@@ -1982,25 +1966,8 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
         </div>
         <img src="assets/planout-logo-negro.png" alt="Planout" style="height:36px; object-fit:contain; opacity:.55; filter:invert(1) brightness(2);" />
         <div class="sales-open-actions" style="justify-content:center;">
-          <a class="sales-band-btn sales-band-btn-primary" href="https://planout.ar/eventos/es/comprarEvento?idEvento=793" target="_blank" rel="noopener noreferrer">Adquirí tu entrada</a>
+          <a class="sales-band-btn sales-band-btn-primary" href="demo-entradas.html">Adquirí tu entrada</a>
           <a class="sales-band-btn sales-band-btn-ghost" href="#contacto" id="btnAsesorateEntradas">Asesorate</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- WIDGET PLANOUT — aparece junto con la franja de ventas abiertas -->
-    <div class="planout-widget-wrap" id="planoutWidgetWrap" hidden>
-      <div class="planout-widget-inner">
-        <div id="palco4_widget"
-          data-url-chn-event="https://planout.ar/eventos/"
-          data-id-event="793"
-          data-lng="0"
-          data-visual-mode="1"
-          data-seamless-mode="false"
-          data-auto-acceptance-cookies="false"
-          data-auto-height="true"
-          data-url-page-event="buyEvent"
-          data-width="100%">
         </div>
       </div>
     </div>
@@ -2714,14 +2681,12 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
       var salesTarget = new Date('2026-03-31T12:00:00-03:00').getTime();
       var countdownWrap = document.getElementById('salesCountdownWrap');
       var openWrap = document.getElementById('salesOpenWrap');
-      var widgetWrap = document.getElementById('planoutWidgetWrap');
       var elDays=document.getElementById('scd-days'), elHours=document.getElementById('scd-hours'), elMins=document.getElementById('scd-mins'), elSecs=document.getElementById('scd-secs');
       function pad(n){ return n<10?'0'+n:String(n); }
       function animateTick(el,val){ if(!el)return; var p=pad(val); if(el.textContent===p)return; el.textContent=p; el.classList.remove('tick'); void el.offsetWidth; el.classList.add('tick'); setTimeout(function(){el.classList.remove('tick');},150); }
       function reveal(){
         if(countdownWrap) countdownWrap.hidden=true;
         // if(openWrap) openWrap.hidden=false;
-        if(widgetWrap) widgetWrap.hidden=false;
       }
       function tick(){ var diff=salesTarget-Date.now(); if(diff<=0){reveal();return;} animateTick(elDays,Math.floor(diff/86400000)); animateTick(elHours,Math.floor((diff%86400000)/3600000)); animateTick(elMins,Math.floor((diff%3600000)/60000)); animateTick(elSecs,Math.floor((diff%60000)/1000)); }
       if(Date.now()>=salesTarget){reveal();}else{tick();setInterval(tick,1000);}
@@ -2729,21 +2694,6 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
   </script>
 
 
-<!-- Widget Planout — código actualizado por Planout -->
-  <script>
-    (function(){
-      var jpal, rp, dp=document, gip=dp.getElementById, ce=dp.createElement, gt=dp.getElementsByTagName,
-          id="palco_jpalco_widget",
-          bp="https://planout.ar/eventos/js/";
-      if(!gip.call(dp,id)){
-        jpal=ce.call(dp,"script");
-        jpal.id=id;
-        jpal.src=bp+"widgetIframePalco.js";
-        rp=gt.call(dp,"script")[0];
-        rp.parentNode.insertBefore(jpal,rp);
-      }
-    })();
-  </script>
 <!-- ======= POPUP LEADS CEPATAGONIA ======= -->
 <style>
   #cepaLeadOverlay{position:fixed;inset:0;background:rgba(24,23,19,.34);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:3000;display:none;align-items:center;justify-content:center;padding:18px;}
