@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Dashboard de ventas — CEPATAGONIA</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#E8E6D4; --charcoal:#0E1410; --white:#FDFDF9;
+    --muted:#8a8d84; --line:rgba(14,20,16,.10);
+    --radius:16px;
+    --font-display:'Playfair Display',serif; --font-body:'Montserrat',sans-serif;
+
+    /* paleta categórica validada (dataviz skill) — orden fijo, nunca ciclada */
+    --slot-1:#2a78d6; /* blue     — Total ventas */
+    --slot-2:#1baf7a; /* aqua     — Total recaudado */
+    --slot-3:#eda100; /* yellow   — Entradas vendidas */
+    --slot-4:#4a3aa7; /* violet   — GOLD */
+    --slot-5:#e34948; /* red      — General */
+    --slot-6:#008300; /* green    — Becas */
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:var(--font-body);background:var(--cream);color:var(--charcoal);min-height:100vh;font-size:15px}
+
+  /* ---- login ---- */
+  .login{position:fixed;inset:0;background:var(--cream);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
+  .login-card{max-width:380px;width:100%;background:var(--white);border-radius:var(--radius);padding:34px 28px;text-align:center;box-shadow:0 20px 60px rgba(14,20,16,.10)}
+  .login-card img{height:80px;margin-bottom:6px}
+  .login-card h1{font-family:var(--font-display);font-size:21px;margin-bottom:6px}
+  .login-card p{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+  .login-card input{width:100%;padding:12px;border:1px solid var(--line);border-radius:9px;font-family:var(--font-body);font-size:15px;text-align:center;letter-spacing:.1em;margin-bottom:10px}
+  .login-card .err{display:none;color:#B0654F;font-size:12px;margin-bottom:8px}
+  .btn{width:100%;padding:13px;border:none;border-radius:9px;background:var(--charcoal);color:var(--cream);font-family:var(--font-body);font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+  .btn:active{opacity:.85}
+
+  /* ---- shell ---- */
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:18px 22px;border-bottom:1px solid var(--line);background:var(--white)}
+  header .brand{display:flex;align-items:center;gap:10px}
+  header .brand img{height:34px}
+  header h1{font-family:var(--font-display);font-size:18px;font-weight:600}
+  .live{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--muted);letter-spacing:.04em}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:var(--slot-6);box-shadow:0 0 0 0 rgba(0,131,0,.5);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(0,131,0,.45)}70%{box-shadow:0 0 0 7px rgba(0,131,0,0)}100%{box-shadow:0 0 0 0 rgba(0,131,0,0)}}
+
+  main{max-width:1080px;margin:0 auto;padding:28px 20px 60px}
+
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+  @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:480px){.grid{grid-template-columns:1fr}}
+
+  .tile{
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;position:relative;overflow:hidden;
+    transition:transform .15s ease;
+  }
+  .tile::before{content:"";position:absolute;top:0;left:0;width:5px;height:100%;background:var(--accent)}
+  .chip{width:38px;height:38px;border-radius:11px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+  .tile .label{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:6px}
+  .tile .value{font-family:var(--font-body);font-size:32px;font-weight:800;letter-spacing:-.01em;transition:opacity .2s}
+  .tile .value.flash{animation:flash .6s ease}
+  @keyframes flash{0%{opacity:.35}100%{opacity:1}}
+
+  .section-title{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:26px 0 12px}
+
+  footer{max-width:1080px;margin:0 auto;padding:0 20px 40px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .refreshBtn{border:1px solid var(--line);background:var(--white);border-radius:999px;padding:9px 16px;font-family:var(--font-body);font-size:12px;font-weight:700;color:var(--charcoal);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+  .refreshBtn:active{opacity:.8}
+  .updated{font-size:11.5px;color:var(--muted)}
+
+  .errBanner{display:none;max-width:1080px;margin:0 auto 18px;padding:12px 16px;border-radius:10px;background:#fdece8;color:#8a3225;font-size:13px}
+</style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <div class="login-card">
+    <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
+    <h1>Dashboard de ventas</h1>
+    <p>Acceso exclusivo del equipo. Ingresá la clave.</p>
+    <input id="clave" type="password" placeholder="Clave" autocomplete="off">
+    <p class="err" id="loginErr">Clave incorrecta</p>
+    <button class="btn" id="loginBtn" type="button">Ingresar</button>
+  </div>
+</div>
+
+<header>
+  <div class="brand">
+    <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
+    <h1>Dashboard de ventas</h1>
+  </div>
+  <div class="live"><span class="dot"></span> En vivo</div>
+</header>
+
+<main>
+  <div class="errBanner" id="errBanner"></div>
+
+  <div class="section-title">Resumen general</div>
+  <div class="grid">
+    <div class="tile" style="--accent:var(--slot-1)">
+      <div class="chip">🎟️</div>
+      <div class="label">Total ventas</div>
+      <div class="value" id="vTotalVentas">—</div>
+    </div>
+    <div class="tile" style="--accent:var(--slot-2)">
+      <div class="chip">💰</div>
+      <div class="label">Total recaudado</div>
+      <div class="value" id="vTotalMonto">—</div>
+    </div>
+    <div class="tile" style="--accent:var(--slot-3)">
+      <div class="chip">👥</div>
+      <div class="label">Entradas vendidas</div>
+      <div class="value" id="vEntradas">—</div>
+    </div>
+  </div>
+
+  <div class="section-title">Por tipo</div>
+  <div class="grid">
+    <div class="tile" style="--accent:var(--slot-4)">
+      <div class="chip">🥇</div>
+      <div class="label">Gold</div>
+      <div class="value" id="vGold">—</div>
+    </div>
+    <div class="tile" style="--accent:var(--slot-5)">
+      <div class="chip">🎫</div>
+      <div class="label">General</div>
+      <div class="value" id="vGeneral">—</div>
+    </div>
+    <div class="tile" style="--accent:var(--slot-6)">
+      <div class="chip">🎁</div>
+      <div class="label">Becas</div>
+      <div class="value" id="vBecas">—</div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <button class="refreshBtn" id="refreshBtn" type="button">↻ Actualizar ahora</button>
+  <span class="updated" id="updated"></span>
+</footer>
+
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
+const REFRESH_MS = 8000;
+
+let CLAVE = '';
+let pollId = null;
+
+function money(n){ return '$ ' + Number(n || 0).toLocaleString('es-AR'); }
+
+function setValue(id, text){
+  const el = document.getElementById(id);
+  if(el.textContent === text) return;
+  el.textContent = text;
+  el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+}
+
+function mostrarError(msg){
+  const b = document.getElementById('errBanner');
+  if(!msg){ b.style.display = 'none'; return; }
+  b.textContent = msg; b.style.display = 'block';
+}
+
+async function cargarStats(){
+  try{
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'stats', clave: CLAVE })
+    });
+    const data = await res.json();
+    if(!data.ok){
+      if(data.error === 'Clave incorrecta'){ cerrarSesion(); return; }
+      mostrarError(data.error || 'No se pudo cargar la información.');
+      return;
+    }
+    mostrarError(null);
+    setValue('vTotalVentas', String(data.totalVentas));
+    setValue('vTotalMonto', money(data.totalMonto));
+    setValue('vEntradas', String(data.entradasVendidas));
+    setValue('vGold', String(data.gold));
+    setValue('vGeneral', String(data.general));
+    setValue('vBecas', String(data.becas));
+    document.getElementById('updated').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-AR');
+  }catch(err){
+    mostrarError('Error de conexión. Reintentando…');
+  }
+}
+
+function iniciarPolling(){
+  if(pollId) clearInterval(pollId);
+  cargarStats();
+  pollId = setInterval(cargarStats, REFRESH_MS);
+}
+
+function cerrarSesion(){
+  try{ sessionStorage.removeItem('cepaDashClave'); }catch(e){}
+  if(pollId) clearInterval(pollId);
+  location.reload();
+}
+
+document.getElementById('refreshBtn').addEventListener('click', cargarStats);
+
+document.getElementById('loginBtn').onclick = async function(){
+  const k = document.getElementById('clave').value.trim();
+  if(!k) return;
+  this.textContent = 'Verificando…';
+  CLAVE = k;
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action: 'stats', clave: CLAVE })
+  }).catch(() => null);
+  const data = res ? await res.json().catch(() => ({ ok: false })) : { ok: false };
+  this.textContent = 'Ingresar';
+  if(data.ok){
+    try{ sessionStorage.setItem('cepaDashClave', k); }catch(e){}
+    document.getElementById('login').remove();
+    iniciarPolling();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+  }
+};
+document.getElementById('clave').addEventListener('keydown', e => { if(e.key === 'Enter') document.getElementById('loginBtn').click(); });
+
+(function(){
+  try{
+    const k = sessionStorage.getItem('cepaDashClave');
+    if(k){ CLAVE = k; document.getElementById('login').remove(); iniciarPolling(); }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
