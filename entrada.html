@@ -626,7 +626,7 @@ function chgPost(cual, d){
 function actualizarDisponibilidadFerreira(){
   const habilitado = !!state.zona && !state.soloFinci;
   document.getElementById('ferreiraPlusBtn').disabled = !habilitado;
-  document.getElementById('ferreiraAviso').style.display = habilitado ? 'none' : 'block';
+  document.getElementById('ferreiraAviso').style.display = (state.soloFinci || state.zona) ? 'none' : 'block';
 }
 
 function toggleSoloFinci(){
