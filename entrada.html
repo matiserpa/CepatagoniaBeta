@@ -32,28 +32,6 @@
     font-size:15px;
     line-height:1.55;
   }
-  .gate{
-    position:fixed;inset:0;background:var(--cream);z-index:100;
-    display:flex;align-items:center;justify-content:center;padding:20px;
-  }
-  .gate-card{
-    max-width:400px;width:100%;background:var(--white);border:1px solid rgba(14,20,16,.1);
-    border-radius:var(--radius);padding:36px 30px;text-align:center;
-  }
-  .gate-card img{height:90px;margin-bottom:6px}
-  .gate-card h3{font-family:var(--font-display);font-size:21px;margin-bottom:8px}
-  .gate-card p{font-size:13px;color:rgba(14,20,16,.6);margin-bottom:18px}
-  .gate-card input{
-    width:100%;padding:12px 14px;border:1px solid rgba(14,20,16,.2);border-radius:7px;
-    font-family:var(--font-body);font-size:15px;text-align:center;letter-spacing:.15em;
-    margin-bottom:6px;
-  }
-  .gate-card .gate-err{display:none;color:#B0654F;font-size:12px;margin:4px 0 8px}
-  .gate-card .btn{width:100%;margin-top:8px}
-  .mock-banner{
-    background:var(--charcoal);color:var(--cream);text-align:center;
-    font-size:11px;letter-spacing:.18em;text-transform:uppercase;padding:8px 12px;
-  }
   /* --- nav del sitio real --- */
   .site-nav{
     position:sticky;top:0;z-index:40;
@@ -324,19 +302,6 @@
 </style>
 </head>
 <body>
-
-<div class="gate" id="gate">
-  <div class="gate-card">
-    <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
-    <h3>Demo interna</h3>
-    <p>Esta página es una prueba del sistema de entradas de CEPATAGONIA. Ingresá la clave del equipo para continuar.</p>
-    <input id="gateKey" type="password" placeholder="Clave de acceso" autocomplete="off">
-    <p class="gate-err" id="gateErr">Clave incorrecta</p>
-    <button class="btn btn-primary" id="gateBtn" type="button">Ingresar</button>
-  </div>
-</div>
-
-<div class="mock-banner">DEMO INTERNA · ACCESO RESTRINGIDO · Compras de prueba reembolsables — sin validez como entrada</div>
 
 <nav class="site-nav">
   <div class="inner">
@@ -1052,24 +1017,6 @@ function buildSummary(){
   html += '<div class="sum-line total"><span>Total</span><span>' + money(currentTotal()) + '</span></div>';
   box.innerHTML = html;
 }
-
-// ===== GATE de acceso a la demo =====
-const CLAVE_DEMO = 'Bauz@2026'; // ← clave del equipo
-(function(){
-  try{ if(sessionStorage.getItem('cepaDemoOk') === '1'){ document.getElementById('gate').remove(); return; } }catch(e){}
-  const btn = document.getElementById('gateBtn');
-  const key = document.getElementById('gateKey');
-  btn.onclick = function(){
-    if(key.value.trim().toUpperCase() === CLAVE_DEMO.toUpperCase()){
-      try{ sessionStorage.setItem('cepaDemoOk','1'); }catch(e){}
-      document.getElementById('gate').remove();
-    } else {
-      document.getElementById('gateErr').style.display = 'block';
-      key.value = ''; key.focus();
-    }
-  };
-  key.addEventListener('keydown', e=>{ if(e.key === 'Enter') btn.click(); });
-})();
 
 document.getElementById('zp-GOLD').textContent = money(PRICES.GOLD);
 document.getElementById('zp-GENERAL').textContent = money(PRICES.GENERAL);
