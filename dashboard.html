@@ -22,6 +22,7 @@
     --slot-4:#4a3aa7; /* violet   — GOLD */
     --slot-5:#e34948; /* red      — General */
     --slot-6:#008300; /* green    — Becas */
+    --status-warning:#fab219; /* estado pendiente/transitorio — Entradas bloqueadas (HOLD) */
   }
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:var(--font-body);background:var(--cream);color:var(--charcoal);min-height:100vh;font-size:15px}
@@ -115,6 +116,11 @@
       <div class="label">Entradas vendidas</div>
       <div class="value" id="vEntradas">—</div>
     </div>
+    <div class="tile" style="--accent:var(--status-warning)">
+      <div class="chip">🔒</div>
+      <div class="label">Entradas bloqueadas</div>
+      <div class="value" id="vBloqueadas">—</div>
+    </div>
   </div>
 
   <div class="section-title">Por tipo</div>
@@ -184,6 +190,7 @@ async function cargarStats(){
     setValue('vGold', String(data.gold));
     setValue('vGeneral', String(data.general));
     setValue('vBecas', String(data.becas));
+    setValue('vBloqueadas', String(data.bloqueadas));
     document.getElementById('updated').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-AR');
   }catch(err){
     mostrarError('Error de conexión. Reintentando…');
