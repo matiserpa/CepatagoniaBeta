@@ -47,9 +47,9 @@
   .cam-msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;font-size:13px;color:rgba(232,230,212,.8)}
 
   .manual{display:flex;gap:8px;margin:0 14px 12px}
-  .manual input{flex:1;padding:12px;border:1px solid rgba(232,230,212,.3);border-radius:9px;background:rgba(232,230,212,.08);color:var(--cream);font-family:var(--font-body);font-size:14px}
-  .manual input::placeholder{color:rgba(232,230,212,.45)}
-  .manual button{padding:12px 18px;border:none;border-radius:9px;background:var(--dark-green);color:var(--cream);font-weight:700;cursor:pointer;font-family:var(--font-body)}
+  .manual input{flex:1;min-width:0;padding:12px;border:1px solid rgba(232,230,212,.3);border-radius:9px;background:rgba(232,230,212,.08);color:var(--cream);font-family:var(--font-body);font-size:16px}
+  .manual input::placeholder{color:rgba(232,230,212,.45);font-size:13px}
+  .manual button{padding:12px 16px;border:none;border-radius:9px;background:var(--dark-green);color:var(--cream);font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap}
 
   .rapido{display:flex;align-items:center;gap:8px;margin:0 14px 14px;font-size:12px;color:rgba(232,230,212,.7)}
   .rapido input{width:16px;height:16px;accent-color:var(--dark-green)}
@@ -69,6 +69,22 @@
   .result .acciones button{flex:1;padding:16px;border:none;border-radius:10px;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
   .b-conf{background:var(--cream);color:var(--charcoal)}
   .b-sec{background:rgba(0,0,0,.25);color:inherit}
+
+  /* ---- pantallas angostas ---- */
+  @media (max-width:400px){
+    header{padding:10px 12px}
+    header .t{font-size:14px}
+    header .cnt{font-size:11px}
+    .jornadas{padding:10px 10px 4px;gap:6px}
+    .jbtn{font-size:10px;padding:10px 4px}
+    .scanner{margin:10px}
+    .manual{margin:0 10px 10px;gap:6px}
+    .manual button{padding:12px 14px;font-size:13px}
+    .rapido{margin:0 10px 12px;font-size:11.5px}
+    .result h2{font-size:24px}
+    .result .persona{font-size:19px}
+    .result .det{font-size:13.5px}
+  }
 </style>
 </head>
 <body>
@@ -182,13 +198,25 @@ async function handleCredentialResponse(resp){
   }catch(e){}
 })();
 
+// ---------- foco permanente en el campo manual (así el lector USB, que "escribe" como
+// un teclado, siempre cae ahí sin que el staff tenga que tocar el campo antes de escanear) ----------
+function enfocarManual(){
+  const m = document.getElementById('manual');
+  if (m && document.activeElement !== m) m.focus();
+}
+setInterval(()=>{
+  if(!document.getElementById('login') && !document.getElementById('result').classList.contains('visible')) enfocarManual();
+}, 1000);
+
 // ---------- jornadas ----------
 document.querySelectorAll('.jbtn').forEach(b=>{
   b.onclick = ()=>{
     jornada = b.dataset.j;
     document.querySelectorAll('.jbtn').forEach(x=>x.classList.toggle('active', x===b));
+    enfocarManual();
   };
 });
+document.getElementById('rapido').addEventListener('change', enfocarManual);
 
 // ---------- API ----------
 async function llamar(action, codigo){
@@ -298,6 +326,7 @@ async function iniciarCamara(){
   }catch(err){
     msg.textContent = 'No se pudo acceder a la cámara. Usá el campo manual o el lector USB.';
   }
+  enfocarManual();
 }
 async function escanear(video){
   if(!document.getElementById('result').classList.contains('visible') && video.readyState === 4 && !ocupado){
