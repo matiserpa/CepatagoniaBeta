@@ -41,11 +41,10 @@
   .login-card .gwrap{display:flex;justify-content:center;margin-bottom:4px;min-height:44px}
 
   /* ---- header ---- */
-  header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
-  header .marca{display:flex;align-items:center;gap:8px}
-  header .marca img{height:30px;width:auto;display:block}
-  header .marca span{font-family:var(--font-display);font-size:15px;color:var(--text)}
-  header .cnt{font-size:11.5px;font-weight:700;color:var(--a1);text-align:right;white-space:nowrap}
+  header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+  header .etiqueta{font-family:var(--font-display);font-size:14px;color:var(--text);justify-self:start}
+  header .logo{height:52px;width:auto;display:block;justify-self:center}
+  header .cnt{font-size:11.5px;font-weight:700;color:var(--a1);text-align:right;white-space:nowrap;justify-self:end}
 
   .jornadas{display:flex;gap:8px;padding:12px 14px 4px}
   .jbtn{flex:1;padding:10px 6px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--text);font-family:var(--font-body);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;line-height:1.5}
@@ -83,9 +82,9 @@
 
   /* ---- pantallas angostas ---- */
   @media (max-width:400px){
-    header{padding:10px 12px}
-    header .marca span{font-size:13px}
-    header .marca img{height:26px}
+    header{padding:8px 12px}
+    header .etiqueta{font-size:12px}
+    header .logo{height:40px}
     header .cnt{font-size:10.5px}
     .jornadas{padding:10px 10px 4px;gap:6px}
     .jbtn{font-size:9.5px;padding:10px 4px}
@@ -113,10 +112,8 @@
 
 <div class="app">
   <header>
-    <div class="marca">
-      <img src="https://cepatagonia.com/assets/logo_oficial.png" alt="CEPATAGONIA">
-      <span>Puerta</span>
-    </div>
+    <span class="etiqueta">Puerta</span>
+    <img class="logo" src="https://cepatagonia.com/assets/logo_oficial.png" alt="CEPATAGONIA">
     <span class="cnt"><b id="cnt">0</b> acreditados<br>en esta sesión</span>
   </header>
 
