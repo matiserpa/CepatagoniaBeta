@@ -598,7 +598,8 @@ async function cargarPlano(silencioso){
     if(!data.ok) return;
     occupied = new Set(); holds = new Set();
     data.seats.forEach(s=>{
-      if(s.estado === 'VENDIDO') occupied.add(s.id);
+      // BLOQUEADO cuenta como ocupado: son butacas que sacamos de la venta desde el panel
+      if(s.estado === 'VENDIDO' || s.estado === 'BLOQUEADO') occupied.add(s.id);
       else if(s.estado === 'HOLD') holds.add(s.id);
     });
     // Si me tomaron un asiento que tenia seleccionado, lo suelto y aviso
