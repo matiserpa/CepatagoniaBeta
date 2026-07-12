@@ -508,6 +508,13 @@
     <label for="f-prof">Profesión / Matrícula (opcional)</label>
     <input type="text" id="f-prof">
 
+    <label for="f-promo">Código promocional (opcional)</label>
+    <div style="display:flex;gap:10px">
+      <input type="text" id="f-promo" placeholder="CEPA-XXXXXX" autocomplete="off" style="text-transform:uppercase;flex:1">
+      <button type="button" class="btn btn-ghost" id="btnPromo" onclick="aplicarPromo()" style="white-space:nowrap;flex-shrink:0">Aplicar</button>
+    </div>
+    <p id="promoMsg" style="display:none;font-size:12.5px;font-weight:600;margin:-8px 0 16px"></p>
+
     <div id="asistentesWrap" style="display:none">
       <p class="zone-label" style="margin-top:8px">Datos de los demás asistentes</p>
       <div id="asistList"></div>
@@ -573,7 +580,7 @@ const GOLD_ROWS = 'ABCDEF';
 const GAP_AFTER_ROW = 'J';
 const PRICES = { GOLD: 400000, GENERAL: 350000, POST_FINCI: 280000, POST_FERREIRA: 150000 };
 
-const state = { qty: 1, postFinci: 0, postFerreira: 0, zona: null, selected: [], step: 1, timerId: null, pollId: null, orderId: null, initPoint: null, soloFinci: false };
+const state = { qty: 1, postFinci: 0, postFerreira: 0, zona: null, selected: [], step: 1, timerId: null, pollId: null, orderId: null, initPoint: null, soloFinci: false, promo: null };
 
 // Estado del plano: se carga desde el backend
 let occupied = new Set();
@@ -854,11 +861,68 @@ if(window.matchMedia('(pointer:coarse)').matches){
 
 function zone(id){ return GOLD_ROWS.indexOf(id[0]) >= 0 ? 'GOLD' : 'GENERAL'; }
 function money(n){ return n == null ? 'a definir' : '$ ' + n.toLocaleString('es-AR'); }
+function subtotalAsientos(){ return state.selected.reduce((a, id)=>a + PRICES[zone(id)], 0); }
+// Descuento del código promocional, SOLO sobre las entradas (misma cuenta que hace el backend)
+function descuentoPromo(){
+  if(!state.promo || state.selected.length === 0) return 0;
+  const sub = subtotalAsientos();
+  if(state.promo.tipo === '50') return sub - Math.round(sub * 0.5);
+  if(state.promo.tipo === '2X1'){
+    if(state.selected.length < 2) return 0;
+    const ps = state.selected.map(id=>PRICES[zone(id)]).sort((a, b)=>b - a);
+    let cobrado = 0;
+    for(let i = 0; i < ps.length; i += 2) cobrado += ps[i];
+    return sub - cobrado;
+  }
+  return 0;
+}
 function currentTotal(){
   if(PRICES.GOLD == null || PRICES.GENERAL == null) return null;
-  let t = state.selected.reduce((a, id)=>a + PRICES[zone(id)], 0);
+  let t = subtotalAsientos() - descuentoPromo();
   t += PRICES.POST_FINCI * state.postFinci + PRICES.POST_FERREIRA * state.postFerreira;
   return t;
+}
+
+// ================== CODIGO PROMOCIONAL ==================
+async function aplicarPromo(){
+  const inp = document.getElementById('f-promo');
+  const btn = document.getElementById('btnPromo');
+  const msg = document.getElementById('promoMsg');
+  const aviso = (color, texto)=>{ msg.style.display = 'block'; msg.style.color = color; msg.textContent = texto; };
+
+  if(state.promo){ // el botón pasa a "Quitar" cuando hay un código aplicado
+    state.promo = null;
+    inp.value = ''; inp.disabled = false;
+    btn.textContent = 'Aplicar';
+    msg.style.display = 'none';
+    renderBar();
+    return;
+  }
+
+  const codigo = inp.value.trim().toUpperCase();
+  if(!codigo){ aviso('#9a4a33', 'Ingresá un código.'); return; }
+  btn.disabled = true; btn.textContent = 'Verificando…';
+  try{
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'validarCodigoPromo', codigo: codigo })
+    });
+    const data = await res.json();
+    if(!data.ok){ aviso('#9a4a33', data.error || 'Código inválido o ya usado.'); return; }
+    if(state.selected.length === 0){ aviso('#9a4a33', 'El código aplica a entradas del Congreso: elegí al menos un asiento.'); return; }
+    if(data.tipo === '2X1' && state.selected.length < 2){ aviso('#9a4a33', 'El código 2x1 requiere al menos 2 entradas en la misma orden.'); return; }
+    state.promo = { codigo: data.codigo, tipo: data.tipo, descripcion: data.descripcion };
+    inp.value = data.codigo; inp.disabled = true;
+    btn.textContent = 'Quitar';
+    aviso('#2e5735', '✓ Código ' + data.codigo + ' aplicado (' + data.descripcion + '): descuento de ' + money(descuentoPromo()) + '.');
+    renderBar();
+  }catch(err){
+    aviso('#9a4a33', 'Error de conexión, probá de nuevo.');
+  }finally{
+    btn.disabled = false;
+    if(!state.promo) btn.textContent = 'Aplicar';
+  }
 }
 function renderBar(){
   document.getElementById('need').textContent = state.qty;
@@ -954,6 +1018,7 @@ async function crearOrden(){
         asientos: state.selected,
         postFinci: state.postFinci,
         postFerreira: state.postFerreira,
+        codigoPromo: state.promo ? state.promo.codigo : '',
         comprador: {
           nombre: nombre,
           apellido: document.getElementById('f-apellido').value.trim(),
@@ -1030,6 +1095,9 @@ function buildSummary(){
   }
   if(state.postFerreira){
     html += '<div class="sum-line"><span>Post Congreso J. Ferreira × ' + state.postFerreira + '</span><span>' + money(PRICES.POST_FERREIRA * state.postFerreira) + '</span></div>';
+  }
+  if(state.promo && descuentoPromo() > 0){
+    html += '<div class="sum-line"><span>Código ' + state.promo.codigo + ' (' + state.promo.descripcion + ')</span><span style="color:#2e5735;font-weight:700">−' + money(descuentoPromo()) + '</span></div>';
   }
   const nombre = document.getElementById('f-nombre').value || '—';
   const email = document.getElementById('f-email').value || '—';
