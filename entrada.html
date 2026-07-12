@@ -874,6 +874,8 @@ function descuentoPromo(){
     for(let i = 0; i < ps.length; i += 2) cobrado += ps[i];
     return sub - cobrado;
   }
+  const camp = /^P(\d{1,2})$/.exec(state.promo.tipo); // campañas: P40 = 40% off en entradas
+  if(camp) return sub - Math.round(sub * (1 - Number(camp[1]) / 100));
   return 0;
 }
 function currentTotal(){
