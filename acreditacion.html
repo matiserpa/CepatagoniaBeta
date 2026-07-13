@@ -63,6 +63,11 @@
 
   .rapido{display:flex;align-items:center;gap:8px;margin:0 14px 16px;font-size:12px;color:var(--muted)}
   .rapido input{width:16px;height:16px;accent-color:var(--a1)}
+  #busqResultados{margin:0 14px 12px;display:flex;flex-direction:column;gap:6px}
+  .busq-msg{font-size:13px;color:var(--muted-2);padding:4px 2px}
+  .busq-item{text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-family:var(--font-body);font-size:14px;cursor:pointer}
+  .busq-item small{color:var(--muted-2);font-size:12px}
+  .busq-ya{font-size:11px;font-weight:700;color:#a4553f;border:1px solid #a4553f;border-radius:999px;padding:1px 8px;margin-left:6px}
 
   /* ---- resultado ---- */
   .result{position:fixed;inset:0;z-index:50;display:none;flex-direction:column;align-items:center;justify-content:center;padding:22px;text-align:center}
@@ -133,6 +138,12 @@
     <input id="manual" placeholder="Código manual o lector USB (CEP-XXXX-P1)" autocomplete="off">
     <button type="button" id="manualBtn">Buscar</button>
   </div>
+
+  <div class="manual" style="margin-top:-4px">
+    <input id="busqueda" placeholder="¿Sin QR? Buscar por nombre o DNI" autocomplete="off">
+    <button type="button" id="busquedaBtn">Buscar</button>
+  </div>
+  <div id="busqResultados" style="display:none"></div>
 
   <label class="rapido"><input type="checkbox" id="rapido"> Acreditación directa (confirma sola al escanear)</label>
 </div>
@@ -219,6 +230,9 @@ function enfocarManual(){
   if (m && document.activeElement !== m) m.focus();
 }
 setInterval(()=>{
+  // No robar el foco si el staff está tipeando en la búsqueda por nombre
+  const a = document.activeElement;
+  if(a && a.id === 'busqueda') return;
   if(!document.getElementById('login') && !document.getElementById('result').classList.contains('visible')) enfocarManual();
 }, 1000);
 
@@ -321,6 +335,39 @@ document.getElementById('manualBtn').onclick = ()=>procesar(document.getElementB
 document.getElementById('manual').addEventListener('keydown', e=>{
   if(e.key === 'Enter'){ e.preventDefault(); procesar(e.target.value); }
 });
+
+// ---------- búsqueda por nombre / DNI (para gente sin el QR a mano) ----------
+function escHtml(s){ return String(s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function limpiarBusqueda(){
+  document.getElementById('busqueda').value = '';
+  const c = document.getElementById('busqResultados');
+  c.style.display = 'none'; c.innerHTML = '';
+}
+async function buscarPorNombre(){
+  const q = document.getElementById('busqueda').value.trim();
+  const cont = document.getElementById('busqResultados');
+  cont.style.display = 'flex';
+  if(q.length < 3){ cont.innerHTML = '<div class="busq-msg">Escribí al menos 3 letras o números.</div>'; return; }
+  cont.innerHTML = '<div class="busq-msg">Buscando…</div>';
+  const res = await fetch(API_URL, { method:'POST', headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+    body: JSON.stringify({ action:'buscarPersonaAcceso', id_token:ID_TOKEN, consulta:q, jornada:jornada }) })
+    .then(r=>r.json()).catch(()=>({ ok:false, error:'Error de conexión' }));
+  if(!res.ok){ cont.innerHTML = '<div class="busq-msg">'+escHtml(res.error||'No se pudo buscar')+'</div>'; return; }
+  if(!res.resultados.length){ cont.innerHTML = '<div class="busq-msg">Sin resultados para “'+escHtml(q)+'” en '+jorNombre()+'.</div>'; return; }
+  cont.innerHTML = res.resultados.map(r =>
+    '<button type="button" class="busq-item" data-cod="'+escHtml(r.codigo)+'">'+
+    '<b>'+escHtml(r.persona)+'</b>'+(r.yaIngreso ? '<span class="busq-ya">ya entró '+escHtml(r.yaIngreso)+'</span>' : '')+
+    '<br><small>'+escHtml(r.codigo)+(r.asientos ? ' · asientos '+escHtml(r.asientos) : '')+'</small></button>'
+  ).join('');
+  cont.querySelectorAll('.busq-item').forEach(b=>{
+    b.onclick = ()=>{ limpiarBusqueda(); procesar(b.dataset.cod); };
+  });
+}
+document.getElementById('busquedaBtn').onclick = buscarPorNombre;
+document.getElementById('busqueda').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); buscarPorNombre(); }
+});
+document.querySelectorAll('.jbtn').forEach(b=> b.addEventListener('click', limpiarBusqueda));
 
 // ---------- cámara ----------
 let detector = null, canvas = null, cctx = null;
