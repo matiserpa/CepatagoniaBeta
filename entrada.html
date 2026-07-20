@@ -504,7 +504,7 @@
     <div class="grid2">
       <div><label for="f-nombre">Nombre</label><input type="text" id="f-nombre" autocomplete="given-name"></div>
       <div><label for="f-apellido">Apellido</label><input type="text" id="f-apellido" autocomplete="family-name"></div>
-      <div><label for="f-dni">DNI</label><input type="text" id="f-dni" inputmode="numeric"></div>
+      <div><label for="f-dni">DNI</label><input type="text" id="f-dni" inputmode="numeric" class="dni-input" maxlength="8"></div>
       <div><label for="f-tel">WhatsApp</label><input type="tel" id="f-tel" autocomplete="tel"></div>
     </div>
     <label for="f-email">Email</label>
@@ -679,7 +679,7 @@ function renderAsistentes(){
   for(let i = 2; i <= state.qty; i++){
     h += '<div class="asist-card"><p class="asist-t">Asistente ' + i + '</p><div class="grid2">' +
          '<div><label for="af-n-' + i + '">Nombre y apellido</label><input type="text" id="af-n-' + i + '"></div>' +
-         '<div><label for="af-d-' + i + '">DNI</label><input type="text" id="af-d-' + i + '" inputmode="numeric"></div>' +
+         '<div><label for="af-d-' + i + '">DNI</label><input type="text" id="af-d-' + i + '" inputmode="numeric" class="dni-input" maxlength="8"></div>' +
          '</div></div>';
   }
   list.innerHTML = h;
@@ -995,6 +995,15 @@ function goTo(n){
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
+// DNI: solo dígitos, máximo 8 — evita letras y largos inválidos. Va con delegación
+// para cubrir también los campos de asistentes que se generan dinámicamente.
+document.addEventListener('input', function(e){
+  if(e.target && e.target.classList && e.target.classList.contains('dni-input')){
+    const limpio = e.target.value.replace(/\D/g, '').slice(0, 8);
+    if(e.target.value !== limpio) e.target.value = limpio;
+  }
+});
+
 // ================== ORDEN REAL (hold en el backend) ==================
 async function crearOrden(){
   const nombre = document.getElementById('f-nombre').value.trim();
@@ -1002,6 +1011,7 @@ async function crearOrden(){
   const dni = document.getElementById('f-dni').value.trim();
   if(!document.getElementById('aceptaTerminos').checked){ alert('Necesitás aceptar los términos y condiciones para continuar.'); return; }
   if(!nombre || !email || !dni){ alert('Completá nombre, DNI y email para continuar.'); return; }
+  if(!/^\d{7,8}$/.test(dni)){ alert('El DNI debe tener 7 u 8 números, sin puntos ni letras.'); return; }
   let asistentes = '';
   if(state.qty > 1){
     const partes = [];
@@ -1009,6 +1019,7 @@ async function crearOrden(){
       const n = document.getElementById('af-n-' + i).value.trim();
       const d = document.getElementById('af-d-' + i).value.trim();
       if(!n || !d){ alert('Completá nombre y DNI del asistente ' + i + '.'); return; }
+      if(!/^\d{7,8}$/.test(d)){ alert('El DNI del asistente ' + i + ' debe tener 7 u 8 números, sin puntos ni letras.'); return; }
       partes.push(n + ' (DNI ' + d + ')');
     }
     asistentes = partes.join(' · ');
