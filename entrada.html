@@ -867,27 +867,43 @@ if(window.matchMedia('(pointer:coarse)').matches){
 function zone(id){ return GOLD_ROWS.indexOf(id[0]) >= 0 ? 'GOLD' : 'GENERAL'; }
 function money(n){ return n == null ? 'a definir' : '$ ' + n.toLocaleString('es-AR'); }
 function subtotalAsientos(){ return state.selected.reduce((a, id)=>a + PRICES[zone(id)], 0); }
-// Descuento del código promocional, SOLO sobre las entradas (misma cuenta que hace el backend)
+// ---- Descuento del código: aplica a entrada y/o post congreso según el código (espejo del backend) ----
+function beneficiosCodigo(tipo){
+  const nada = { modo:'nada', pct:0 };
+  const uno = v => { v = String(v==null?'0':v).trim().toUpperCase();
+    if(v === '2X1') return { modo:'2x1', pct:0 };
+    const n = Number(v); if(n >= 1 && n <= 100) return { modo:'pct', pct:Math.round(n) };
+    return nada; };
+  const t = String(tipo||'').trim().toUpperCase();
+  if(t.indexOf('MIX:') === 0){ const m = t.match(/^MIX:E([^:]*):F([^:]*):R([^:]*)$/);
+    return m ? { entrada:uno(m[1]), finci:uno(m[2]), ferreira:uno(m[3]) } : { entrada:nada, finci:nada, ferreira:nada }; }
+  if(t === '50') return { entrada:{modo:'pct',pct:50}, finci:nada, ferreira:nada };
+  if(t === '2X1') return { entrada:{modo:'2x1',pct:0}, finci:nada, ferreira:nada };
+  const mp = t.match(/^P(\d{1,2})$/); if(mp) return { entrada:{modo:'pct',pct:Number(mp[1])}, finci:nada, ferreira:nada };
+  return { entrada:nada, finci:nada, ferreira:nada };
+}
+function totalConBeneficio(precios, ben){
+  if(!precios.length) return 0;
+  const total = precios.reduce((a,b)=>a+b,0);
+  if(ben.modo === 'pct') return Math.round(total*(1-ben.pct/100));
+  if(ben.modo === '2x1'){ const o = precios.slice().sort((a,b)=>b-a); let c=0; for(let i=0;i<o.length;i+=2)c+=o[i]; return c; }
+  return total;
+}
+function totalConCodigo(){
+  const ent = state.selected.map(id=>PRICES[zone(id)]);
+  const fin = Array(Math.max(state.postFinci,0)).fill(PRICES.POST_FINCI);
+  const fer = Array(Math.max(state.postFerreira,0)).fill(PRICES.POST_FERREIRA);
+  const ben = beneficiosCodigo(state.promo ? state.promo.tipo : '');
+  return totalConBeneficio(ent, ben.entrada) + totalConBeneficio(fin, ben.finci) + totalConBeneficio(fer, ben.ferreira);
+}
 function descuentoPromo(){
-  if(!state.promo || state.selected.length === 0) return 0;
-  const sub = subtotalAsientos();
-  if(state.promo.tipo === '50') return sub - Math.round(sub * 0.5);
-  if(state.promo.tipo === '2X1'){
-    if(state.selected.length < 2) return 0;
-    const ps = state.selected.map(id=>PRICES[zone(id)]).sort((a, b)=>b - a);
-    let cobrado = 0;
-    for(let i = 0; i < ps.length; i += 2) cobrado += ps[i];
-    return sub - cobrado;
-  }
-  const camp = /^P(\d{1,2})$/.exec(state.promo.tipo); // campañas: P40 = 40% off en entradas
-  if(camp) return sub - Math.round(sub * (1 - Number(camp[1]) / 100));
-  return 0;
+  if(!state.promo) return 0;
+  const lleno = subtotalAsientos() + PRICES.POST_FINCI * state.postFinci + PRICES.POST_FERREIRA * state.postFerreira;
+  return Math.max(lleno - totalConCodigo(), 0);
 }
 function currentTotal(){
   if(PRICES.GOLD == null || PRICES.GENERAL == null) return null;
-  let t = subtotalAsientos() - descuentoPromo();
-  t += PRICES.POST_FINCI * state.postFinci + PRICES.POST_FERREIRA * state.postFerreira;
-  return t;
+  return totalConCodigo();
 }
 
 // ================== CODIGO PROMOCIONAL ==================
