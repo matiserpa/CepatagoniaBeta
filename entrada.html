@@ -867,42 +867,74 @@ if(window.matchMedia('(pointer:coarse)').matches){
 function zone(id){ return GOLD_ROWS.indexOf(id[0]) >= 0 ? 'GOLD' : 'GENERAL'; }
 function money(n){ return n == null ? 'a definir' : '$ ' + n.toLocaleString('es-AR'); }
 function subtotalAsientos(){ return state.selected.reduce((a, id)=>a + PRICES[zone(id)], 0); }
-// ---- Descuento del código: aplica a entrada y/o post congreso según el código (espejo del backend) ----
+// ---- Descuento del código: entrada / Finci / Ferreira, con zona, bonificación y requisito (espejo del backend) ----
 function beneficiosCodigo(tipo){
-  const nada = { modo:'nada', pct:0 };
-  const uno = v => { v = String(v==null?'0':v).trim().toUpperCase();
+  const nada = { modo:'nada', pct:0, n:0 };
+  const benPost = v => { v = String(v==null?'0':v).trim().toUpperCase();
+    if(v === '2X1') return { modo:'2x1', pct:0, n:0 };
+    const b = v.match(/^B(\d{1,3})$/); if(b) return { modo:'bonif', pct:0, n:Number(b[1]) };
+    const n = Number(v); if(n >= 1 && n <= 100) return { modo:'pct', pct:Math.round(n), n:0 };
+    return nada; };
+  const benEnt = v => { v = String(v==null?'0':v).trim().toUpperCase();
     if(v === '2X1') return { modo:'2x1', pct:0 };
     const n = Number(v); if(n >= 1 && n <= 100) return { modo:'pct', pct:Math.round(n) };
-    return nada; };
+    return { modo:'nada', pct:0 }; };
+  const base = { zona:'T', finci:nada, ferreira:nada, requisito:{butacas:0,finci:0,ferreira:0} };
   const t = String(tipo||'').trim().toUpperCase();
-  if(t.indexOf('MIX:') === 0){ const m = t.match(/^MIX:E([^:]*):F([^:]*):R([^:]*)$/);
-    return m ? { entrada:uno(m[1]), finci:uno(m[2]), ferreira:uno(m[3]) } : { entrada:nada, finci:nada, ferreira:nada }; }
-  if(t === '50') return { entrada:{modo:'pct',pct:50}, finci:nada, ferreira:nada };
-  if(t === '2X1') return { entrada:{modo:'2x1',pct:0}, finci:nada, ferreira:nada };
-  const mp = t.match(/^P(\d{1,2})$/); if(mp) return { entrada:{modo:'pct',pct:Number(mp[1])}, finci:nada, ferreira:nada };
-  return { entrada:nada, finci:nada, ferreira:nada };
+  if(t.indexOf('MIX:') === 0){
+    let e='0', z='T', f='0', r='0', q=[0,0,0];
+    t.split(':').forEach(s => { if(s==='MIX'||!s) return; const p=s.charAt(0), rest=s.slice(1);
+      if(p==='E')e=rest; else if(p==='Z')z=(rest==='G'||rest==='O')?rest:'T'; else if(p==='F')f=rest; else if(p==='R')r=rest;
+      else if(p==='Q'){ const m=s.match(/^Q(\d+)-(\d+)-(\d+)$/); if(m)q=[+m[1],+m[2],+m[3]]; } });
+    return { entrada:benEnt(e), zona:z, finci:benPost(f), ferreira:benPost(r), requisito:{butacas:q[0],finci:q[1],ferreira:q[2]} };
+  }
+  if(t === '50') return Object.assign({ entrada:{modo:'pct',pct:50} }, base);
+  if(t === '2X1') return Object.assign({ entrada:{modo:'2x1',pct:0} }, base);
+  const mp = t.match(/^P(\d{1,2})$/); if(mp) return Object.assign({ entrada:{modo:'pct',pct:Number(mp[1])} }, base);
+  return Object.assign({ entrada:{modo:'nada',pct:0} }, base);
 }
 function totalConBeneficio(precios, ben){
   if(!precios.length) return 0;
   const total = precios.reduce((a,b)=>a+b,0);
   if(ben.modo === 'pct') return Math.round(total*(1-ben.pct/100));
-  if(ben.modo === '2x1'){ const o = precios.slice().sort((a,b)=>b-a); let c=0; for(let i=0;i<o.length;i+=2)c+=o[i]; return c; }
+  const o = precios.slice().sort((a,b)=>b-a);
+  if(ben.modo === '2x1'){ let c=0; for(let i=0;i<o.length;i+=2)c+=o[i]; return c; }
+  if(ben.modo === 'bonif'){ let c=0; for(let i=0;i<o.length-ben.n;i++)c+=o[i]; return c; }
   return total;
 }
 function totalConCodigo(){
-  const ent = state.selected.map(id=>PRICES[zone(id)]);
+  const ben = beneficiosCodigo(state.promo ? state.promo.tipo : '');
+  const enZona = z => ben.zona==='T' || (ben.zona==='G'&&z==='GENERAL') || (ben.zona==='O'&&z==='GOLD');
+  const con=[], sin=[];
+  state.selected.forEach(id => { (enZona(zone(id))?con:sin).push(PRICES[zone(id)]); });
+  const te = totalConBeneficio(con, ben.entrada) + sin.reduce((a,b)=>a+b,0);
   const fin = Array(Math.max(state.postFinci,0)).fill(PRICES.POST_FINCI);
   const fer = Array(Math.max(state.postFerreira,0)).fill(PRICES.POST_FERREIRA);
-  const ben = beneficiosCodigo(state.promo ? state.promo.tipo : '');
-  return totalConBeneficio(ent, ben.entrada) + totalConBeneficio(fin, ben.finci) + totalConBeneficio(fer, ben.ferreira);
+  return te + totalConBeneficio(fin, ben.finci) + totalConBeneficio(fer, ben.ferreira);
+}
+// Requisito de un código corporativo: null si cumple (o no tiene), o el texto de lo que falta.
+function requisitoFaltante(){
+  if(!state.promo) return null;
+  const ben = beneficiosCodigo(state.promo.tipo);
+  const req = ben.requisito;
+  if(!req || (!req.butacas && !req.finci && !req.ferreira)) return null;
+  const zonaTxt = ben.zona==='G'?' Generales':ben.zona==='O'?' Gold':'';
+  const nB = state.selected.filter(id => ben.zona==='T' || (ben.zona==='G'&&zone(id)==='GENERAL') || (ben.zona==='O'&&zone(id)==='GOLD')).length;
+  const f=[];
+  if(req.butacas && nB < req.butacas) f.push(req.butacas+' butaca(s)'+zonaTxt);
+  if(req.finci && state.postFinci < req.finci) f.push(req.finci+' Post Finci');
+  if(req.ferreira && state.postFerreira < req.ferreira) f.push(req.ferreira+' Post Ferreira');
+  return f.length ? ('Este código necesita al menos '+f.join(' + ')+' en la compra.') : null;
 }
 function descuentoPromo(){
-  if(!state.promo) return 0;
+  if(!state.promo || requisitoFaltante()) return 0;
   const lleno = subtotalAsientos() + PRICES.POST_FINCI * state.postFinci + PRICES.POST_FERREIRA * state.postFerreira;
   return Math.max(lleno - totalConCodigo(), 0);
 }
 function currentTotal(){
   if(PRICES.GOLD == null || PRICES.GENERAL == null) return null;
+  if(state.promo && requisitoFaltante())
+    return subtotalAsientos() + PRICES.POST_FINCI * state.postFinci + PRICES.POST_FERREIRA * state.postFerreira;
   return totalConCodigo();
 }
 
@@ -933,12 +965,17 @@ async function aplicarPromo(){
     });
     const data = await res.json();
     if(!data.ok){ aviso('#9a4a33', data.error || 'Código inválido o ya usado.'); return; }
-    if(state.selected.length === 0){ aviso('#9a4a33', 'El código aplica a entradas del Congreso: elegí al menos un asiento.'); return; }
-    if(data.tipo === '2X1' && state.selected.length < 2){ aviso('#9a4a33', 'El código 2x1 requiere al menos 2 entradas en la misma orden.'); return; }
+    const ben = beneficiosCodigo(data.tipo);
+    if(ben.finci.modo === 'nada' && ben.ferreira.modo === 'nada' && state.selected.length === 0){
+      aviso('#9a4a33', 'Este código aplica a entradas del Congreso: elegí al menos un asiento.'); return;
+    }
     state.promo = { codigo: data.codigo, tipo: data.tipo, descripcion: data.descripcion };
     inp.value = data.codigo; inp.disabled = true;
     btn.textContent = 'Quitar';
-    aviso('#2e5735', '✓ Código ' + data.codigo + ' aplicado (' + data.descripcion + '): descuento de ' + money(descuentoPromo()) + '.');
+    const falta = requisitoFaltante();
+    if(falta){ aviso('#c9871f', '✓ ' + data.codigo + ' aplicado (' + data.descripcion + '). ' + falta); }
+    else if(ben.entrada.modo === '2x1' && state.selected.length < 2){ aviso('#c9871f', '✓ ' + data.codigo + ' aplicado. El 2x1 de entradas necesita 2 asientos.'); }
+    else { aviso('#2e5735', '✓ Código ' + data.codigo + ' aplicado (' + data.descripcion + '): descuento de ' + money(descuentoPromo()) + '.'); }
     renderBar();
   }catch(err){
     aviso('#9a4a33', 'Error de conexión, probá de nuevo.');
@@ -1132,6 +1169,8 @@ function buildSummary(){
   }
   if(state.promo && descuentoPromo() > 0){
     html += '<div class="sum-line"><span>Código ' + state.promo.codigo + ' (' + state.promo.descripcion + ')</span><span style="color:#2e5735;font-weight:700">−' + money(descuentoPromo()) + '</span></div>';
+  } else if(state.promo && requisitoFaltante()){
+    html += '<div class="sum-line"><span>Código ' + state.promo.codigo + '</span><span style="color:#c9871f;font-weight:600;font-size:12px;text-align:right;max-width:60%">' + requisitoFaltante() + '</span></div>';
   }
   const nombre = document.getElementById('f-nombre').value || '—';
   const email = document.getElementById('f-email').value || '—';
