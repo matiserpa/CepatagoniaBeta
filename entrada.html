@@ -501,6 +501,10 @@
       ℹ️ Los <b>Post Congresos del 12 de octubre</b> no requieren selección de asiento: tu lugar queda reservado con la compra.
     </p>
 
+    <p id="ocupantesNota" style="font-size:12.5px;color:#6b4f1d;background:#fff7ea;border:1px solid #e6cf95;border-radius:var(--radius);padding:12px 16px;margin-bottom:18px;line-height:1.5">
+      ⚠️ <b>Cada entrada es personal y admite una sola persona.</b> Cargá el nombre y DNI de quien va a ocupar <b>cada butaca</b>: acá van <b>tus datos</b> (primer asistente) y, más abajo, los de <b>cada uno de los demás asistentes</b>. No repitas tus datos en todas las entradas — se controla con el DNI en el ingreso.
+    </p>
+
     <div class="grid2">
       <div><label for="f-nombre">Nombre</label><input type="text" id="f-nombre" autocomplete="given-name"></div>
       <div><label for="f-apellido">Apellido</label><input type="text" id="f-apellido" autocomplete="family-name"></div>
@@ -521,6 +525,7 @@
 
     <div id="asistentesWrap" style="display:none">
       <p class="zone-label" style="margin-top:8px">Datos de los demás asistentes</p>
+      <p style="font-size:11.5px;color:#6b756f;margin:-2px 0 12px;line-height:1.4">Una persona por butaca: cargá el nombre y DNI <b>reales</b> de cada asistente (no repitas los tuyos).</p>
       <div id="asistList"></div>
     </div>
 
@@ -1066,6 +1071,7 @@ async function crearOrden(){
   if(!nombre || !email || !dni){ alert('Completá nombre, DNI y email para continuar.'); return; }
   if(!/^\d{7,8}$/.test(dni)){ alert('El DNI debe tener 7 u 8 números, sin puntos ni letras.'); return; }
   let asistentes = '';
+  const dnisUsados = [dni]; // el comprador es el primer asistente (una persona por butaca)
   if(state.qty > 1){
     const partes = [];
     for(let i = 2; i <= state.qty; i++){
@@ -1073,6 +1079,8 @@ async function crearOrden(){
       const d = document.getElementById('af-d-' + i).value.trim();
       if(!n || !d){ alert('Completá nombre y DNI del asistente ' + i + '.'); return; }
       if(!/^\d{7,8}$/.test(d)){ alert('El DNI del asistente ' + i + ' debe tener 7 u 8 números, sin puntos ni letras.'); return; }
+      if(dnisUsados.includes(d)){ alert('El DNI ' + d + ' está repetido. Cada butaca es para una persona distinta: cargá el nombre y DNI del asistente que va a ocupar cada asiento.'); return; }
+      dnisUsados.push(d);
       partes.push(n + ' (DNI ' + d + ')');
     }
     asistentes = partes.join(' · ');
