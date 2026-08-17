@@ -258,9 +258,12 @@ async function llamar(action, codigo){
 function jorNombre(){ return jornada==='CONGRESO' ? 'Congreso 10–11' : (jornada==='FINCI' ? 'Post E. Finci' : 'Post J. Ferreira'); }
 // Cartel destacado cuando la orden es una RESERVA sin pagar (abona en la puerta)
 function avisoAbonar(d){
-  return d && d.faltaAbonar
-    ? '<br><b style="display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#fdfdf9;color:var(--danger);font-size:15.5px;letter-spacing:.03em">⚠ FALTA ABONAR — cobrar en la puerta</b>'
-    : '';
+  if (!d || !d.faltaAbonar) return '';
+  var saldo = Number(d.saldo);
+  var texto = (saldo > 0)
+    ? '⚠ FALTA ABONAR $' + saldo.toLocaleString('es-AR') + ' — cobrar en la puerta'
+    : '⚠ FALTA ABONAR — cobrar en la puerta';
+  return '<br><b style="display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#fdfdf9;color:var(--danger);font-size:15.5px;letter-spacing:.03em">' + texto + '</b>';
 }
 function mostrar(tipo, titulo, persona, det, cod, conConfirmar){
   const r = document.getElementById('result');
