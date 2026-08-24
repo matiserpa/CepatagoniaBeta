@@ -156,6 +156,7 @@
   <p class="cod" id="rCod"></p>
   <div class="acciones">
     <button class="b-sec" type="button" id="rCancelar">Volver</button>
+    <button class="b-sec" type="button" id="rDeshacer" style="display:none">Deshacer ingreso</button>
     <button class="b-conf" type="button" id="rConfirmar" style="display:none">Confirmar ingreso</button>
   </div>
 </div>
@@ -173,6 +174,8 @@ let ocupado = false;
 let ultimo = { c: '', t: 0 };
 let pendiente = null;
 let contador = 0;
+let cerrarTimer = null;
+let deshacerCod = null;
 
 // ---------- sonido ----------
 function beep(freq, ms){
@@ -274,10 +277,12 @@ function mostrar(tipo, titulo, persona, det, cod, conConfirmar){
   document.getElementById('rDet').innerHTML = det || '';
   document.getElementById('rCod').textContent = cod || '';
   document.getElementById('rConfirmar').style.display = conConfirmar ? 'block' : 'none';
+  document.getElementById('rDeshacer').style.display = 'none';
 }
 function cerrar(){
+  clearTimeout(cerrarTimer);
   document.getElementById('result').className = 'result';
-  pendiente = null; ocupado = false;
+  pendiente = null; ocupado = false; deshacerCod = null;
   const m = document.getElementById('manual'); m.value=''; m.focus();
 }
 document.getElementById('rCancelar').onclick = cerrar;
@@ -288,6 +293,22 @@ document.getElementById('rConfirmar').onclick = async function(){
   this.textContent = 'Confirmar ingreso';
   if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
 };
+document.getElementById('rDeshacer').onclick = async function(){
+  if(!deshacerCod) return cerrar();
+  clearTimeout(cerrarTimer);
+  const cod = deshacerCod.codigo, conto = deshacerCod.conto;
+  this.textContent = 'Deshaciendo…';
+  const data = await llamar('desacreditar', cod).catch(()=>({ok:false,motivo:'Error de conexión'}));
+  this.textContent = 'Deshacer ingreso';
+  if(data.ok){
+    if(conto && contador>0){ contador--; document.getElementById('cnt').textContent = contador; }
+    beep(440,200);
+    mostrar('warn','Ingreso deshecho', data.persona||'', 'Se quitó el ingreso. Ya podés escanear de nuevo.', cod, false);
+    setTimeout(cerrar, 1800);
+  } else {
+    mostrar('bad','No se pudo deshacer','', data.motivo || 'Error', '', false);
+  }
+};
 
 function registrarOK(data){
   contador++; document.getElementById('cnt').textContent = contador;
@@ -295,7 +316,10 @@ function registrarOK(data){
   mostrar('ok','Ingreso registrado', data.persona,
     'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+avisoAbonar(data),
     data.codigo, false);
-  setTimeout(cerrar, 2200);
+  deshacerCod = { codigo: data.codigo, conto: true };
+  document.getElementById('rDeshacer').style.display = 'block';
+  clearTimeout(cerrarTimer);
+  cerrarTimer = setTimeout(cerrar, 4500);
 }
 function resultadoNegativo(data){
   beep(220,350);
@@ -304,6 +328,8 @@ function resultadoNegativo(data){
     mostrar('warn','Ya ingresó', d.persona,
       'Este código ya fue acreditado en '+jorNombre()+'<br>Primer ingreso: <b>'+new Date(d.yaIngreso).toLocaleTimeString('es-AR')+'</b>'+avisoAbonar(d),
       d.codigo, false);
+    deshacerCod = { codigo: d.codigo, conto: false };
+    document.getElementById('rDeshacer').style.display = 'block';
   } else {
     mostrar('bad','No válido','', data.motivo || 'Error', '', false);
   }
