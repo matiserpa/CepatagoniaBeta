@@ -628,6 +628,9 @@ const state = { qty: 1, postFinci: 0, postFerreira: 0, zona: null, selected: [],
 // Estado del plano: se carga desde el backend
 let occupied = new Set();
 let holds = new Set();
+// Filas realmente existentes en la sala, según la hoja Asientos. El dibujo deriva de acá:
+// si el equipo elimina filas del fondo (reducción de sala), desaparecen solas del plano.
+let filasPresentes = null;
 
 // ================== PLANO EN VIVO ==================
 async function cargarPlano(silencioso){
@@ -640,7 +643,9 @@ async function cargarPlano(silencioso){
     const data = await res.json();
     if(!data.ok) return;
     occupied = new Set(); holds = new Set();
+    filasPresentes = new Set();
     data.seats.forEach(s=>{
+      filasPresentes.add(String(s.fila || String(s.id).replace(/\d+$/, '')).trim().toUpperCase());
       // BLOQUEADO cuenta como ocupado: son butacas que sacamos de la venta desde el panel
       if(s.estado === 'VENDIDO' || s.estado === 'BLOQUEADO') occupied.add(s.id);
       else if(s.estado === 'HOLD') holds.add(s.id);
@@ -742,7 +747,10 @@ function setZona(z){
 function buildGrid(){
   const grid = document.getElementById('seatGrid');
   grid.innerHTML = '';
-  ROWS.forEach(r=>{
+  // Solo se dibujan las filas que existen en la hoja Asientos (hasta que carga el plano, todas)
+  const rowsVisibles = filasPresentes ? ROWS.filter(r => filasPresentes.has(r)) : ROWS;
+  const hayFilasTrasCorte = rowsVisibles.some(r => r > GAP_AFTER_ROW);
+  rowsVisibles.forEach(r=>{
     const row = document.createElement('div');
     row.className = 'seat-row';
     const lab = document.createElement('span');
@@ -770,7 +778,7 @@ function buildGrid(){
     }
     row.appendChild(lab.cloneNode(true));
     grid.appendChild(row);
-    if(r === GAP_AFTER_ROW){
+    if(r === GAP_AFTER_ROW && hayFilasTrasCorte){
       const sp = document.createElement('div');
       sp.className = 'row-spacer';
       grid.appendChild(sp);
