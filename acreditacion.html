@@ -84,6 +84,10 @@
   .result .acciones button{flex:1;padding:16px;border:none;border-radius:10px;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
   .b-conf{background:#fdfdf9;color:var(--dark)}
   .b-sec{background:rgba(0,0,0,.22);color:inherit}
+  .cobro-medios{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:18px;width:100%;max-width:380px}
+  .cobro-medios .cm-lbl{font-size:13px;opacity:.85;letter-spacing:.04em;width:100%;margin-bottom:2px}
+  .cobro-medios .mchip{flex:1;min-width:120px;padding:12px 10px;border:2px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(0,0,0,.14);color:inherit;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.03em;cursor:pointer}
+  .cobro-medios .mchip.active{background:#fdfdf9;color:var(--dark);border-color:#fdfdf9}
 
   /* ---- pantallas angostas ---- */
   @media (max-width:400px){
@@ -154,10 +158,16 @@
   <p class="persona" id="rPersona"></p>
   <p class="det" id="rDet"></p>
   <p class="cod" id="rCod"></p>
+  <div id="rCobroMedios" class="cobro-medios" style="display:none">
+    <span class="cm-lbl">¿Cómo paga el saldo?</span>
+    <button type="button" class="mchip active" data-medio="efectivo">💵 Efectivo</button>
+    <button type="button" class="mchip" data-medio="transferencia">🏦 Transferencia</button>
+  </div>
   <div class="acciones">
     <button class="b-sec" type="button" id="rCancelar">Volver</button>
     <button class="b-sec" type="button" id="rDeshacer" style="display:none">Deshacer ingreso</button>
     <button class="b-conf" type="button" id="rConfirmar" style="display:none">Confirmar ingreso</button>
+    <button class="b-conf" type="button" id="rCobrar" style="display:none">Cobrar y entrar</button>
   </div>
 </div>
 
@@ -176,6 +186,8 @@ let pendiente = null;
 let contador = 0;
 let cerrarTimer = null;
 let deshacerCod = null;
+let medioCobro = 'efectivo';
+let pendienteSaldo = 0;
 
 // ---------- sonido ----------
 function beep(freq, ms){
@@ -250,10 +262,11 @@ document.querySelectorAll('.jbtn').forEach(b=>{
 document.getElementById('rapido').addEventListener('change', enfocarManual);
 
 // ---------- API ----------
-async function llamar(action, codigo){
+async function llamar(action, codigo, extra){
+  const cuerpo = Object.assign({ action:action, id_token:ID_TOKEN, codigo:codigo, jornada:jornada }, extra||{});
   const res = await fetch(API_URL, { method:'POST',
     headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-    body: JSON.stringify({ action:action, id_token:ID_TOKEN, codigo:codigo, jornada:jornada }) });
+    body: JSON.stringify(cuerpo) });
   return res.json();
 }
 
@@ -276,13 +289,18 @@ function mostrar(tipo, titulo, persona, det, cod, conConfirmar){
   document.getElementById('rPersona').textContent = persona || '';
   document.getElementById('rDet').innerHTML = det || '';
   document.getElementById('rCod').textContent = cod || '';
-  document.getElementById('rConfirmar').style.display = conConfirmar ? 'block' : 'none';
+  const conf = document.getElementById('rConfirmar');
+  conf.style.display = conConfirmar ? 'block' : 'none';
+  conf.textContent = 'Confirmar ingreso';
+  conf.className = 'b-conf';
   document.getElementById('rDeshacer').style.display = 'none';
+  document.getElementById('rCobrar').style.display = 'none';
+  document.getElementById('rCobroMedios').style.display = 'none';
 }
 function cerrar(){
   clearTimeout(cerrarTimer);
   document.getElementById('result').className = 'result';
-  pendiente = null; ocupado = false; deshacerCod = null;
+  pendiente = null; ocupado = false; deshacerCod = null; medioCobro = 'efectivo'; pendienteSaldo = 0;
   const m = document.getElementById('manual'); m.value=''; m.focus();
 }
 document.getElementById('rCancelar').onclick = cerrar;
@@ -309,12 +327,31 @@ document.getElementById('rDeshacer').onclick = async function(){
     mostrar('bad','No se pudo deshacer','', data.motivo || 'Error', '', false);
   }
 };
+document.getElementById('rCobrar').onclick = async function(){
+  if(!pendiente) return cerrar();
+  clearTimeout(cerrarTimer);
+  this.textContent = 'Cobrando…';
+  const data = await llamar('cobrarYAcreditar', pendiente, { medio: medioCobro }).catch(()=>({ok:false,motivo:'Error de conexión'}));
+  this.textContent = 'Cobrar y entrar';
+  if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
+};
+document.querySelectorAll('#rCobroMedios .mchip').forEach(function(b){
+  b.onclick = function(){ medioCobro = b.dataset.medio; actualizarChips(); };
+});
+function actualizarChips(){
+  document.querySelectorAll('#rCobroMedios .mchip').forEach(function(b){
+    b.classList.toggle('active', b.dataset.medio === medioCobro);
+  });
+}
 
 function registrarOK(data){
   contador++; document.getElementById('cnt').textContent = contador;
   beep(880,120); setTimeout(()=>beep(1320,150),130);
+  const cobroTxt = (Number(data.cobrado) > 0)
+    ? '<br><b style="display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#fdfdf9;color:#1b7a3d;font-size:15.5px">✓ Cobrado $'+Number(data.cobrado).toLocaleString('es-AR')+(data.medioCobro ? ' · '+data.medioCobro : '')+'</b>'
+    : '';
   mostrar('ok','Ingreso registrado', data.persona,
-    'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+avisoAbonar(data),
+    'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+cobroTxt+avisoAbonar(data),
     data.codigo, false);
   deshacerCod = { codigo: data.codigo, conto: true };
   document.getElementById('rDeshacer').style.display = 'block';
@@ -363,6 +400,18 @@ async function procesar(codigo){
     'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+
     (data.post && data.post!=='NO' ? '<br>Incluye: '+data.post : '')+'<br>'+jorNombre()+avisoAbonar(data),
     data.codigo, true);
+  if(data.faltaAbonar){
+    pendienteSaldo = Number(data.saldo) || 0;
+    medioCobro = 'efectivo';
+    const rc = document.getElementById('rCobrar');
+    rc.textContent = pendienteSaldo > 0 ? ('Cobrar $'+pendienteSaldo.toLocaleString('es-AR')+' y entrar') : 'Cobrar y entrar';
+    rc.style.display = 'block';
+    document.getElementById('rCobroMedios').style.display = 'flex';
+    const conf = document.getElementById('rConfirmar');
+    conf.textContent = 'Sólo entrar';
+    conf.className = 'b-sec';
+    actualizarChips();
+  }
 }
 
 // ---------- entrada manual / lector USB ----------
