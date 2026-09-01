@@ -7,6 +7,26 @@
 <title>CEPATAGONIA — Confirmación de compra</title>
 <meta name="description" content="Confirmación de tu compra de entradas para el Congreso de Estética de la Patagonia. Acá encontrás el resumen de tu orden y el código QR de tu entrada.">
 <link rel="canonical" href="https://cepatagonia.com/gracias.html">
+
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-K96KWN1371"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-K96KWN1371');
+</script>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2007724203462058');
+fbq('track', 'PageView');
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -72,6 +92,26 @@ function esc(s){ const d=document.createElement('div'); d.textContent=String(s==
 
 function render(html){ document.getElementById('panel').innerHTML = html; }
 
+// Conversión "purchase" a GA4 y Meta, con dos guardas contra el doble conteo:
+// (1) solo si la visita viene del RETORNO de Mercado Pago (payment_id/collection_id en la
+//     URL — el QR de la entrada apunta a esta misma página pero sin esos parámetros, así
+//     que los escaneos en la puerta no cuentan como compras), y
+// (2) una sola vez por orden en este navegador (localStorage), por si recargan la página.
+function registrarCompra(orden){
+  const vieneDeMP = params.get('payment_id') || params.get('collection_id');
+  if(!vieneDeMP) return;
+  const clave = 'compra_' + orden.orderId;
+  try{ if(localStorage.getItem(clave)) return; localStorage.setItem(clave, '1'); }catch(e){}
+  const monto = Number(orden.monto) || 0;
+  if(typeof gtag === 'function') gtag('event', 'purchase', {
+    transaction_id: orden.orderId,
+    value: monto,
+    currency: 'ARS',
+    items: [{ item_name: 'Entrada CEPATAGONIA 2026', item_category: orden.asientos || 'post', quantity: 1, price: monto }]
+  });
+  if(typeof fbq === 'function') fbq('track', 'Purchase', { value: monto, currency: 'ARS' }, { eventID: orden.orderId });
+}
+
 function pantallaError(msg){
   render('<div class="badge err"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></div>' +
     '<h2>El pago no se completó</h2>' +
@@ -103,6 +143,7 @@ async function init(){
   const qr = '<div class="qr-box"><img alt="QR de tu entrada" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent('https://cepatagonia.com/gracias.html?external_reference=' + orden.orderId + '&status=approved') + '"><p>Presentá este código en la acreditación</p></div>';
 
   if(orden.estado === 'PAGADO' || orden.estado === 'CORTESIA'){
+    registrarCompra(orden);
     render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
       '<h2>¡Compra confirmada!</h2>' +
       '<p class="sub">Congreso de Estética de la Patagonia · 10 y 11 de octubre 2026 · Hotel Le Village, San Martín de los Andes</p>' +
