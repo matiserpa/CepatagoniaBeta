@@ -60,7 +60,7 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
 const params = new URLSearchParams(location.search);
-const codigo = params.get('c') || '';
+const codigo = params.get('cert') || '';
 const panel = document.getElementById('panel');
 
 const TICK = '<svg viewBox="0 0 24 24" fill="none" stroke="#FDFDF9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
@@ -115,7 +115,7 @@ function render(d) {
     return;
   }
   try {
-    const res = await fetch(API_URL + '?action=certificado&c=' + encodeURIComponent(codigo));
+    const res = await fetch(API_URL + '?action=certificado&cert=' + encodeURIComponent(codigo));
     const d = await res.json();
     // No alcanza con mirar d.ok: si el backend todavía no conoce esta acción, contesta otra
     // cosa que también trae ok:true, y esta página diría "auténtico" con el nombre vacío.
