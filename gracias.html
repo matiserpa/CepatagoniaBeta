@@ -142,7 +142,15 @@ async function init(){
 
   const qr = '<div class="qr-box"><img alt="QR de tu entrada" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent('https://cepatagonia.com/gracias.html?external_reference=' + orden.orderId + '&status=approved') + '"><p>Presentá este código en la acreditación</p></div>';
 
-  if(orden.estado === 'PAGADO' || orden.estado === 'CORTESIA'){
+  if(orden.estado === 'CREDENCIAL'){
+    // Rama propia: NO llama a registrarCompra —no hubo compra— y no habla de pagos ni de
+    // totales. Es la pantalla que ve un disertante o alguien de un stand al escanear su QR.
+    render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
+      '<h2>Credencial confirmada</h2>' +
+      '<p class="sub">Congreso de Estética de la Patagonia · 10 y 11 de octubre 2026 · Hotel Le Village, San Martín de los Andes</p>' +
+      qr +
+      '<div class="nota">Presentá este código y tu DNI en la acreditación, desde las 8:00. Se acredita una vez por día.</div>');
+  } else if(orden.estado === 'PAGADO' || orden.estado === 'CORTESIA'){
     registrarCompra(orden);
     render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
       '<h2>¡Compra confirmada!</h2>' +
