@@ -8,6 +8,15 @@
 <meta name="description" content="Acreditación de asistentes por código QR — Congreso de Estética de la Patagonia. Herramienta interna del staff del evento.">
 <link rel="canonical" href="https://cepatagonia.com/acreditacion.html">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!-- Instalable en el telefono: icono propio, pantalla completa, sin barra del navegador.
+     iOS ignora el manifiesto para el icono y usa apple-touch-icon, y no muestra ningun cartel
+     de instalacion: hay que ensenarle a la persona a usar Compartir > Agregar a inicio. -->
+<link rel="manifest" href="/acreditacion.webmanifest">
+<meta name="theme-color" content="#0E1410">
+<link rel="apple-touch-icon" href="/assets/acred-apple-touch.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Acreditar">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -178,6 +187,77 @@
 </div>
 
 <script src="https://accounts.google.com/gsi/client"></script>
+<script>
+// ---------- instalacion en el telefono ----------
+// El service worker es mejora progresiva: si falla, la pagina anda igual. Por eso todo va
+// dentro de un try y ningun error frena nada.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function(){
+    // Alcance acotado a esta pagina: el resto del sitio (la web publica, la compra) no tiene
+    // por que quedar bajo un service worker pensado para la puerta.
+    navigator.serviceWorker.register('/acreditacion-sw.js', { scope: '/acreditacion.html' })
+      .catch(function(){ /* sin service worker se usa igual, solo no queda instalable */ });
+  });
+}
+
+// Android dispara este evento cuando la app es instalable. Se guarda y se ofrece con un boton
+// propio: el cartel del navegador aparece cuando el navegador quiere, y en la puerta conviene
+// que aparezca cuando la persona lo esta configurando, no en medio de una fila.
+var pedidoInstalar = null;
+window.addEventListener('beforeinstallprompt', function(e){
+  e.preventDefault();
+  pedidoInstalar = e;
+  mostrarCartelInstalar('android');
+});
+
+// iOS NO dispara ese evento ni muestra ningun cartel. Hay que explicarle a la persona los tres
+// pasos, o no lo encuentra nunca. Se detecta iPhone/iPad y que NO este ya instalada.
+function esIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+function yaInstalada(){
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+window.addEventListener('load', function(){
+  if (esIOS() && !yaInstalada()) mostrarCartelInstalar('ios');
+});
+
+function mostrarCartelInstalar(tipo){
+  if (document.getElementById('cartelInstalar')) return;
+  if (sessionStorage.getItem('cepaInstalarOculto') === '1') return;
+  var d = document.createElement('div');
+  d.id = 'cartelInstalar';
+  d.style.cssText = 'position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;background:#0E1410;color:#E8E6D4;border-radius:14px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.28);font-size:14px;line-height:1.5;display:flex;gap:12px;align-items:center;flex-wrap:wrap';
+  var texto = tipo === 'ios'
+    ? '<b>Tenela a mano todo el d\u00eda.</b><br>Toc\u00e1 <b>Compartir</b> abajo y despu\u00e9s <b>Agregar a inicio</b>.'
+    : '<b>Tenela a mano todo el d\u00eda.</b><br>Se instala como una app, sin pasar por la tienda.';
+  d.innerHTML = '<div style="flex:1;min-width:180px">' + texto + '</div>';
+
+  if (tipo === 'android') {
+    var b = document.createElement('button');
+    b.textContent = 'Instalar';
+    b.style.cssText = 'padding:10px 20px;border:none;border-radius:999px;background:#91BBAE;color:#0E1410;font-weight:800;font-size:14px;cursor:pointer';
+    b.onclick = function(){
+      if (!pedidoInstalar) return;
+      pedidoInstalar.prompt();
+      pedidoInstalar.userChoice.then(function(){ pedidoInstalar = null; cerrarCartel(); });
+    };
+    d.appendChild(b);
+  }
+  var x = document.createElement('button');
+  x.textContent = 'Ahora no';
+  x.style.cssText = 'padding:10px 14px;border:none;border-radius:999px;background:transparent;color:#8fa88f;font-size:13px;cursor:pointer';
+  x.onclick = cerrarCartel;
+  d.appendChild(x);
+  document.body.appendChild(d);
+}
+function cerrarCartel(){
+  // Por sesion y no para siempre: si alguien lo cierra sin querer, vuelve a aparecer manana.
+  sessionStorage.setItem('cepaInstalarOculto', '1');
+  var d = document.getElementById('cartelInstalar');
+  if (d) d.remove();
+}
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
