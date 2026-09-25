@@ -79,6 +79,11 @@
   .result h2{font-size:30px;margin-bottom:6px}
   .result .persona{font-size:22px;font-weight:700;margin:8px 0 2px}
   .result .det{font-size:14.5px;opacity:.92;line-height:1.6;max-width:380px}
+  .result .cinta{display:none;align-items:center;gap:12px;margin:14px 0 4px;padding:10px 22px 10px 14px;border-radius:999px;background:#fdfdf9;color:#1a1f1b;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  .result .cinta.visible{display:inline-flex}
+  .result .cinta .muestra{width:30px;height:30px;border-radius:8px;border:1px solid rgba(0,0,0,.22);flex-shrink:0}
+  .result .cinta .txt{font-size:13px;letter-spacing:.09em;text-transform:uppercase;font-weight:800;line-height:1.25}
+  .result .cinta .txt small{display:block;font-size:10.5px;letter-spacing:.06em;font-weight:600;opacity:.6;text-transform:none}
   .result .cod{font-family:var(--font-display);letter-spacing:2px;font-size:15px;margin-top:10px;opacity:.85}
   .result .acciones{display:flex;gap:12px;margin-top:26px;width:100%;max-width:380px}
   .result .acciones button{flex:1;padding:16px;border:none;border-radius:10px;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
@@ -156,6 +161,7 @@
   <div class="icono" id="rIcono"></div>
   <h2 id="rTitulo"></h2>
   <p class="persona" id="rPersona"></p>
+  <div class="cinta" id="rCinta"><span class="muestra" id="rCintaColor"></span><span class="txt" id="rCintaTxt"></span></div>
   <p class="det" id="rDet"></p>
   <p class="cod" id="rCod"></p>
   <div id="rCobroMedios" class="cobro-medios" style="display:none">
@@ -281,7 +287,15 @@ function avisoAbonar(d){
     : '⚠ FALTA ABONAR — cobrar en la puerta';
   return '<br><b style="display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#fdfdf9;color:var(--danger);font-size:15.5px;letter-spacing:.03em">' + texto + '</b>';
 }
-function mostrar(tipo, titulo, persona, det, cod, conConfirmar){
+function pintarCinta(cinta){
+  const caja = document.getElementById('rCinta');
+  if(!cinta || !cinta.etiqueta){ caja.className = 'cinta'; return; }
+  document.getElementById('rCintaColor').style.background = cinta.color || '#ccc';
+  document.getElementById('rCintaTxt').innerHTML = 'Cinta ' + cinta.etiqueta + '<small>para la mu\u00f1eca</small>';
+  caja.className = 'cinta visible';
+}
+function mostrar(tipo, titulo, persona, det, cod, conConfirmar, cinta){
+  pintarCinta(cinta);
   const r = document.getElementById('result');
   r.className = 'result visible ' + tipo;
   document.getElementById('rIcono').textContent = tipo==='ok' ? '✓' : (tipo==='warn' ? '⚠' : '✕');
@@ -352,7 +366,7 @@ function registrarOK(data){
     : '';
   mostrar('ok','Ingreso registrado', data.persona,
     'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+cobroTxt+avisoAbonar(data),
-    data.codigo, false);
+    data.codigo, false, data.cinta);
   deshacerCod = { codigo: data.codigo, conto: true };
   document.getElementById('rDeshacer').style.display = 'block';
   clearTimeout(cerrarTimer);
@@ -396,10 +410,12 @@ async function procesar(codigo){
     return;
   }
   pendiente = codigo;
+  // También antes de confirmar: quien acredita busca la cinta mientras la persona se acerca,
+  // no después de darle al botón.
   mostrar('ok','Entrada válida', data.persona,
     'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+
     (data.post && data.post!=='NO' ? '<br>Incluye: '+data.post : '')+'<br>'+jorNombre()+avisoAbonar(data),
-    data.codigo, true);
+    data.codigo, true, data.cinta);
   if(data.faltaAbonar){
     pendienteSaldo = Number(data.saldo) || 0;
     medioCobro = 'efectivo';
