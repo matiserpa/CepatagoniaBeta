@@ -1,6 +1,6 @@
 {
-  "name": "Acreditación CEPATAGONIA",
-  "short_name": "Acreditar",
+  "name": "CEPATAGONIA - ACREDITAR",
+  "short_name": "ACREDITAR",
   "description": "Escaneo de entradas del Congreso de Estética de la Patagonia.",
   "start_url": "/acreditacion.html",
   "scope": "/acreditacion.html",
@@ -10,9 +10,29 @@
   "theme_color": "#0E1410",
   "lang": "es-AR",
   "icons": [
-    { "src": "/assets/acred-icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/assets/acred-icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/assets/acred-icono-192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/assets/acred-icono-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/assets/acred-icono-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/acred-icono-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/acred-icono-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/acred-icono-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
