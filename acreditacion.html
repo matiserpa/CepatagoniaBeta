@@ -207,7 +207,10 @@ try {
   }
 } catch(e) {}
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<!-- jsQR servido desde ACA y no desde un CDN. La URL de cdnjs que habia devuelve 404: la
+     libreria no esta en ese CDN. Como la lectura por camara cae a jsQR en todo lo que no sea
+     Chrome en Android, en iPhone la camara no leia un solo codigo, y en silencio. -->
+<script src="/vendor/jsQR-1.4.0.min.js"></script>
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
 const GOOGLE_CLIENT_ID = '772242856871-a78k98qpso708f7vgetmu4u7011mvhas.apps.googleusercontent.com';
@@ -348,7 +351,7 @@ function pintarCinta(cinta){
   const caja = document.getElementById('rCinta');
   if(!cinta || !cinta.etiqueta){ caja.className = 'cinta'; return; }
   document.getElementById('rCintaColor').style.background = cinta.color || '#ccc';
-  document.getElementById('rCintaTxt').innerHTML = 'Cinta ' + cinta.etiqueta + '<small>para la mu\u00f1eca</small>';
+  document.getElementById('rCintaTxt').innerHTML = 'Cinta ' + escHtml(cinta.etiqueta) + '<small>para la mu\u00f1eca</small>';
   caja.className = 'cinta visible';
 }
 function mostrar(tipo, titulo, persona, det, cod, conConfirmar, cinta){
@@ -422,7 +425,7 @@ function registrarOK(data){
     ? '<br><b style="display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#fdfdf9;color:#1b7a3d;font-size:15.5px">✓ Cobrado $'+Number(data.cobrado).toLocaleString('es-AR')+(data.medioCobro ? ' · '+data.medioCobro : '')+'</b>'
     : '';
   mostrar('ok','Ingreso registrado', data.persona,
-    'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+cobroTxt+avisoAbonar(data),
+    'Asientos: <b>'+escHtml(data.asientos)+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+cobroTxt+avisoAbonar(data),
     data.codigo, false, data.cinta);
   deshacerCod = { codigo: data.codigo, conto: true };
   document.getElementById('rDeshacer').style.display = 'block';
@@ -437,6 +440,16 @@ function resultadoNegativo(data){
     pedirReLogin();
     return;
   }
+  // Quedarse sin señal no es que la entrada este mal. Iban las dos cosas a la misma pantalla
+  // roja, y el staff no tenia como distinguirlas: con el wifi de un hotel lleno, eso significa
+  // rechazar gente por un problema de red.
+  if(/conexi\u00f3n|conexion|sin red/i.test(String(data.motivo||''))){
+    beep(320,200);
+    mostrar('warn','Sin conexi\u00f3n','',
+      'No se pudo hablar con el sistema. <b>La entrada no est\u00e1 rechazada</b>: volv\u00e9 a escanear en unos segundos.<br>Si sigue igual, anotala en papel y segu\u00ed.',
+      '', false);
+    return;
+  }
   beep(220,350);
   if(data.motivo === 'YA INGRESÓ' && data.detalle){
     const d = data.detalle;
@@ -446,7 +459,7 @@ function resultadoNegativo(data){
     deshacerCod = { codigo: d.codigo, conto: false };
     document.getElementById('rDeshacer').style.display = 'block';
   } else {
-    mostrar('bad','No válido','', data.motivo || 'Error', '', false);
+    mostrar('bad','No válido','', escHtml(data.motivo || 'Error'), '', false);
   }
 }
 
@@ -477,8 +490,8 @@ async function procesar(codigo){
   // También antes de confirmar: quien acredita busca la cinta mientras la persona se acerca,
   // no después de darle al botón.
   mostrar('ok','Entrada válida', data.persona,
-    'Asientos: <b>'+data.asientos+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+
-    (data.post && data.post!=='NO' ? '<br>Incluye: '+data.post : '')+'<br>'+jorNombre()+avisoAbonar(data),
+    'Asientos: <b>'+escHtml(data.asientos)+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+
+    (data.post && data.post!=='NO' ? '<br>Incluye: '+escHtml(data.post) : '')+'<br>'+jorNombre()+avisoAbonar(data),
     data.codigo, true, data.cinta);
   if(data.faltaAbonar){
     pendienteSaldo = Number(data.saldo) || 0;
@@ -551,8 +564,24 @@ async function iniciarCamara(){
   }catch(err){
     msg.textContent = 'No se pudo acceder a la cámara. Usá el campo manual o el lector USB.';
   }
+  revisarLector();
   enfocarManual();
 }
+// Si no hay BarcodeDetector NI jsQR, la camara no puede leer nada. Antes eso pasaba en
+// silencio: el acreditador apuntaba y no ocurria nada, y la conclusion natural es que el QR de
+// la persona esta mal. Se avisa una sola vez, sin tapar el campo manual, que sigue sirviendo.
+var avisoSinLector = false;
+function revisarLector(){
+  if(avisoSinLector) return;
+  if(detector || window.jsQR) return;
+  avisoSinLector = true;
+  var m = document.querySelector('.cam-msg');
+  if(m){
+    m.textContent = 'La c\u00e1mara no puede leer c\u00f3digos en este navegador. Us\u00e1 el campo manual o el lector USB.';
+    m.style.background = 'rgba(178,59,59,.85)';
+  }
+}
+
 async function escanear(video){
   if(!document.getElementById('result').classList.contains('visible') && video.readyState === 4 && !ocupado){
     try{
