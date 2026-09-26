@@ -196,11 +196,16 @@
 // Esta pagina llego a tener su propia PWA por un rato. La app instalable paso a ser el panel,
 // asi que al que alcanzo a instalar la de aca se le da de baja el service worker: si no, le
 // queda una app fantasma sirviendo una cascara vieja de esta pagina.
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations()
-    .then(function(rs){ rs.forEach(function(r){ r.unregister(); }); })
-    .catch(function(){ /* si no se puede, tampoco pasa nada grave */ });
-}
+// try y no solo .catch(): si navigator.serviceWorker existe pero viene undefined, la llamada
+// tira de forma SINCRONICA y se lleva puesto el resto del script de la pagina — incluido el
+// lector. Nada de esto vale un lector que no arranca.
+try {
+  if (navigator.serviceWorker && navigator.serviceWorker.getRegistrations) {
+    navigator.serviceWorker.getRegistrations()
+      .then(function(rs){ rs.forEach(function(r){ r.unregister(); }); })
+      .catch(function(){});
+  }
+} catch(e) {}
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
 <script>
@@ -237,14 +242,42 @@ async function probarToken(token){
     body: JSON.stringify({ action:'panelAuth', id_token:token }) });
   return res.json(); // { ok, email, nombre, rol } o { ok:false, error }
 }
+// El aviso de reingreso se programa a los 50 minutos, antes de que el token muera a los 60.
+// Que aparezca ANTES importa: si esperamos a que falle, la primera persona de la cola ya se
+// comio una pantalla roja que dice que su entrada no sirve.
+var avisoSesion = null;
+
 function entrarConToken(token){
   ID_TOKEN = token;
   try{ sessionStorage.setItem(TOKEN_KEY, token); }catch(e){}
-  document.getElementById('login').remove();
+  // display:none y NO .remove(): el boton de Google tiene que seguir existiendo en el DOM
+  // para poder volver a entrar sin recargar la pagina.
+  document.getElementById('login').style.display = 'none';
+  var err = document.getElementById('loginErr');
+  if(err){ err.style.display = 'none'; }
+  if(avisoSesion) clearTimeout(avisoSesion);
+  avisoSesion = setTimeout(pedirReLogin, 50 * 60 * 1000);
   iniciarCamara();
+}
+
+// Vuelve a mostrar el login, explicando que el problema es la sesion y NO la entrada de la
+// persona que esta parada enfrente. Esa distincion es todo el arreglo: sin ella el staff
+// rechaza gente que tiene la entrada bien.
+function pedirReLogin(){
+  var l = document.getElementById('login');
+  if(!l) return;
+  var e = document.getElementById('loginErr');
+  if(e){
+    e.textContent = 'Se venci\u00f3 tu sesi\u00f3n. Volv\u00e9 a entrar con Google \u2014 la entrada de la persona est\u00e1 bien.';
+    e.style.color = '#8a6d00';
+    e.style.display = 'block';
+  }
+  l.style.display = 'flex';
+  cerrar();
 }
 async function handleCredentialResponse(resp){
   const err = document.getElementById('loginErr');
+  err.style.color = '';
   err.style.display = 'none';
   const data = await probarToken(resp.credential).catch(()=>({ ok:false, error:'Error de conexión' }));
   if(data.ok && (data.rol === 'admin' || data.rol === 'acreditador')){
@@ -397,6 +430,13 @@ function registrarOK(data){
   cerrarTimer = setTimeout(cerrar, 4500);
 }
 function resultadoNegativo(data){
+  // Un problema de SESION no es una entrada invalida. El regex cubre los textos que produce
+  // verificarSesionPanel_ en el backend y ninguno de los motivos de negocio ("YA INGRESÓ",
+  // "no está paga", "no incluye el Post Congreso"), asi que no puede tapar un rechazo real.
+  if(/^Token|^Falta id_token|validar el token|acceso al panel|no autorizado/i.test(String(data.motivo||''))){
+    pedirReLogin();
+    return;
+  }
   beep(220,350);
   if(data.motivo === 'YA INGRESÓ' && data.detalle){
     const d = data.detalle;
