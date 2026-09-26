@@ -291,8 +291,19 @@ async function handleCredentialResponse(resp){
   }
 }
 (function(){
-  google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleCredentialResponse });
-  google.accounts.id.renderButton(document.getElementById('gBtn'), { theme:'filled_black', size:'large', text:'signin_with', shape:'pill', width:260 });
+  // Si el script de Google no bajó —red del hotel, bloqueo, caída— `google` no existe y esta
+  // línea tiraba, llevándose puesto TODO el resto del script: incluido el campo manual y el
+  // lector USB, que son justamente el plan B. Ahora falla acotado y lo dice.
+  try{
+    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleCredentialResponse });
+    google.accounts.id.renderButton(document.getElementById('gBtn'), { theme:'filled_black', size:'large', text:'signin_with', shape:'pill', width:260 });
+  }catch(e){
+    var eg = document.getElementById('loginErr');
+    if(eg){
+      eg.textContent = 'No se pudo cargar el ingreso de Google. Revisá la conexión y recargá la página.';
+      eg.style.display = 'block';
+    }
+  }
   try{
     const t = sessionStorage.getItem(TOKEN_KEY);
     if(t){

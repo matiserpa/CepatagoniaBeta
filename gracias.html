@@ -140,7 +140,20 @@ async function init(){
     (Number(orden.monto) > 0 ? '<div class="sum-line"><span>Total</span><b>' + money(orden.monto) + '</b></div>' : '') +
     '</div>';
 
-  const qr = '<div class="qr-box"><img alt="QR de tu entrada" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent('https://cepatagonia.com/gracias.html?external_reference=' + orden.orderId + '&status=approved') + '"><p>Presentá este código en la acreditación</p></div>';
+  // UN QR POR PERSONA. Cada uno lleva su &p=n, que es lo que la puerta lee para saber a
+  // quién está dejando entrar. Antes se mostraba un solo código, el del titular, y en una
+  // orden de varios entraba una sola persona.
+  const personas = (orden.personas && orden.personas.length) ? orden.personas : [orden.nombre || 'Titular'];
+  const qr = '<div class="qr-box">' + personas.map(function(p, i){
+    const url = 'https://cepatagonia.com/gracias.html?external_reference=' + orden.orderId + '&p=' + (i + 1) + '&status=approved';
+    return '<div style="display:inline-block;margin:0 10px 14px;vertical-align:top">' +
+      '<img alt="QR de ' + esc(p) + '" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' + encodeURIComponent(url) + '">' +
+      (personas.length > 1 ? '<p style="margin-top:6px;font-weight:700;color:#0E1410">' + esc(p) + '</p>' : '') +
+      '</div>';
+  }).join('') +
+  '<p>' + (personas.length > 1
+    ? 'Cada persona presenta <b>su propio</b> código en la acreditación'
+    : 'Presentá este código en la acreditación') + '</p></div>';
 
   if(orden.estado === 'CREDENCIAL'){
     // Rama propia: NO llama a registrarCompra —no hubo compra— y no habla de pagos ni de
