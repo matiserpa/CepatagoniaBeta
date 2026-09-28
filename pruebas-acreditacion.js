@@ -276,6 +276,40 @@ console.log('── 6 · El teclado del teléfono no puede taparle la cámara al
   ok(focos === 1, 'con teclado físico el foco sigue yendo al campo, para el lector USB');
 }
 
+
+console.log('');
+console.log('── 7 · El lector entra solo si el permiso ya se dio en el panel');
+{
+  // Este era el error: auto_select estaba puesto en initialize() pero NO SE USABA. En Google
+  // Identity Services auto_select solo actúa cuando se dispara One Tap con prompt(), y prompt()
+  // se llamaba únicamente al renovar — nunca al abrir. Resultado: el panel entraba solo (por el
+  // localStorage) y el lector seguía pidiendo permiso, justo al revés de lo que se quería.
+  const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+  ok(/function entrarSinMolestar/.test(html), 'existe el intento silencioso al abrir');
+  ok(/else \s*\{[\s\S]{0,60}entrarSinMolestar/.test(html),
+    'y se llama cuando NO hay token guardado, que es la apertura limpia');
+  ok(/auto_select:\s*true/.test(html), 'con auto_select puesto, que es lo que lo hace silencioso');
+}
+{
+  // Con Google disponible, abrir sin token guardado tiene que pedirle un token — sin mostrar
+  // el botón ni molestar a nadie.
+  const s = armar();
+  let pedidos = 0;
+  s.window.google = { accounts: { id: { prompt(cb) { pedidos++; } } } };
+  s.google = s.window.google;
+  s.entrarSinMolestar();
+  ok(pedidos === 1, 'le pide el token a Google al abrir');
+}
+{
+  // Y si la librería de Google no cargó, no explota ni deja la página colgada esperando.
+  const s = armar();
+  s.window.google = undefined;
+  let exploto = false;
+  try { s.entrarSinMolestar(); } catch (e) { exploto = true; }
+  ok(!exploto, 'sin la librería de Google no explota');
+  ok(s.__timers.some((t) => t.ms === 500), 'reintenta, porque el script de Google puede tardar');
+}
+
 console.log('────────────────────────────────────────────────────────────────');
 console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
 process.exitCode = fallaron ? 1 : 0;

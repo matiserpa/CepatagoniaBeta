@@ -276,6 +276,26 @@ async function probarToken(token){
     body: JSON.stringify({ action:'panelAuth', id_token:token }) });
   return res.json(); // { ok, email, nombre, rol } o { ok:false, error }
 }
+// Al abrir el lector sin sesión guardada, se le pide a Google un token EN SILENCIO antes de
+// mostrar el botón. Si esta persona ya autorizó la aplicación —porque entró al panel, por
+// ejemplo— entra sin tocar nada: esa es la segunda autorización que se quería sacar. Si nunca
+// la autorizó, o tiene varias cuentas de Google, aparece el botón de siempre.
+//
+// Esto hacía falta y no estaba: auto_select en initialize() no hace nada por su cuenta — solo
+// actúa cuando se dispara One Tap con prompt(), y prompt() se llamaba únicamente al renovar.
+function entrarSinMolestar(){
+  // Se espera a que cargue la librería de Google, que es un script externo y puede tardar.
+  var intentos = 0;
+  (function esperar(){
+    if(window.google && google.accounts && google.accounts.id){
+      renovarEnSilencio(function(){ /* no se pudo: queda el botón, que ya está en pantalla */ });
+      return;
+    }
+    if(++intentos > 20) return;   // diez segundos y se deja de esperar
+    setTimeout(esperar, 500);
+  })();
+}
+
 // La sesión se RENUEVA SOLA antes de vencer, en vez de avisar que venció. El token de Google
 // vive una hora; cinco minutos antes se pide uno nuevo en silencio, y si Google lo da —porque
 // la persona ya autorizó esta app alguna vez— el acreditador no se entera de nada.
@@ -404,8 +424,10 @@ async function handleCredentialResponse(resp){
     if(t){
       probarToken(t).then(data=>{
         if(data.ok && (data.rol==='admin' || data.rol==='acreditador')) entrarConToken(t);
-        else olvidarToken();
-      }).catch(()=>{});
+        else { olvidarToken(); entrarSinMolestar(); }
+      }).catch(function(){ entrarSinMolestar(); });
+    } else {
+      entrarSinMolestar();
     }
   }catch(e){}
 })();
