@@ -410,13 +410,32 @@ async function handleCredentialResponse(resp){
   }catch(e){}
 })();
 
-// ---------- foco permanente en el campo manual (así el lector USB, que "escribe" como
-// un teclado, siempre cae ahí sin que el staff tenga que tocar el campo antes de escanear) ----------
-function enfocarManual(){
+// ---------- foco en el campo manual ----------
+// El lector USB "escribe" como un teclado, así que necesita el foco puesto ahí sin que nadie
+// toque nada. Pero en un teléfono cada foco abre el teclado en pantalla Y TAPA LA CÁMARA: hay
+// que bajarlo a mano para poder apuntar, y después de cada escaneo vuelve a subir.
+//
+// Entonces el foco se roba solo cuando sirve: cuando hay un teclado de verdad, o cuando la
+// cámara no arrancó y escribir es la única forma de acreditar. Con la cámara andando en un
+// teléfono el campo sigue ahí, a un toque, para quien quiera tipear.
+//
+// any-pointer: fine detecta mouse, trackpad o lápiz — lo que en la práctica significa "no es un
+// teléfono". Si el navegador no entiende matchMedia, se asume que sí, que es el comportamiento
+// de antes y no rompe la puerta con notebook.
+var HAY_TECLADO = true;
+try{ HAY_TECLADO = !window.matchMedia || window.matchMedia('(any-pointer: fine)').matches; }catch(e){}
+var CAMARA_ANDANDO = false;
+
+function enfocarManual(forzar){
+  if(!forzar && !HAY_TECLADO && CAMARA_ANDANDO) return;   // teléfono con cámara: no molestar
   const m = document.getElementById('manual');
   if (m && document.activeElement !== m) m.focus();
 }
+
+// El foco permanente es para el lector USB. En un teléfono este intervalo era lo peor de todo:
+// bajabas el teclado y volía a subir un segundo después.
 setInterval(()=>{
+  if(!HAY_TECLADO && CAMARA_ANDANDO) return;
   // No robar el foco si el staff está tipeando en la búsqueda por nombre
   const a = document.activeElement;
   if(a && a.id === 'busqueda') return;
@@ -481,7 +500,9 @@ function cerrar(){
   clearTimeout(cerrarTimer);
   document.getElementById('result').className = 'result';
   pendiente = null; ocupado = false; deshacerCod = null; medioCobro = 'efectivo'; pendienteSaldo = 0;
-  const m = document.getElementById('manual'); m.value=''; m.focus();
+  // enfocarManual y NO m.focus() directo: después de cada persona, en un teléfono, esto
+  // levantaba el teclado encima de la cámara justo cuando llega el siguiente de la fila.
+  const m = document.getElementById('manual'); m.value=''; enfocarManual();
 }
 document.getElementById('rCancelar').onclick = cerrar;
 document.getElementById('rConfirmar').onclick = async function(){
@@ -666,12 +687,16 @@ async function iniciarCamara(){
       try{ detector = new BarcodeDetector({ formats: ['qr_code'] }); }catch(e){ detector = null; }
     }
     if(!detector){ canvas = document.createElement('canvas'); cctx = canvas.getContext('2d', { willReadFrequently: true }); }
+    CAMARA_ANDANDO = true;
     escanear(video);
   }catch(err){
+    CAMARA_ANDANDO = false;
     msg.textContent = 'No se pudo acceder a la cámara. Usá el campo manual o el lector USB.';
   }
   revisarLector();
-  enfocarManual();
+  // Sin cámara, escribir es la única forma de acreditar: ahí el teclado tiene que aparecer solo,
+  // teléfono o no.
+  enfocarManual(!CAMARA_ANDANDO || (!detector && !window.jsQR));
 }
 // Si no hay BarcodeDetector NI jsQR, la camara no puede leer nada. Antes eso pasaba en
 // silencio: el acreditador apuntaba y no ocurria nada, y la conclusion natural es que el QR de

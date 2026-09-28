@@ -237,6 +237,45 @@ console.log('── 5 · "Ya ingresó" tampoco se confunde con un problema de se
 }
 
 console.log('');
+
+console.log('');
+console.log('── 6 · El teclado del teléfono no puede taparle la cámara al acreditador');
+{
+  // El campo manual se enfoca a propósito, porque el lector USB escribe como un teclado. Pero
+  // en un teléfono cada foco abre el teclado en pantalla ENCIMA de la cámara: hay que bajarlo
+  // a mano para poder apuntar, y después de cada persona vuelve a subir.
+  const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+  ok(/any-pointer: fine/.test(html), 'distingue un teléfono de una notebook con lector USB');
+  ok(html.indexOf('if(!HAY_TECLADO && CAMARA_ANDANDO) return;') > 0,
+    'el intervalo que robaba el foco CADA SEGUNDO se frena en el teléfono');
+  ok(html.indexOf("m.value=''; enfocarManual();") > 0,
+    'y cerrar el resultado ya no hace focus() directo después de cada persona');
+}
+{
+  // El sandbox no tiene any-pointer: fine, o sea que se comporta como teléfono.
+  const s = armar();
+  s.CAMARA_ANDANDO = true;
+  s.HAY_TECLADO = false;
+  let focos = 0;
+  s.nodos.manual.focus = () => { focos++; };
+  s.enfocarManual();
+  ok(focos === 0, 'en un teléfono con cámara, entrar NO abre el teclado');
+
+  // Pero si la cámara no arrancó, escribir es la única forma de acreditar: ahí sí.
+  s.enfocarManual(true);
+  ok(focos === 1, 'sin cámara el teclado aparece solo, que es lo que hace falta');
+}
+{
+  // Y en una notebook con lector USB el comportamiento de siempre no se toca.
+  const s = armar();
+  s.HAY_TECLADO = true;
+  s.CAMARA_ANDANDO = true;
+  let focos = 0;
+  s.nodos.manual.focus = () => { focos++; };
+  s.enfocarManual();
+  ok(focos === 1, 'con teclado físico el foco sigue yendo al campo, para el lector USB');
+}
+
 console.log('────────────────────────────────────────────────────────────────');
 console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
 process.exitCode = fallaron ? 1 : 0;
