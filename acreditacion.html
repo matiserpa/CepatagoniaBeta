@@ -216,6 +216,37 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDzt
 const GOOGLE_CLIENT_ID = '772242856871-a78k98qpso708f7vgetmu4u7011mvhas.apps.googleusercontent.com';
 const TOKEN_KEY = 'cepaAcredToken';
 
+// localStorage y no sessionStorage: el acreditador cierra el navegador del teléfono, lo vuelve
+// a abrir y tiene que seguir adentro. sessionStorage se borra al cerrar la pestaña.
+// Los dos se leen envueltos: en una ventana privada o con las cookies bloqueadas, tocarlos tira.
+function guardarToken(t){
+  try{ localStorage.setItem(TOKEN_KEY, t); }catch(e){}
+  try{ sessionStorage.setItem(TOKEN_KEY, t); }catch(e){}   // respaldo si localStorage no anda
+}
+function leerToken(){
+  try{ var a = localStorage.getItem(TOKEN_KEY); if(a) return a; }catch(e){}
+  try{ return sessionStorage.getItem(TOKEN_KEY); }catch(e){}
+  return null;
+}
+function olvidarToken(){
+  try{ localStorage.removeItem(TOKEN_KEY); }catch(e){}
+  try{ sessionStorage.removeItem(TOKEN_KEY); }catch(e){}
+}
+
+// Cuándo vence el token, en milisegundos desde ahora. Sale del propio JWT: la parte del medio
+// es JSON en base64url y trae "exp" en segundos. Devuelve 0 si no se puede leer, y entonces se
+// trata como vencido — es mejor renovar de más que quedarse con uno muerto en la mano.
+function vidaDelToken(t){
+  try{
+    var carga = String(t).split('.')[1];
+    if(!carga) return 0;
+    var json = atob(carga.replace(/-/g,'+').replace(/_/g,'/'));
+    var exp = JSON.parse(json).exp;
+    if(!exp) return 0;
+    return (exp * 1000) - Date.now();
+  }catch(e){ return 0; }
+}
+
 let ID_TOKEN = '';
 let jornada = 'CONGRESO';
 let ocupado = false;
@@ -245,28 +276,84 @@ async function probarToken(token){
     body: JSON.stringify({ action:'panelAuth', id_token:token }) });
   return res.json(); // { ok, email, nombre, rol } o { ok:false, error }
 }
-// El aviso de reingreso se programa a los 50 minutos, antes de que el token muera a los 60.
-// Que aparezca ANTES importa: si esperamos a que falle, la primera persona de la cola ya se
-// comio una pantalla roja que dice que su entrada no sirve.
+// La sesión se RENUEVA SOLA antes de vencer, en vez de avisar que venció. El token de Google
+// vive una hora; cinco minutos antes se pide uno nuevo en silencio, y si Google lo da —porque
+// la persona ya autorizó esta app alguna vez— el acreditador no se entera de nada.
+//
+// El cartel de "volvé a entrar" queda solo para cuando la renovación silenciosa no se puede.
 var avisoSesion = null;
+var renovando = false;
+
+// Le pide a Google un token nuevo sin mostrar nada. Google lo da si la persona ya dio permiso a
+// esta aplicación y tiene UNA sola cuenta iniciada; con varias muestra el selector, que también
+// está bien. Si no se puede, cae en el cartel de siempre.
+function renovarEnSilencio(alFallar){
+  if(renovando) return;
+  renovando = true;
+  var listo = false;
+  var seRindio = function(){
+    if(listo) return;
+    renovando = false;
+    if(alFallar) alFallar();
+  };
+  try{
+    if(!window.google || !google.accounts || !google.accounts.id) return seRindio();
+    // handleCredentialResponse es el mismo callback del botón: si Google contesta, entra solo.
+    google.accounts.id.prompt(function(aviso){
+      // No se mostró ni se eligió nada: no hay renovación silenciosa posible.
+      try{
+        if(aviso && (aviso.isNotDisplayed && aviso.isNotDisplayed() ||
+                     aviso.isSkippedMoment && aviso.isSkippedMoment() ||
+                     aviso.isDismissedMoment && aviso.isDismissedMoment())){
+          seRindio();
+        }
+      }catch(e){ seRindio(); }
+    });
+    // Si en doce segundos no entró un token nuevo, se asume que no va a entrar.
+    setTimeout(seRindio, 12000);
+  }catch(e){ seRindio(); }
+  // entrarConToken marca listo=true al llegar un token nuevo.
+  renovarEnSilencio.marcarListo = function(){ listo = true; renovando = false; };
+}
 
 function entrarConToken(token){
   ID_TOKEN = token;
-  try{ sessionStorage.setItem(TOKEN_KEY, token); }catch(e){}
+  guardarToken(token);
+  if(renovarEnSilencio.marcarListo) renovarEnSilencio.marcarListo();
   // display:none y NO .remove(): el boton de Google tiene que seguir existiendo en el DOM
   // para poder volver a entrar sin recargar la pagina.
   document.getElementById('login').style.display = 'none';
   var err = document.getElementById('loginErr');
   if(err){ err.style.display = 'none'; }
+  // Renovar CINCO MINUTOS ANTES de que venza, no a los 50 fijos: si el token que trajo Google
+  // ya venía usado, 50 minutos lo agarran muerto. El mínimo de 10 segundos evita que un token
+  // ya vencido dispare una renovación en bucle.
   if(avisoSesion) clearTimeout(avisoSesion);
-  avisoSesion = setTimeout(pedirReLogin, 50 * 60 * 1000);
+  var falta = vidaDelToken(token) - 5 * 60 * 1000;
+  avisoSesion = setTimeout(function(){
+    renovarEnSilencio(pedirReLogin);
+  }, Math.max(falta, 10000));
   iniciarCamara();
 }
 
 // Vuelve a mostrar el login, explicando que el problema es la sesion y NO la entrada de la
 // persona que esta parada enfrente. Esa distincion es todo el arreglo: sin ella el staff
 // rechaza gente que tiene la entrada bien.
+// Antes de molestar a nadie se intenta una renovación silenciosa. El cartel es el último
+// recurso, no el primero.
 function pedirReLogin(){
+  var l = document.getElementById('login');
+  if(!l) return;
+  if(!pedirReLogin.yaIntento){
+    pedirReLogin.yaIntento = true;
+    renovarEnSilencio(function(){ pedirReLogin.yaIntento = false; mostrarLoginVencido(); });
+    return;
+  }
+  pedirReLogin.yaIntento = false;
+  mostrarLoginVencido();
+}
+
+function mostrarLoginVencido(){
   var l = document.getElementById('login');
   if(!l) return;
   var e = document.getElementById('loginErr');
@@ -295,7 +382,15 @@ async function handleCredentialResponse(resp){
   // línea tiraba, llevándose puesto TODO el resto del script: incluido el campo manual y el
   // lector USB, que son justamente el plan B. Ahora falla acotado y lo dice.
   try{
-    google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleCredentialResponse });
+    // auto_select: si la persona ya autorizó esta app y tiene una sola cuenta iniciada, Google
+    // devuelve el token sin mostrar nada. Es lo que hace que no haya que loguearse de nuevo —
+    // ni al volver a abrir, ni al pasar del panel al lector, ni cuando el token vence.
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleCredentialResponse,
+      auto_select: true,
+      cancel_on_tap_outside: false,
+    });
     google.accounts.id.renderButton(document.getElementById('gBtn'), { theme:'filled_black', size:'large', text:'signin_with', shape:'pill', width:260 });
   }catch(e){
     var eg = document.getElementById('loginErr');
@@ -305,11 +400,11 @@ async function handleCredentialResponse(resp){
     }
   }
   try{
-    const t = sessionStorage.getItem(TOKEN_KEY);
+    const t = leerToken();
     if(t){
       probarToken(t).then(data=>{
         if(data.ok && (data.rol==='admin' || data.rol==='acreditador')) entrarConToken(t);
-        else sessionStorage.removeItem(TOKEN_KEY);
+        else olvidarToken();
       }).catch(()=>{});
     }
   }catch(e){}

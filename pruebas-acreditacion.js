@@ -15,6 +15,14 @@ function ok(cond, que) {
   else { console.log('  FALLA ' + que); fallaron++; }
 }
 
+// Un JWT de mentira con un vencimiento de verdad: cabecera.carga.firma, y la carga en
+// base64url. El código lee únicamente "exp", así que con eso alcanza.
+function tokenQueVenceEn(minutos) {
+  const carga = Buffer.from(JSON.stringify({ exp: Math.floor(Date.now() / 1000) + minutos * 60 }))
+    .toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return 'cabecera.' + carga + '.firma';
+}
+
 function armar() {
   const nodos = {};
   function nodo(id) {
@@ -46,7 +54,16 @@ function armar() {
     window: { addEventListener() {}, matchMedia: () => ({ matches: false }) },
     navigator: { mediaDevices: { getUserMedia: () => Promise.reject(new Error('sin cámara')) }, userAgent: 'test' },
     sessionStorage: { _d: {}, getItem(k) { return this._d[k] ?? null; }, setItem(k, v) { this._d[k] = v; }, removeItem(k) { delete this._d[k]; } },
-    localStorage: { getItem: () => null, setItem() {}, removeItem() {} },
+    // localStorage con memoria: la prueba nueva verifica que el token SOBREVIVA, y un stub que
+    // siempre devuelve null no puede distinguir "guardó bien" de "no guardó nada".
+    localStorage: {
+      _d: {},
+      getItem(k) { return k in this._d ? this._d[k] : null; },
+      setItem(k, v) { this._d[k] = String(v); },
+      removeItem(k) { delete this._d[k]; },
+    },
+    // El token trae su vencimiento adentro, en base64url. Sin atob no se puede leer.
+    atob: (b) => Buffer.from(String(b), 'base64').toString('binary'),
     fetch: () => Promise.resolve({ json: () => Promise.resolve({ ok: false }) }),
     setTimeout: (fn, ms) => { s.__timers.push({ fn, ms }); return s.__timers.length; },
     clearTimeout() {},
@@ -81,24 +98,90 @@ console.log('── 1 · Entrar NO borra el botón de Google');
 }
 
 console.log('');
-console.log('── 2 · Se programa el aviso antes de que el token muera');
+console.log('── 2 · La sesión se renueva sola ANTES de vencer');
 {
+  // El acreditador no puede quedarse afuera en medio de la fila. Cinco minutos antes de que el
+  // token muera se pide uno nuevo en silencio; el cartel de "volvé a entrar" es el último
+  // recurso, no el primero.
   const s = armar();
-  s.entrarConToken('tok-123');
-  const aviso = s.__timers.filter((t) => t.ms >= 40 * 60 * 1000 && t.ms < 60 * 60 * 1000);
-  ok(aviso.length === 1, 'hay un aviso programado dentro de la hora');
-  ok(aviso.length === 1 && aviso[0].ms === 50 * 60 * 1000, 'a los 50 minutos, con 10 de margen');
-  // Y que ese aviso haga lo que tiene que hacer.
-  if (aviso.length) {
-    aviso[0].fn();
-    ok(s.nodos.login.style.display === 'flex', 'al dispararse, vuelve a mostrar el login');
-    ok(/sesi/i.test(s.nodos.loginErr.textContent), 'con un texto que habla de la sesión');
-    ok(/entrada de la persona est/i.test(s.nodos.loginErr.textContent),
-      'y que aclara que la entrada de la persona está bien');
-  }
+  s.entrarConToken(tokenQueVenceEn(60));
+  const renov = s.__timers.filter((t) => t.ms > 40 * 60 * 1000 && t.ms < 60 * 60 * 1000);
+  ok(renov.length === 1, 'programa una renovación dentro de la hora');
+  ok(renov.length === 1 && Math.abs(renov[0].ms - 55 * 60 * 1000) < 5000,
+    'a los 55 minutos: cinco antes de que venza a los 60');
+}
+{
+  // Un token que Google devuelve ya usado no dura 60 minutos. Antes se renovaba a los 50 fijos
+  // y lo agarraba muerto; ahora la cuenta sale del vencimiento que trae el token.
+  const s = armar();
+  s.entrarConToken(tokenQueVenceEn(20));
+  const renov = s.__timers.filter((t) => t.ms > 10 * 60 * 1000 && t.ms < 20 * 60 * 1000);
+  ok(renov.length === 1, 'un token de 20 minutos se renueva a los 15, no a los 50');
+}
+{
+  // Y si el token no se puede leer, no se programa nada negativo ni nada eterno.
+  const s = armar();
+  s.entrarConToken('esto-no-es-un-jwt');
+  const renov = s.__timers.filter((t) => t.ms >= 10000 && t.ms < 60000);
+  ok(renov.length === 1, 'un token ilegible se renueva enseguida, no nunca');
+  ok(!s.__timers.some((t) => t.ms < 0), 'y nunca con un plazo negativo');
 }
 
 console.log('');
+console.log('── 2b · El token sobrevive a cerrar el navegador');
+{
+  // sessionStorage se borra al cerrar la pestaña. En una jornada de ocho horas el acreditador
+  // cierra y abre el teléfono varias veces, y no puede tener que loguearse cada vez.
+  const s = armar();
+  s.entrarConToken('tok-abc');
+  ok(s.localStorage.getItem('cepaAcredToken') === 'tok-abc', 'queda en localStorage');
+  ok(s.sessionStorage.getItem('cepaAcredToken') === 'tok-abc', 'y también en sessionStorage, de respaldo');
+
+  // Al volver a abrir, se lee de localStorage aunque sessionStorage esté vacío.
+  const s2 = armar();
+  s2.localStorage.setItem('cepaAcredToken', 'tok-guardado');
+  ok(s2.leerToken() === 'tok-guardado', 'al reabrir lo encuentra');
+  s2.olvidarToken();
+  ok(s2.leerToken() === null, 'y al olvidarlo se va de los dos lados');
+}
+
+console.log('');
+console.log('── 2c · Lo que hace que no haya que loguearse de nuevo');
+{
+  const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+  ok(/auto_select:\s*true/.test(html),
+    'auto_select está puesto: Google devuelve el token sin mostrar nada');
+  ok(/google\.accounts\.id\.prompt\(/.test(html),
+    'y se le pide un token nuevo en silencio cuando hace falta');
+}
+
+console.log('');
+console.log('── 2d · Antes de molestar a nadie, intenta renovar en silencio');
+{
+  // Los bloques de arriba prueban el RESPALDO, porque en ese sandbox window.google no existe.
+  // Este prueba el camino que de verdad va a ocurrir el 10 de octubre: Google disponible, y
+  // la sesion renovandose sin que el acreditador vea nada.
+  const s = armar();
+  let pedidos = 0;
+  s.window.google = { accounts: { id: { prompt(cb) { pedidos++; } } } };
+  s.google = s.window.google;
+  s.entrarConToken(tokenQueVenceEn(60));
+  s.nodos.login.style.display = 'none';
+
+  s.resultadoNegativo({ ok: false, motivo: 'Token inválido o vencido' });
+  ok(pedidos === 1, 'le pide a Google un token nuevo');
+  ok(s.nodos.login.style.display === 'none',
+    'y NO muestra el cartel todavía: el acreditador sigue trabajando');
+
+  // Recién si esa renovación no trae nada, aparece el cartel.
+  s.resultadoNegativo({ ok: false, motivo: 'Token inválido o vencido' });
+  ok(s.nodos.login.style.display === 'flex', 'si el segundo intento falla, ahí sí aparece');
+  ok(/sesi/i.test(s.nodos.loginErr.textContent), 'y dice que el problema es la sesión');
+  ok(/entrada de la persona est/i.test(s.nodos.loginErr.textContent),
+    'no la entrada de quien está parado enfrente');
+}
+
+
 console.log('── 3 · EL CASO DEL BUG: un error de sesión no se muestra como entrada inválida');
 {
   const MOTIVOS_SESION = [
