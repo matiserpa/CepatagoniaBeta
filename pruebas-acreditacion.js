@@ -310,6 +310,44 @@ console.log('── 7 · El lector entra solo si el permiso ya se dio en el pane
   ok(s.__timers.some((t) => t.ms === 500), 'reintenta, porque el script de Google puede tardar');
 }
 
+
+console.log('');
+console.log('── 8 · La pantalla de login no puede parpadear');
+{
+  // Antes aparecía un segundo y se iba: el acreditador ve un login que no llega a leer y no
+  // sabe si tiene que hacer algo. Ahora arranca mostrando que está entrando, y el botón se
+  // revela SOLO si la entrada silenciosa no sale.
+  const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+  ok(html.indexOf("class=\"login verificando\"") > 0,
+    'arranca en estado de verificación, no pidiendo login');
+  ok(/\.login\.verificando \.gwrap/.test(html), 'y con el botón de Google escondido');
+  ok(/function mostrarBotonDeGoogle/.test(html), 'existe la función que lo revela');
+}
+{
+  const s = armar();
+  const quitados = [];
+  s.document.getElementById('login').classList.remove = (c) => { quitados.push(c); };
+  s.mostrarBotonDeGoogle();
+  ok(quitados.indexOf('verificando') >= 0, 'revelar el botón saca el estado de verificación');
+}
+{
+  // Y si Google nunca contesta, el botón aparece igual: quedarse en "Entrando" para siempre
+  // sería peor que el parpadeo que esto viene a arreglar.
+  const s = armar();
+  s.window.google = { accounts: { id: { prompt() {} } } };
+  s.google = s.window.google;
+  // entrarSinMolestar ya corrio al cargar la pagina, asi que se mide la DIFERENCIA y no el
+  // total: contar el total daria dos y la prueba pasaria o fallaria por el motivo equivocado.
+  const antes = s.__timers.filter((t) => t.ms === 6000).length;
+  s.entrarSinMolestar();
+  const tope = s.__timers.filter((t) => t.ms === 6000);
+  ok(tope.length === antes + 1, 'programa un tope de seis segundos');
+  const quitados = [];
+  s.document.getElementById('login').classList.remove = (c) => { quitados.push(c); };
+  if (tope.length) tope[0].fn();
+  ok(quitados.indexOf('verificando') >= 0, 'y al cumplirse muestra el botón');
+}
+
 console.log('────────────────────────────────────────────────────────────────');
 console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
 process.exitCode = fallaron ? 1 : 0;

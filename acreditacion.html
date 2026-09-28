@@ -121,15 +121,35 @@
     .result .persona{font-size:19px}
     .result .det{font-size:13.5px}
   }
+  /* Mientras se intenta entrar en silencio no se muestra nada que pida acción: ni el texto de
+     "ingresá con tu cuenta" ni el botón. Solo el logo y tres puntitos. */
+  .login.verificando .pedir,
+  .login.verificando .gwrap,
+  .login.verificando .err { display:none }
+  .login:not(.verificando) .entrando { display:none }
+  .entrando{ color:#8a8d84; font-size:14px; letter-spacing:.02em }
+  .entrando .pto{
+    display:inline-block; width:5px; height:5px; border-radius:50%;
+    background:#6B8F71; margin-right:3px; opacity:.3;
+    animation: pto 1.2s ease-in-out infinite;
+  }
+  .entrando .pto:nth-child(2){ animation-delay:.15s }
+  .entrando .pto:nth-child(3){ animation-delay:.3s }
+  @keyframes pto{ 0%,100%{opacity:.25; transform:translateY(0)} 40%{opacity:1; transform:translateY(-3px)} }
+  @media (prefers-reduced-motion: reduce){ .entrando .pto{ animation:none; opacity:.6 } }
 </style>
 </head>
 <body>
 
-<div class="login" id="login">
+<!-- Arranca en "verificando": se ve el logo y "Entrando", NO el botón de Google. Si la entrada
+     silenciosa sale —que es lo normal cuando ya se autorizó la app— el acreditador nunca ve una
+     pantalla de login. El botón se revela solo si hace falta de verdad. -->
+<div class="login verificando" id="login">
   <div class="login-card">
     <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
     <h1>Acreditación</h1>
-    <p>Acceso exclusivo del equipo. Ingresá con tu cuenta de Google autorizada.</p>
+    <p class="entrando" id="loginEntrando"><span class="pto"></span><span class="pto"></span><span class="pto"></span> Entrando</p>
+    <p class="pedir">Acceso exclusivo del equipo. Ingresá con tu cuenta de Google autorizada.</p>
     <div class="gwrap" id="gBtn"></div>
     <p class="err" id="loginErr"></p>
   </div>
@@ -283,15 +303,26 @@ async function probarToken(token){
 //
 // Esto hacía falta y no estaba: auto_select en initialize() no hace nada por su cuenta — solo
 // actúa cuando se dispara One Tap con prompt(), y prompt() se llamaba únicamente al renovar.
+// Saca el estado de "entrando" y deja ver el botón. Se llama cuando la entrada silenciosa no
+// salió, o cuando se acabó la paciencia.
+function mostrarBotonDeGoogle(){
+  var l = document.getElementById('login');
+  if(l) l.classList.remove('verificando');
+}
+
 function entrarSinMolestar(){
+  // Tope: si en seis segundos no entró, se muestra el botón igual. Quedarse en "Entrando" para
+  // siempre es peor que el parpadeo que esto viene a arreglar.
+  setTimeout(mostrarBotonDeGoogle, 6000);
+
   // Se espera a que cargue la librería de Google, que es un script externo y puede tardar.
   var intentos = 0;
   (function esperar(){
     if(window.google && google.accounts && google.accounts.id){
-      renovarEnSilencio(function(){ /* no se pudo: queda el botón, que ya está en pantalla */ });
+      renovarEnSilencio(mostrarBotonDeGoogle);
       return;
     }
-    if(++intentos > 20) return;   // diez segundos y se deja de esperar
+    if(++intentos > 20) return mostrarBotonDeGoogle();   // Google no cargó: que se pueda entrar a mano
     setTimeout(esperar, 500);
   })();
 }
@@ -376,6 +407,7 @@ function pedirReLogin(){
 function mostrarLoginVencido(){
   var l = document.getElementById('login');
   if(!l) return;
+  mostrarBotonDeGoogle();
   var e = document.getElementById('loginErr');
   if(e){
     e.textContent = 'Se venci\u00f3 tu sesi\u00f3n. Volv\u00e9 a entrar con Google \u2014 la entrada de la persona est\u00e1 bien.';
