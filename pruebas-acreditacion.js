@@ -23,7 +23,8 @@ function tokenQueVenceEn(minutos) {
   return 'cabecera.' + carga + '.firma';
 }
 
-function armar() {
+// hoy: 'AAAA-MM-DD' para fijar el día. Toda la elección de jornada depende de eso.
+function armar(hoy) {
   const nodos = {};
   function nodo(id) {
     if (!nodos[id]) {
@@ -32,7 +33,19 @@ function armar() {
         style: {}, dataset: {},
         appendChild() {}, removeChild() {}, remove() { nodos[id].borrado = true; },
         addEventListener() {}, focus() {}, querySelectorAll() { return []; },
-        classList: { add() {}, remove() {}, contains() { return false; } },
+        // Un classList de verdad: con stubs vacíos, una prueba que verifica que algo quedó en
+        // gris pasa diga lo que diga el código.
+        clases: new Set(),
+        classList: {
+          add(c) { nodos[id].clases.add(c); },
+          remove(c) { nodos[id].clases.delete(c); },
+          contains(c) { return nodos[id].clases.has(c); },
+          toggle(c, on) {
+            const poner = on === undefined ? !nodos[id].clases.has(c) : !!on;
+            if (poner) nodos[id].clases.add(c); else nodos[id].clases.delete(c);
+            return poner;
+          },
+        },
         getContext() { return { drawImage() {}, getImageData() { return { data: [], width: 0, height: 0 }; } }; },
       };
     }
@@ -44,12 +57,24 @@ function armar() {
     nodos,
     document: {
       getElementById: nodo,
-      querySelectorAll() { return []; },
+      querySelectorAll(sel) {
+        // Los tres botones de jornada, que son los que las pruebas miran. Se crean una sola vez
+        // por sandbox para que las clases que se les pongan persistan entre llamadas.
+        if (sel === '.jbtn') {
+          return ['CONGRESO', 'FINCI', 'FERREIRA'].map(function (j) {
+            const n = nodo('jbtn-' + j);
+            n.dataset = { j: j };
+            return n;
+          });
+        }
+        return [];
+      },
       querySelector() { return null; },
       addEventListener() {},
       createElement: () => nodo('tmp' + Math.random()),
       body: nodo('body'),
       hidden: false,
+      visibilityState: 'visible',   // mantenerDespierta no pide nada si la pestaña no está adelante
     },
     window: { addEventListener() {}, matchMedia: () => ({ matches: false }) },
     navigator: { mediaDevices: { getUserMedia: () => Promise.reject(new Error('sin cámara')) }, userAgent: 'test' },
@@ -73,7 +98,8 @@ function armar() {
     AudioContext: function () { return { createOscillator: () => ({ connect() {}, start() {}, stop() {}, frequency: {}, type: '' }), createGain: () => ({ connect() {}, gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} } }), destination: {}, currentTime: 0 }; },
     google: { accounts: { id: { initialize() {}, renderButton() {}, prompt() {} } } },
     jsQR: () => null,
-    Date, Math, JSON, String, Number, Boolean, Array, Object, RegExp, Error, Promise, isNaN, parseInt, parseFloat, encodeURIComponent, decodeURIComponent,
+    Date: hoy ? class extends Date { toLocaleDateString() { return hoy; } } : Date,
+    Math, JSON, String, Number, Boolean, Array, Object, RegExp, Error, Promise, isNaN, parseInt, parseFloat, encodeURIComponent, decodeURIComponent,
     __timers: [],
   };
   s.window.location = { reload() { s.__recargo = true; } };
@@ -84,6 +110,10 @@ function armar() {
   const bloques = html.match(/<script>([\s\S]*?)<\/script>/g) || [];
   const codigo = bloques.map((x) => x.replace(/<\/?script[^>]*>/g, '')).join('\n');
   vm.runInContext(codigo, s);
+  // Las variables del script declaradas con let/const viven en el scope léxico del contexto y
+  // NO como propiedades del sandbox: s.jornada es undefined, y asignarle algo crea una
+  // propiedad que el código nunca mira. Para tocarlas hay que evaluar adentro.
+  s.__leer = function (expr) { return vm.runInContext(expr, s); };
   return s;
 }
 
@@ -346,6 +376,92 @@ console.log('── 8 · La pantalla de login no puede parpadear');
   s.document.getElementById('login').classList.remove = (c) => { quitados.push(c); };
   if (tope.length) tope[0].fn();
   ok(quitados.indexOf('verificando') >= 0, 'y al cumplirse muestra el botón');
+}
+
+
+console.log('');
+console.log('── 9 · La jornada se elige sola: es el error más caro de la app');
+{
+  // Si queda tocado "Post Finci" un sábado, cada escaneo devuelve "esta entrada no incluye el
+  // Post Congreso": pantalla roja sobre entradas perfectas, y el acreditador cree que el
+  // sistema falla. La app sabe qué día es.
+  const sab = armar('2026-10-10');
+  ok(sab.__leer('jornada') === 'CONGRESO', 'el sábado arranca en Congreso');
+  ok(sab.nodos['jbtn-FINCI'].clases.has('otro-dia'), 'y los post congresos quedan en gris');
+  ok(!sab.nodos['jbtn-CONGRESO'].clases.has('otro-dia'), 'el Congreso no');
+
+  const lun = armar('2026-10-12');
+  ok(lun.__leer('jornada') === 'FINCI', 'el lunes arranca en un post congreso');
+  ok(lun.nodos['jbtn-CONGRESO'].clases.has('otro-dia'), 'y el Congreso queda en gris');
+  ok(!lun.nodos['jbtn-FERREIRA'].clases.has('otro-dia'), 'los dos post siguen disponibles');
+
+  const dom = armar('2026-10-11');
+  ok(dom.__leer('jornada') === 'CONGRESO', 'el domingo también es Congreso');
+
+  // Cualquier otro día queda como antes: Congreso y nada en gris.
+  const otro = armar('2026-09-28');
+  ok(otro.__leer('jornada') === 'CONGRESO', 'un día cualquiera queda en Congreso');
+  ok(!otro.nodos['jbtn-FINCI'].clases.has('otro-dia'), 'y no se marca nada en gris');
+}
+{
+  // No BLOQUEA cambiar de jornada — hay casos legítimos — pero avisa fuerte.
+  const s = armar('2026-10-10');
+  s.__leer("jornada = 'FINCI'; repintarJornadas();");
+  const av = s.nodos.avisoJornada;
+  ok(av.clases.has('visible'), 'avisa cuando la jornada elegida no es la de hoy');
+  ok(/rechazadas/.test(av.textContent), 'y dice qué va a pasar: las entradas salen rechazadas');
+  ok(/Post Finci/.test(av.textContent) && /Congreso/.test(av.textContent),
+    'nombrando la elegida y la de hoy');
+
+  s.__leer("jornada = 'CONGRESO'; repintarJornadas();");
+  ok(!av.clases.has('visible'), 'y desaparece cuando se corrige');
+}
+
+console.log('');
+console.log('── 10 · Vibra, porque el beep no se escucha en un hall lleno');
+{
+  const s = armar('2026-10-10');
+  const patrones = [];
+  s.navigator.vibrate = (p) => { patrones.push(JSON.stringify(p)); return true; };
+
+  s.mostrar('ok', 'Entrada válida', 'Meylin', '', 'CEP-1-P1', true);
+  s.mostrar('bad', 'No válido', '', 'motivo', '', false);
+  s.mostrar('warn', 'Ya ingresó', '', '', '', false);
+  ok(patrones.length === 3, 'vibra en las tres pantallas de resultado');
+  ok(patrones[0] !== patrones[1], 'entrar y ser rechazado se sienten distinto');
+  ok(patrones[1] !== patrones[2], 'y rechazado tampoco se confunde con ya ingresó');
+}
+{
+  // Un navegador sin vibración no puede romper la puerta.
+  const s = armar('2026-10-10');
+  s.navigator.vibrate = undefined;
+  let exploto = false;
+  try { s.mostrar('ok', 'Entrada válida', 'Ana', '', '', true); } catch (e) { exploto = true; }
+  ok(!exploto, 'sin soporte de vibración sigue funcionando igual');
+}
+
+console.log('');
+console.log('── 11 · La pantalla no se apaga entre persona y persona');
+{
+  const s = armar('2026-10-10');
+  let pedidos = 0;
+  s.navigator.wakeLock = { request: () => { pedidos++; return Promise.resolve({ addEventListener() {} }); } };
+  s.mantenerDespierta();
+  ok(pedidos === 1, 'pide mantener la pantalla encendida');
+}
+{
+  // Y si el navegador no lo soporta o lo niega, no pasa nada.
+  const s = armar('2026-10-10');
+  s.navigator.wakeLock = undefined;
+  let exploto = false;
+  try { s.mantenerDespierta(); } catch (e) { exploto = true; }
+  ok(!exploto, 'sin soporte no explota');
+
+  const s2 = armar('2026-10-10');
+  s2.navigator.wakeLock = { request: () => Promise.reject(new Error('no')) };
+  let exploto2 = false;
+  try { s2.mantenerDespierta(); } catch (e) { exploto2 = true; }
+  ok(!exploto2, 'y si lo niega, tampoco');
 }
 
 console.log('────────────────────────────────────────────────────────────────');

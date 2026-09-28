@@ -123,6 +123,16 @@
   }
   /* Mientras se intenta entrar en silencio no se muestra nada que pida acción: ni el texto de
      "ingresá con tu cuenta" ni el botón. Solo el logo y tres puntitos. */
+  /* La jornada que no corresponde a hoy queda atrás, pero se puede tocar igual: hay casos
+     legitimos (alguien que viene el sábado a retirar algo del post congreso). */
+  .jbtn.otro-dia{ opacity:.45 }
+  .aviso-jornada{
+    display:none; margin:8px 14px 0; padding:9px 12px; border-radius:10px;
+    background:#fff3d6; border:1px solid #e8c97a; color:#7a5a12;
+    font-size:13px; line-height:1.45; font-weight:600;
+  }
+  .aviso-jornada.visible{ display:block }
+
   .login.verificando .pedir,
   .login.verificando .gwrap,
   .login.verificando .err { display:none }
@@ -169,6 +179,10 @@
     <button class="jbtn" data-j="FINCI">Post Finci<br>12 oct</button>
     <button class="jbtn" data-j="FERREIRA">Post Ferreira<br>12 oct</button>
   </div>
+  <!-- Solo aparece cuando la jornada elegida no es la de hoy. Sin esto, dejar tocado "Post
+       Finci" un sábado devuelve pantalla roja sobre entradas perfectas y parece que el sistema
+       falla. -->
+  <div class="aviso-jornada" id="avisoJornada"></div>
 
   <div class="scanner">
     <video id="video" playsinline muted></video>
@@ -464,6 +478,24 @@ async function handleCredentialResponse(resp){
   }catch(e){}
 })();
 
+// ---------- que la pantalla no se apague ----------
+// Entre persona y persona el teléfono se bloquea, y desbloquearlo con una mano ocupada mientras
+// el siguiente ya está enfrente cuesta varios segundos por vez.
+//
+// Se vuelve a pedir al volver de segundo plano: el permiso se pierde solo cuando la pantalla se
+// apaga o se cambia de app, y sin eso dura hasta la primera notificación.
+var desvelo = null;
+async function mantenerDespierta(){
+  try{
+    if(!navigator.wakeLock || document.visibilityState !== 'visible') return;
+    desvelo = await navigator.wakeLock.request('screen');
+    desvelo.addEventListener('release', function(){ desvelo = null; });
+  }catch(e){ desvelo = null; }   // el navegador puede negarlo; no es motivo para romper nada
+}
+document.addEventListener('visibilitychange', function(){
+  if(document.visibilityState === 'visible' && !desvelo) mantenerDespierta();
+});
+
 // ---------- foco en el campo manual ----------
 // El lector USB "escribe" como un teclado, así que necesita el foco puesto ahí sin que nadie
 // toque nada. Pero en un teléfono cada foco abre el teclado en pantalla Y TAPA LA CÁMARA: hay
@@ -497,13 +529,60 @@ setInterval(()=>{
 }, 1000);
 
 // ---------- jornadas ----------
+// Qué se acredita cada día. El sábado y el domingo es el Congreso; el lunes, los dos post.
+// Si la app no sabe qué día es —o es cualquier otro día— queda el Congreso, como antes.
+var JORNADA_DEL_DIA = {
+  '2026-10-10': ['CONGRESO'],
+  '2026-10-11': ['CONGRESO'],
+  '2026-10-12': ['FINCI', 'FERREIRA'],
+};
+function jornadasDeHoy(){
+  var hoy;
+  try{ hoy = new Date().toLocaleDateString('sv-SE'); }catch(e){ return null; }
+  return JORNADA_DEL_DIA[hoy] || null;
+}
+
+// Marca en gris las que no son de hoy y avisa si la elegida no corresponde. NO bloquea: hay
+// casos legítimos, y con gente en la puerta una app que no te deja hacer algo es peor que una
+// que te avisa.
+function repintarJornadas(){
+  var deHoy = jornadasDeHoy();
+  var aviso = document.getElementById('avisoJornada');
+  document.querySelectorAll('.jbtn').forEach(function(x){
+    x.classList.toggle('otro-dia', !!deHoy && deHoy.indexOf(x.dataset.j) < 0);
+  });
+  if(!aviso) return;
+  if(deHoy && deHoy.indexOf(jornada) < 0){
+    var nombres = { CONGRESO:'el Congreso', FINCI:'el Post Finci', FERREIRA:'el Post Ferreira' };
+    aviso.textContent = 'Estás acreditando ' + (nombres[jornada] || jornada) + ', y hoy es ' +
+      deHoy.map(function(j){ return nombres[j] || j; }).join(' o ') +
+      '. Las entradas que escanees van a salir rechazadas.';
+    aviso.classList.add('visible');
+  } else {
+    aviso.classList.remove('visible');
+  }
+}
+
 document.querySelectorAll('.jbtn').forEach(b=>{
   b.onclick = ()=>{
     jornada = b.dataset.j;
     document.querySelectorAll('.jbtn').forEach(x=>x.classList.toggle('active', x===b));
+    repintarJornadas();
     enfocarManual();
   };
 });
+
+// Al abrir, la jornada que corresponde al día ya viene puesta. El 12 hay dos post congresos y
+// no se puede adivinar cuál: se deja la primera y el aviso se encarga del resto.
+(function ponerJornadaDeHoy(){
+  var deHoy = jornadasDeHoy();
+  if(!deHoy || !deHoy.length) return repintarJornadas();
+  jornada = deHoy[0];
+  document.querySelectorAll('.jbtn').forEach(function(x){
+    x.classList.toggle('active', x.dataset.j === jornada);
+  });
+  repintarJornadas();
+})();
 document.getElementById('rapido').addEventListener('change', enfocarManual);
 
 // ---------- API ----------
@@ -533,7 +612,18 @@ function pintarCinta(cinta){
   document.getElementById('rCintaTxt').innerHTML = 'Cinta ' + escHtml(cinta.etiqueta) + '<small>para la mu\u00f1eca</small>';
   caja.className = 'cinta visible';
 }
+// Un hall con doscientas personas y música tapa el beep. El patrón de vibración permite NO
+// mirar la pantalla en el caso común, que es el 95%: un golpe corto y seguí.
+//
+// Va acá y no en cada beep porque mostrar() es por donde pasan todas las pantallas de
+// resultado: una sola vez, sin olvidarse ninguna.
+var VIBRA = { ok: [45], warn: [30, 80, 30], mal: [140, 70, 140] };
+function vibrar(tipo){
+  try{ if(navigator.vibrate) navigator.vibrate(VIBRA[tipo] || VIBRA.mal); }catch(e){}
+}
+
 function mostrar(tipo, titulo, persona, det, cod, conConfirmar, cinta){
+  vibrar(tipo === 'ok' ? 'ok' : (tipo === 'warn' ? 'warn' : 'mal'));
   pintarCinta(cinta);
   const r = document.getElementById('result');
   r.className = 'result visible ' + tipo;
@@ -751,6 +841,7 @@ async function iniciarCamara(){
   // Sin cámara, escribir es la única forma de acreditar: ahí el teclado tiene que aparecer solo,
   // teléfono o no.
   enfocarManual(!CAMARA_ANDANDO || (!detector && !window.jsQR));
+  mantenerDespierta();
 }
 // Si no hay BarcodeDetector NI jsQR, la camara no puede leer nada. Antes eso pasaba en
 // silencio: el acreditador apuntaba y no ocurria nada, y la conclusion natural es que el QR de
