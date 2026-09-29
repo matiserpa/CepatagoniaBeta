@@ -571,6 +571,14 @@ src="https://www.facebook.com/tr?id=2007724203462058&ev=PageView&noscript=1"
     </label>
       <button class="btn btn-primary" id="btnOrden" onclick="crearOrden()">Reservar y revisar</button>
     </div>
+    <div id="ordenDudaBox" style="display:none;margin-top:18px;border:1px solid #c9871f;background:#fdf6e7;border-radius:var(--radius);padding:16px 18px">
+      <p style="font-weight:700;font-size:14px;margin-bottom:8px" id="ordenDudaTitulo">No pudimos confirmar tu reserva</p>
+      <p style="font-size:13px;line-height:1.6;margin-bottom:14px" id="ordenDudaTexto"></p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a id="ordenDudaWA" class="btn btn-primary" target="_blank" rel="noopener noreferrer" style="text-decoration:none">Escribinos por WhatsApp</a>
+        <button type="button" class="btn btn-ghost" onclick="verificarOrdenDeNuevo()">Verificar de nuevo</button>
+      </div>
+    </div>
   </section>
 
   <!-- STEP 4 -->
@@ -1017,6 +1025,7 @@ async function aplicarPromo(){
       aviso('#9a4a33', 'Este código aplica a entradas del Congreso: elegí al menos un asiento.'); return;
     }
     state.promo = { codigo: data.codigo, tipo: data.tipo, descripcion: data.descripcion };
+    trackEmbudo('add_promo', null);   // evento custom, solo GA4 (no hay equivalente estandar en Meta)
     inp.value = data.codigo; inp.disabled = true;
     btn.textContent = 'Quitar';
     const falta = requisitoFaltante();
@@ -1060,6 +1069,7 @@ function toggleSeat(id, el){
       if(oldEl) oldEl.classList.remove('selected');
     }
     state.selected.push(id); el.classList.add('selected');
+    trackEmbudo('select_item', 'AddToCart');   // solo al seleccionar, no al soltar
   }
   renderBar();
 }
@@ -1091,6 +1101,7 @@ function goTo(n){
   });
   if(n === 2) cargarPlano(true);
   if(n === 3) document.getElementById('postNota').style.display = (state.postFinci || state.postFerreira) ? 'block' : 'none';
+  if(n === 3) trackEmbudo('begin_checkout', 'InitiateCheckout');   // panel de datos del comprador
   document.getElementById('patrocinadoresWrap').style.display = (n === 1) ? '' : 'none';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -1128,10 +1139,16 @@ async function crearOrden(){
     asistentes = partes.join(' · ');
   }
   const btn = document.getElementById('btnOrden');
-  btn.disabled = true; btn.textContent = 'Reservando…';
+  btn.disabled = true; btn.textContent = 'Reservando\u2026';
+  ocultarAvisoOrden();
 
+  // Se guarda lo pedido ANTES de salir: si la respuesta se pierde, es lo unico
+  // con lo que se puede averiguar despues si la orden llego a crearse.
+  const pedido = { asientos: state.selected.slice(), nombre: nombre, dni: dni, email: email };
+
+  let data = null;
   try{
-    const res = await fetch(API_URL, {
+    const res = await fetchConTimeout(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS
       body: JSON.stringify({
@@ -1149,29 +1166,135 @@ async function crearOrden(){
           asistentes: asistentes
         }
       })
-    });
-    const data = await res.json();
-    if(!data.ok){
-      alert(data.error || 'No se pudo crear la reserva.');
-      await cargarPlano(true);
-      goTo(2);
-      return;
-    }
-    state.orderId = data.orderId;
-    document.getElementById('ordenId').textContent = data.orderId;
-    buildSummary();
-    goTo(4);
-    startHoldTimer();
-    // El backend devuelve init_point (Mercado Pago real) y redirigimos de inmediato
-    if(data.init_point){
-      state.initPoint = data.init_point;
-      window.location.href = data.init_point;
-    }
+    }, ORDEN_TIMEOUT_MS);
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    data = await res.json();
   }catch(err){
-    alert('Error de conexión con el backend.');
-  }finally{
-    btn.disabled = false; btn.textContent = 'Reservar y revisar';
+    // Respuesta perdida (corte de red, timeout, error del servidor). NO es lo mismo
+    // que un "no" del backend: la orden pudo haberse creado igual, porque el HOLD de
+    // los asientos se escribe antes de contestar. Nunca reintentar a ciegas aca.
+    await resolverOrdenEnDuda(pedido);
+    return;
   }
+
+  if(!data.ok){
+    // El backend dijo explicitamente que no: no se reservo nada y es seguro reintentar.
+    alert(data.error || 'No se pudo crear la reserva.');
+    btn.disabled = false; btn.textContent = 'Reservar y revisar';
+    await cargarPlano(true);
+    goTo(2);
+    return;
+  }
+
+  // Antes de redirigir a Mercado Pago: GA4 usa sendBeacon y sobrevive a la navegacion.
+  trackEmbudo('add_payment_info', 'AddPaymentInfo', { payment_type: 'Mercado Pago' });
+  state.orderId = data.orderId;
+  document.getElementById('ordenId').textContent = data.orderId;
+  buildSummary();
+  goTo(4);
+  startHoldTimer();
+  btn.disabled = false; btn.textContent = 'Reservar y revisar';
+  // El backend devuelve init_point (Mercado Pago real) y redirigimos de inmediato
+  if(data.init_point){
+    state.initPoint = data.init_point;
+    window.location.href = data.init_point;
+  }
+}
+
+// ============ RESERVA SIN CONFIRMAR ============
+// El backend genera el orderId de su lado y solo lo devuelve una vez, asi que si la
+// respuesta se pierde no hay forma de recuperar el link de pago desde el navegador.
+// Lo que si se puede saber es SI la orden existe: el backend pone los asientos en HOLD
+// antes de contestar, o sea que si vuelven a leerse tomados, la reserva se hizo.
+const ORDEN_TIMEOUT_MS = 30000;   // el backend toma el lock hasta 10s + pide la preferencia a MP
+const WA_SOPORTE = '5491131888164';
+let _pedidoEnDuda = null;
+
+function fetchConTimeout(url, opts, ms){
+  const ctrl = (typeof AbortController === 'function') ? new AbortController() : null;
+  const o = Object.assign({}, opts || {});
+  if(ctrl) o.signal = ctrl.signal;
+  const to = setTimeout(function(){ if(ctrl) ctrl.abort(); }, ms);
+  return fetch(url, o).finally(function(){ clearTimeout(to); });
+}
+
+function ocultarAvisoOrden(){
+  const box = document.getElementById('ordenDudaBox');
+  if(box) box.style.display = 'none';
+}
+
+function waSoporteUrl(pedido, motivo){
+  const lineas = [
+    'Hola! ' + motivo,
+    'Nombre: ' + (pedido.nombre || '-'),
+    'DNI: ' + (pedido.dni || '-'),
+    'Email: ' + (pedido.email || '-'),
+    pedido.asientos.length ? 'Asientos: ' + pedido.asientos.join(', ') : 'Post Congreso (sin butacas)'
+  ];
+  return 'https://wa.me/' + WA_SOPORTE + '?text=' + encodeURIComponent(lineas.join('\n'));
+}
+
+function mostrarAvisoOrden(titulo, texto, pedido, motivoWA){
+  const box = document.getElementById('ordenDudaBox');
+  if(!box) { alert(texto); return; }
+  document.getElementById('ordenDudaTitulo').textContent = titulo;
+  document.getElementById('ordenDudaTexto').textContent = texto;
+  document.getElementById('ordenDudaWA').setAttribute('href', waSoporteUrl(pedido, motivoWA));
+  box.style.display = 'block';
+  box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// Relee el plano y contesta si los asientos pedidos quedaron tomados.
+// Devuelve true (tomados), false (libres) o null (no se pudo verificar).
+async function asientosQuedaronTomados(asientos){
+  if(!asientos.length) return null;             // orden "solo Finci": no hay butacas que mirar
+  try{
+    const res = await fetchConTimeout(API_URL, {}, 15000);
+    if(!res.ok) return null;
+    const plano = await res.json();
+    if(!plano || !plano.ok || !plano.seats) return null;
+    const noLibres = new Set(plano.seats.filter(s => s.estado !== 'LIBRE').map(s => s.id));
+    return asientos.some(id => noLibres.has(id));
+  }catch(e){
+    return null;
+  }
+}
+
+async function resolverOrdenEnDuda(pedido){
+  _pedidoEnDuda = pedido;
+  const btn = document.getElementById('btnOrden');
+  btn.disabled = true; btn.textContent = 'Verificando\u2026';
+
+  const tomados = await asientosQuedaronTomados(pedido.asientos);
+
+  if(tomados === false){
+    // Los asientos siguen libres: no se reservo nada. Reintentar es seguro.
+    btn.disabled = false; btn.textContent = 'Reservar y revisar';
+    mostrarAvisoOrden(
+      'No se pudo conectar con el servidor',
+      'No llegamos a reservar nada, tus asientos siguen libres. Revisá tu conexión y tocá "Reservar y revisar" de nuevo.',
+      pedido,
+      'No pude completar la compra en la web por un problema de conexión.'
+    );
+    return;
+  }
+
+  // tomados === true  -> la reserva se hizo y se perdio el link de pago
+  // tomados === null  -> no se pudo verificar (sigue sin red, u orden solo Finci)
+  btn.disabled = true; btn.textContent = 'Reserva sin confirmar';
+  const texto = tomados === true
+    ? 'Tu reserva quedó tomada, pero se cortó la conexión antes de que pudiéramos darte el link de pago. '
+      + 'No vuelvas a reservar: se duplicaría. Escribinos por WhatsApp y te pasamos el link en el momento. '
+      + 'Si preferís empezar de cero, esperá 10 minutos: los asientos se liberan solos y podés volver a intentarlo.'
+    : 'Se cortó la conexión y no pudimos verificar si tu reserva quedó hecha. '
+      + 'Para no duplicarla, escribinos por WhatsApp con tus datos y lo confirmamos en el momento. '
+      + 'Si tu reserva no llegó a hacerse, los asientos se liberan solos en 10 minutos.';
+  mostrarAvisoOrden('No pudimos confirmar tu reserva', texto, pedido,
+    'Reservé entradas en la web pero se cortó y no sé si mi reserva quedó hecha. ¿Me lo confirman?');
+}
+
+function verificarOrdenDeNuevo(){
+  if(_pedidoEnDuda) resolverOrdenEnDuda(_pedidoEnDuda);
 }
 
 function startHoldTimer(){
@@ -1229,6 +1352,68 @@ function buildSummary(){
   box.innerHTML = html;
 }
 
+// ================== EMBUDO (GA4 + Meta) ==================
+// Cada evento se dispara UNA sola vez por sesion de compra: si la persona vuelve
+// atras y cambia de butaca, no se vuelve a contar. Misma idea que la guarda de
+// purchase en gracias.html, pero en memoria (recargar la pagina = compra nueva).
+const _embudoHecho = {};
+
+function _sector(){
+  if(state.zona) return state.zona;
+  if(state.selected.length) return zone(state.selected[0]);
+  return '';
+}
+function _cantidad(){ return state.selected.length || state.qty; }
+function _itemId(){ return 'ENTRADA-' + (_sector() || 'NA'); }
+function _items(){
+  const s = _sector();
+  return [{
+    item_id: _itemId(),
+    item_name: 'Entrada CEPATAGONIA 2026',
+    item_category: s || 'sin zona',
+    price: s ? PRICES[s] : 0,
+    quantity: _cantidad()
+  }];
+}
+// Dispara a GA4 y a Meta. Si gtag o fbq no existen, no hace nada y no rompe.
+function trackEmbudo(evGA, evMeta, extraGA){
+  const clave = evGA;
+  if(_embudoHecho[clave]) return;
+  _embudoHecho[clave] = true;
+  const cant = _cantidad();
+  const sect = _sector();
+  const valor = Number(currentTotal()) || 0;
+  const promo = state.promo ? state.promo.codigo : '';
+  try{
+    if(typeof gtag === 'function'){
+      const p = Object.assign({
+        currency: 'ARS',
+        value: valor,
+        items: _items(),
+        cantidad: cant,
+        sector: sect
+      }, extraGA || {});
+      if(promo) p.coupon = promo;
+      gtag('event', evGA, p);
+    }
+  }catch(e){}
+  try{
+    if(evMeta && typeof fbq === 'function'){
+      const p = {
+        content_type: 'product',
+        content_ids: [_itemId()],
+        contents: [{ id: _itemId(), quantity: cant }],
+        num_items: cant,
+        value: valor,
+        currency: 'ARS'
+      };
+      if(sect) p.content_category = sect;
+      if(promo) p.promo_code = promo;
+      fbq('track', evMeta, p);
+    }
+  }catch(e){}
+}
+
 document.getElementById('zp-GOLD').textContent = money(PRICES.GOLD);
 document.getElementById('zp-GENERAL').textContent = money(PRICES.GENERAL);
 document.getElementById('pp-FINCI').textContent = money(PRICES.POST_FINCI);
@@ -1238,6 +1423,7 @@ buildGrid();
 renderBar();
 cargarPlano(true);
 iniciarPolling();
+trackEmbudo('view_item_list', 'ViewContent', { item_list_id: 'plano_sala', item_list_name: 'Butacas CEPATAGONIA 2026' });
 </script>
 </body>
 </html>
