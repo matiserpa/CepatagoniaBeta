@@ -8,9 +8,10 @@
 <meta name="description" content="Acreditación de asistentes por código QR — Congreso de Estética de la Patagonia. Herramienta interna del staff del evento.">
 <link rel="canonical" href="https://cepatagonia.com/acreditacion.html">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<!-- La app instalable es el PANEL (admin.cepatagonia.com): ahi vive "quien falta" y el
-     start_url de un manifiesto no puede apuntar a otro dominio. Esta pagina es el lector,
-     y se llega a ella desde el panel. -->
+<!-- El lector es la pantalla de entrada de los acreditadores: se abre directo (o desde el
+     icono en el telefono) y se loguean UNA vez, aca. Antes se llegaba desde el panel, y eso
+     eran dos logins: el del panel y el de esta pagina, que es otro dominio. -->
+<link rel="manifest" href="/acreditacion.webmanifest">
 <meta name="theme-color" content="#0E1410">
 <link rel="apple-touch-icon" href="/assets/acred-apple-touch.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -147,6 +148,13 @@
   .entrando .pto:nth-child(3){ animation-delay:.3s }
   @keyframes pto{ 0%,100%{opacity:.25; transform:translateY(0)} 40%{opacity:1; transform:translateY(-3px)} }
   @media (prefers-reduced-motion: reduce){ .entrando .pto{ animation:none; opacity:.6 } }
+
+  /* Un toque antes de prender la camara. En Android el navegador NO deja vibrar (ni sonar)
+     hasta que la persona toca la pagina al menos una vez, y con la entrada automatica nadie
+     tocaba nada: la primera lectura llegaba muda. */
+  .empezar{position:fixed;inset:0;background:var(--bg-marco);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
+  .empezar.visible{display:flex}
+  .empezar button{margin-top:6px;width:100%;padding:18px;border:0;border-radius:999px;background:var(--dark);color:#fdfdf9;font-family:var(--font-body);font-size:17px;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -162,6 +170,15 @@
     <p class="pedir">Acceso exclusivo del equipo. Ingresá con tu cuenta de Google autorizada.</p>
     <div class="gwrap" id="gBtn"></div>
     <p class="err" id="loginErr"></p>
+  </div>
+</div>
+
+<div class="empezar" id="empezar">
+  <div class="login-card">
+    <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
+    <h1>Puerta lista</h1>
+    <p>Tocá para prender la cámara. El teléfono va a vibrar una vez: así sabés que también va a vibrar en cada lectura.</p>
+    <button type="button" id="empezarBtn">Empezar a escanear</button>
   </div>
 </div>
 
@@ -398,8 +415,29 @@ function entrarConToken(token){
   avisoSesion = setTimeout(function(){
     renovarEnSilencio(pedirReLogin);
   }, Math.max(falta, 10000));
+  arrancarPuerta();
+}
+
+// La primera vez se pide un toque (ver .empezar). Las siguientes —cuando la sesión se
+// renueva sola— la cámara sigue sin molestar: ese toque ya habilitó la vibración para toda
+// la vida de la página.
+var PUERTA_ARRANCADA = false;
+function arrancarPuerta(){
+  if(PUERTA_ARRANCADA) return iniciarCamara();
+  document.getElementById('empezar').classList.add('visible');
+}
+function empezarAEscanear(){
+  PUERTA_ARRANCADA = true;
+  document.getElementById('empezar').classList.remove('visible');
+  // El sonido también necesita el toque: un AudioContext creado sin él nace suspendido.
+  try{
+    var ctx = beep.ctx || (beep.ctx = new (window.AudioContext || window.webkitAudioContext)());
+    if(ctx.resume) ctx.resume();
+  }catch(e){}
+  vibrar('ok');
   iniciarCamara();
 }
+document.getElementById('empezarBtn').onclick = empezarAEscanear;
 
 // Vuelve a mostrar el login, explicando que el problema es la sesion y NO la entrada de la
 // persona que esta parada enfrente. Esa distincion es todo el arreglo: sin ella el staff

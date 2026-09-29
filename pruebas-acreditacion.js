@@ -464,6 +464,53 @@ console.log('── 11 · La pantalla no se apaga entre persona y persona');
   ok(!exploto2, 'y si lo niega, tampoco');
 }
 
+console.log('');
+console.log('── 12 · Un toque antes de la cámara, para que Android deje vibrar');
+{
+  // Android no deja vibrar hasta que la persona toca la página. Con la entrada automática nadie
+  // tocaba nada y la primera lectura llegaba muda: por eso la cámara espera ese toque.
+  const s = armar('2026-10-10');
+  let camaras = 0;
+  const patrones = [];
+  s.navigator.mediaDevices.getUserMedia = () => { camaras++; return Promise.reject(new Error('sin cámara')); };
+  s.navigator.vibrate = (p) => { patrones.push(p); return true; };
+
+  s.entrarConToken(tokenQueVenceEn(60));
+  ok(s.nodos.empezar.clases.has('visible'), 'al entrar aparece el botón de empezar');
+  ok(camaras === 0, 'y la cámara todavía no arrancó');
+
+  s.nodos.empezarBtn.onclick();
+  ok(!s.nodos.empezar.clases.has('visible'), 'al tocarlo se va');
+  ok(patrones.length === 1, 'vibra una vez: así se sabe que la vibración anda');
+  ok(camaras === 1, 'y arranca la cámara');
+
+  // La sesión se renueva sola cada hora: eso no puede volver a pedir el toque.
+  s.entrarConToken(tokenQueVenceEn(60));
+  ok(!s.nodos.empezar.clases.has('visible'), 'al renovarse la sesión no lo vuelve a pedir');
+  ok(camaras === 2, 'la cámara sigue sin tocar nada');
+}
+{
+  // Un teléfono sin vibración ni audio tiene que poder empezar igual.
+  const s = armar('2026-10-10');
+  s.navigator.vibrate = undefined;
+  s.AudioContext = undefined; s.webkitAudioContext = undefined;
+  s.entrarConToken(tokenQueVenceEn(60));
+  let exploto = false;
+  try { s.nodos.empezarBtn.onclick(); } catch (e) { exploto = true; }
+  ok(!exploto, 'sin vibración ni sonido el botón funciona igual');
+}
+
+console.log('');
+console.log('── 13 · El lector se instala como app propia');
+{
+  const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+  ok(/<link rel="manifest" href="\/acreditacion\.webmanifest">/.test(html), 'la página apunta a su manifiesto');
+  const m = JSON.parse(fs.readFileSync(__dirname + '/acreditacion.webmanifest', 'utf8'));
+  ok(m.start_url === '/acreditacion.html', 'el ícono abre directo el lector');
+  ok(m.display === 'standalone', 'y a pantalla completa');
+  ok(m.icons.every((i) => fs.existsSync(__dirname + i.src)), 'todos los íconos existen');
+}
+
 console.log('────────────────────────────────────────────────────────────────');
 console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
 process.exitCode = fallaron ? 1 : 0;
