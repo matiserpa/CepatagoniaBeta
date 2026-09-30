@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Pedido de credencial — CEPATAGONIA</title>
+<meta name="description" content="Pedido de credencial para invitados, staff y personal de stands del Congreso de Estética de la Patagonia.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0E1410">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!--
+  PEDIDO DE CREDENCIAL. Quien no compra entrada (invitados, staff, gente de los stands) completa
+  esto y al enviar se le abre WhatsApp con el pedido listo para mandarle a la organización.
+  El mensaje lleva un link al panel que abre Credenciales con todo cargado: la organización
+  revisa y emite. No escribe nada en ningún lado por su cuenta: nadie queda acreditado sin que
+  alguien de la organización lo apruebe.
+
+  Parámetros opcionales del link, para mandarle a cada grupo el suyo:
+    ?tipo=INVITADO|STAFF|AYUDANTE   fija el tipo y esconde la elección
+    &org=Lidherma                   precarga la organización
+    &wa=5492944...                  a qué WhatsApp llega el pedido (por defecto, el de la web)
+-->
+<style>
+  :root{
+    --bg:#efede6; --panel:#fff; --text:#181713; --muted:#64675f; --line:rgba(35,36,32,.14);
+    --a1:#7f977f; --dark:#0e1410; --danger:#b23b3b; --ok:#4a7a52; --radius:14px;
+    --font-display:'Playfair Display',serif; --font-body:'Montserrat',system-ui,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;padding:24px 16px 48px}
+  .card{max-width:520px;margin:0 auto;background:var(--panel);border-radius:var(--radius);padding:28px 22px;box-shadow:0 10px 28px rgba(48,45,37,.10)}
+  .logo{display:block;height:84px;margin:0 auto 10px}
+  h1{font-family:var(--font-display);font-size:24px;text-align:center;margin-bottom:6px}
+  .sub{text-align:center;color:var(--muted);font-size:13.5px;line-height:1.55;margin-bottom:22px}
+  label{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:14px 0 5px}
+  input{width:100%;padding:11px 12px;border:1px solid #d5ddd2;border-radius:10px;font:inherit;font-size:15px;background:#fff}
+  input:focus{outline:2px solid var(--a1);outline-offset:0;border-color:transparent}
+  .fila{display:flex;gap:10px}.fila>div{flex:1;min-width:0}
+  .tipos{display:flex;gap:8px;flex-wrap:wrap}
+  .tipos button{flex:1 1 30%;padding:10px 8px;border-radius:999px;border:1px solid #d5ddd2;background:#fdfdf9;color:#3d4a3d;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .tipos button.on{background:var(--a1);border-color:var(--a1);color:#fff}
+  .acomp{border:1px solid #e2e7de;border-radius:12px;padding:12px;margin-top:12px;background:#fafbf8}
+  .acomp-cab{display:flex;align-items:center;font-size:13px;font-weight:700;color:#3d4a3d}
+  .acomp-cab button{margin-left:auto;border:1px solid #d5ddd2;background:#fff;border-radius:999px;padding:3px 12px;font:inherit;font-size:12px;color:var(--muted);cursor:pointer}
+  .mas{margin-top:14px;border:1px dashed #b9c6b3;background:none;border-radius:10px;padding:10px;width:100%;font:inherit;font-size:14px;font-weight:600;color:#3d4a3d;cursor:pointer}
+  .enviar{margin-top:22px;width:100%;padding:15px;border:0;border-radius:999px;background:#25D366;color:#fff;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+  .err{display:none;margin-top:12px;color:var(--danger);font-weight:700;font-size:13.5px}
+  .nota{margin-top:14px;font-size:12px;color:var(--muted);line-height:1.55;text-align:center}
+  .listo{display:none;text-align:center}
+  .listo h2{font-family:var(--font-display);font-size:22px;margin:8px 0}
+  .listo p{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:14px}
+  .listo a{display:inline-block;padding:13px 22px;border-radius:999px;background:#25D366;color:#fff;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <img class="logo" src="/assets/logo-oficial.png" alt="CEPATAGONIA">
+
+  <div id="formulario">
+    <h1>Pedido de credencial</h1>
+    <p class="sub">Congreso de Estética de la Patagonia · 10, 11 y 12 de octubre · Hotel Le Village, San Martín de los Andes.<br>Completá tus datos y los de quien venga con vos. La organización lo revisa y te manda tu código QR.</p>
+
+    <div id="bloqueTipo">
+      <label>¿Cómo venís?</label>
+      <div class="tipos" id="tipos">
+        <button type="button" data-t="INVITADO">Invitado</button>
+        <button type="button" data-t="AYUDANTE">Stand</button>
+        <button type="button" data-t="STAFF">Staff</button>
+      </div>
+    </div>
+
+    <div class="fila">
+      <div><label for="nombre">Nombre</label><input id="nombre" autocomplete="given-name"></div>
+      <div><label for="apellido">Apellido</label><input id="apellido" autocomplete="family-name"></div>
+    </div>
+    <label for="dni">DNI</label><input id="dni" inputmode="numeric" autocomplete="off">
+    <label for="telefono">Celular (WhatsApp)</label><input id="telefono" inputmode="tel" autocomplete="tel" placeholder="Ej: 2944 15 555666">
+    <label for="email">Email (opcional)</label><input id="email" type="email" inputmode="email" autocomplete="email">
+    <label for="org">Organización o empresa</label><input id="org" placeholder="Ej: Lidherma, prensa, familia…">
+
+    <div id="acomps"></div>
+    <button type="button" class="mas" id="mas">+ Viene alguien conmigo</button>
+
+    <p class="err" id="err"></p>
+    <button type="button" class="enviar" id="enviar">Enviar pedido por WhatsApp</button>
+    <p class="nota">Se abre WhatsApp con tu pedido listo: solo tocá enviar. Cada persona recibe su propio código QR para la acreditación.</p>
+  </div>
+
+  <div class="listo" id="listo">
+    <h2>¡Ya casi!</h2>
+    <p>Se abrió WhatsApp con tu pedido. Si no lo enviaste, tocá el botón. Cuando la organización lo apruebe te llega el código QR.</p>
+    <a id="reabrir" href="#" target="_blank" rel="noopener">Abrir WhatsApp de nuevo</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  var PANEL = 'https://admin.cepatagonia.com/';
+  var WA_DEFECTO = '5492944534720';
+  var ETIQUETA = { INVITADO: 'invitado/a', AYUDANTE: 'personal de stand', STAFF: 'staff' };
+
+  var q = new URLSearchParams(location.search);
+  var tipoFijo = String(q.get('tipo') || '').toUpperCase();
+  if (!ETIQUETA[tipoFijo]) tipoFijo = '';
+  var destino = String(q.get('wa') || WA_DEFECTO).replace(/\D/g, '') || WA_DEFECTO;
+  var tipo = tipoFijo;
+  var $ = function(id){ return document.getElementById(id); };
+
+  if (q.get('org')) $('org').value = q.get('org');
+  if (tipoFijo) $('bloqueTipo').style.display = 'none';
+
+  var botonesTipo = document.querySelectorAll('#tipos button');
+  botonesTipo.forEach(function(b){
+    b.onclick = function(){
+      tipo = b.getAttribute('data-t');
+      botonesTipo.forEach(function(x){ x.classList.toggle('on', x === b); });
+    };
+  });
+
+  // Acompañantes: nombre, apellido y DNI. Cada uno sale como su propia credencial.
+  var nAcomp = 0;
+  $('mas').onclick = function(){
+    nAcomp++;
+    var d = document.createElement('div');
+    d.className = 'acomp';
+    d.innerHTML =
+      '<div class="acomp-cab">Acompañante<button type="button">quitar</button></div>' +
+      '<div class="fila"><div><label>Nombre</label><input class="a-nombre"></div>' +
+      '<div><label>Apellido</label><input class="a-apellido"></div></div>' +
+      '<label>DNI</label><input class="a-dni" inputmode="numeric">';
+    d.querySelector('button').onclick = function(){ d.remove(); };
+    $('acomps').appendChild(d);
+    d.querySelector('.a-nombre').focus();
+  };
+
+  // base64url de UTF-8: el pedido viaja entero en el link y los nombres llevan tildes.
+  function b64url(obj){
+    var bytes = new TextEncoder().encode(JSON.stringify(obj));
+    var bin = ''; bytes.forEach(function(b){ bin += String.fromCharCode(b); });
+    return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  }
+
+  function error(t){ var e = $('err'); e.textContent = t; e.style.display = 'block'; }
+
+  $('enviar').onclick = function(){
+    $('err').style.display = 'none';
+    var v = function(id){ return $(id).value.trim(); };
+    if (!tipo) return error('Elegí cómo venís: invitado, stand o staff.');
+    if (!v('nombre') || !v('apellido')) return error('Falta tu nombre o apellido.');
+    if (!v('dni')) return error('Falta tu DNI: se pide en la acreditación.');
+    if (!v('telefono') && !v('email')) return error('Dejanos un celular o un email para mandarte el código QR.');
+    if (v('email') && v('email').indexOf('@') < 0) return error('El email no parece válido.');
+
+    var acomps = [];
+    var faltan = false;
+    document.querySelectorAll('.acomp').forEach(function(d){
+      var a = {
+        nombre: d.querySelector('.a-nombre').value.trim(),
+        apellido: d.querySelector('.a-apellido').value.trim(),
+        dni: d.querySelector('.a-dni').value.trim(),
+      };
+      if (!a.nombre && !a.apellido && !a.dni) return;   // bloque vacío: se ignora
+      if (!a.nombre || !a.apellido || !a.dni) faltan = true;
+      acomps.push(a);
+    });
+    if (faltan) return error('A un acompañante le falta nombre, apellido o DNI.');
+
+    var pedido = {
+      v: 1, tipo: tipo, nombre: v('nombre'), apellido: v('apellido'), dni: v('dni'),
+      telefono: v('telefono'), email: v('email'), organizacion: v('org'), acompanantes: acomps,
+    };
+    var link = PANEL + '?solicitud=' + b64url(pedido);
+    var texto =
+      'Hola 👋 Soy ' + pedido.nombre + ' ' + pedido.apellido + ' (DNI ' + pedido.dni + ') y pido credencial para CEPATAGONIA como ' +
+      ETIQUETA[tipo] + (pedido.organizacion ? ' de ' + pedido.organizacion : '') + '.' +
+      (acomps.length ? '\nVienen conmigo: ' + acomps.map(function(a){ return a.nombre + ' ' + a.apellido + ' (DNI ' + a.dni + ')'; }).join(', ') + '.' : '') +
+      '\n\nPara revisarlo y aprobarlo:\n' + link;
+    var wa = 'https://wa.me/' + destino + '?text=' + encodeURIComponent(texto);
+    $('reabrir').href = wa;
+    $('formulario').style.display = 'none';
+    $('listo').style.display = 'block';
+    window.location.href = wa;
+  };
+})();
+</script>
+</body>
+</html>
