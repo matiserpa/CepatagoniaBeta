@@ -177,8 +177,9 @@
   <div class="login-card">
     <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
     <h1>Puerta lista</h1>
-    <p>Tocá para prender la cámara. El teléfono va a vibrar una vez: así sabés que también va a vibrar en cada lectura.</p>
+    <p id="empezarTxt">Tocá para prender la cámara. El teléfono va a vibrar una vez: así sabés que también va a vibrar en cada lectura. Si no vibra, ponelo en modo Vibrar (no Silencio) y sacá el ahorro de batería.</p>
     <button type="button" id="empezarBtn">Empezar a escanear</button>
+    <p style="margin:14px 0 0;font-size:11px;color:var(--muted-2)">versión 30/9 · <a href="/prueba-vibracion.html" style="color:inherit">¿no vibra?</a></p>
   </div>
 </div>
 
@@ -189,7 +190,7 @@
     <span class="cnt"><b id="cnt">0</b> acreditados<br>en esta sesión</span>
   </header>
 
-  <a class="volver" href="https://admin.cepatagonia.com/">← Ver quién falta acreditar</a>
+  <a class="volver" href="https://admin.cepatagonia.com/?desde=lector">← Ver quién falta acreditar</a>
 
   <div class="jornadas">
     <button class="jbtn active" data-j="CONGRESO">Congreso<br>10–11 oct</button>
@@ -241,6 +242,20 @@
   </div>
 </div>
 
+<script>
+// El token que manda el panel (#t=...) se lee y se BORRA de la barra antes que nada: antes de
+// que baje el script de Google, que bloquea y con mala red puede tardar. Mientras la URL tenga
+// el token, copiarla o cerrar la pestaña lo deja a la vista.
+var TOKEN_DEL_PANEL = null;
+try{
+  (function(){
+    var m = /[#&]t=([^&]+)/.exec(String((window.location && window.location.hash) || ''));
+    if(!m) return;
+    try{ window.history.replaceState(null, '', window.location.pathname + window.location.search); }catch(e){}
+    TOKEN_DEL_PANEL = decodeURIComponent(m[1]);
+  })();
+}catch(e){ TOKEN_DEL_PANEL = null; }
+</script>
 <script src="https://accounts.google.com/gsi/client"></script>
 <script>
 // ---------- baja del service worker viejo ----------
@@ -373,8 +388,11 @@ function renovarEnSilencio(alFallar){
   if(renovando) return;
   renovando = true;
   var listo = false;
+  // Una sola vez por intento: la llaman el aviso de Google y el tope de 12 s, y antes corría
+  // las dos, así que el tope volvía a mostrar el login a una puerta que ya había renovado.
   var seRindio = function(){
     if(listo) return;
+    listo = true;
     renovando = false;
     if(alFallar) alFallar();
   };
@@ -383,8 +401,12 @@ function renovarEnSilencio(alFallar){
     // handleCredentialResponse es el mismo callback del botón: si Google contesta, entra solo.
     google.accounts.id.prompt(function(aviso){
       // No se mostró ni se eligió nada: no hay renovación silenciosa posible.
+      // OJO: cuando Google SÍ devuelve el token también avisa "dismissed", con el motivo
+      // 'credential_returned'. Eso es el éxito, no una falla: tomarlo como falla mostraba
+      // "Se venció tu sesión" cada hora con la sesión recién renovada.
       try{
-        if(aviso && (aviso.isNotDisplayed && aviso.isNotDisplayed() ||
+        var devolvio = aviso && aviso.getDismissedReason && aviso.getDismissedReason() === 'credential_returned';
+        if(!devolvio && aviso && (aviso.isNotDisplayed && aviso.isNotDisplayed() ||
                      aviso.isSkippedMoment && aviso.isSkippedMoment() ||
                      aviso.isDismissedMoment && aviso.isDismissedMoment())){
           seRindio();
@@ -423,7 +445,15 @@ function entrarConToken(token){
 // la vida de la página.
 var PUERTA_ARRANCADA = false;
 function arrancarPuerta(){
-  if(PUERTA_ARRANCADA) return iniciarCamara();
+  // En iPhone ninguna página puede vibrar: se dice, para que no parezca que algo anda mal.
+  try{
+    if(!('vibrate' in navigator)){
+      document.getElementById('empezarTxt').textContent = 'Tocá para prender la cámara. En iPhone la página no puede vibrar: mirá el color de la pantalla, y sacá el modo silencio para escuchar el pitido.';
+    }
+  }catch(e){}
+  // Con la cámara ya andando no se pide otra: cada renovación sumaba un stream y un loop de
+  // lectura más, y en iPhone eso calienta el teléfono y traba los toques.
+  if(PUERTA_ARRANCADA){ if(!CAMARA_ANDANDO) iniciarCamara(); return; }
   document.getElementById('empezar').classList.add('visible');
 }
 function empezarAEscanear(){
@@ -504,15 +534,27 @@ async function handleCredentialResponse(resp){
     }
   }
   try{
-    const t = leerToken();
-    if(t){
+    // El que manda el panel (#t=, leído arriba de todo) y el guardado: se prueba primero el
+    // que más vida le queda. Si ninguno valida, sigue el camino de siempre.
+    const traido = TOKEN_DEL_PANEL;
+    const guardado = leerToken();
+    const candidatos = [traido, guardado]
+      .filter(function(x, i, a){ return x && a.indexOf(x) === i; })
+      .sort(function(a, b){ return vidaDelToken(b) - vidaDelToken(a); });
+    // Tope desde el principio: si el backend no contesta, a los seis segundos aparece el
+    // botón en vez de quedar "Entrando…" para siempre. Si después entra, se esconde igual.
+    if(candidatos.length) setTimeout(mostrarBotonDeGoogle, 6000);
+    (function probarSiguiente(){
+      const t = candidatos.shift();
+      if(!t) return entrarSinMolestar();
       probarToken(t).then(data=>{
-        if(data.ok && (data.rol==='admin' || data.rol==='acreditador')) entrarConToken(t);
-        else { olvidarToken(); entrarSinMolestar(); }
+        if(data.ok && (data.rol==='admin' || data.rol==='acreditador')) return entrarConToken(t);
+        // Se borra solo si el backend dice que el token es malo. "No se pudo validar con
+        // Google" es un problema pasajero del servidor, no del token.
+        if(t === guardado && /inv\u00e1lido|invalido|vencido|otra aplicaci|no tiene acceso|no verificado/i.test(String(data.error||''))) olvidarToken();
+        probarSiguiente();
       }).catch(function(){ entrarSinMolestar(); });
-    } else {
-      entrarSinMolestar();
-    }
+    })();
   }catch(e){}
 })();
 
@@ -655,7 +697,8 @@ function pintarCinta(cinta){
 //
 // Va acá y no en cada beep porque mostrar() es por donde pasan todas las pantallas de
 // resultado: una sola vez, sin olvidarse ninguna.
-var VIBRA = { ok: [45], warn: [30, 80, 30], mal: [140, 70, 140] };
+// Largos a proposito: 45 ms no se sienten en muchos Android, cuyo motor tarda en arrancar.
+var VIBRA = { ok: [200], warn: [120, 90, 120], mal: [450, 150, 450] };
 function vibrar(tipo){
   try{ if(navigator.vibrate) navigator.vibrate(VIBRA[tipo] || VIBRA.mal); }catch(e){}
 }
@@ -746,6 +789,9 @@ function resultadoNegativo(data){
   // verificarSesionPanel_ en el backend y ninguno de los motivos de negocio ("YA INGRESÓ",
   // "no está paga", "no incluye el Post Congreso"), asi que no puede tapar un rechazo real.
   if(/^Token|^Falta id_token|validar el token|acceso al panel|no autorizado/i.test(String(data.motivo||''))){
+    // Se libera la lectura: si la renovación sale bien, nadie más llama a cerrar() y la
+    // cámara quedaba andando sin leer nada.
+    ocupado = false;
     pedirReLogin();
     return;
   }

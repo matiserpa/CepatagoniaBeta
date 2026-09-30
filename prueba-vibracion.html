@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Prueba de vibración — CEPATAGONIA</title>
+<style>
+  :root{ --bg:#efede6; --panel:#fff; --text:#181713; --muted:#64675f; --dark:#0e1410; --ok:#4a7a52; --mal:#b23b3b }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;padding:24px 16px;min-height:100vh}
+  .card{max-width:420px;margin:0 auto;background:var(--panel);border-radius:14px;padding:26px 22px;box-shadow:0 8px 24px rgba(0,0,0,.08)}
+  h1{font-size:20px;margin-bottom:8px}
+  p{font-size:14px;line-height:1.55;color:var(--muted);margin-bottom:16px}
+  button{width:100%;padding:18px;border:0;border-radius:999px;background:var(--dark);color:#fff;font-size:17px;font-weight:700;margin-bottom:10px}
+  #res{font-size:15px;line-height:1.55;font-weight:600;margin:6px 0 14px}
+  #res.ok{color:var(--ok)} #res.mal{color:var(--mal)}
+  dl{font-size:12px;color:var(--muted);display:grid;grid-template-columns:auto 1fr;gap:4px 10px;word-break:break-word}
+  dt{font-weight:700}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>¿Vibra este teléfono?</h1>
+  <p>Tocá el botón con el teléfono en la mano. Si el navegador acepta el pedido pero no sentís nada, el problema está en la configuración del teléfono, no en la página.</p>
+  <button type="button" id="b">Vibrar</button>
+  <div id="res"></div>
+  <dl id="info"></dl>
+</div>
+<script>
+(function(){
+  var res = document.getElementById('res');
+  var info = document.getElementById('info');
+  var ua = navigator.userAgent || '';
+  var datos = [
+    ['Navegador', ua],
+    ['Tiene vibración', ('vibrate' in navigator) ? 'sí' : 'no'],
+    ['Abierto como app', (window.matchMedia && matchMedia('(display-mode: standalone)').matches) ? 'sí' : 'no'],
+    ['Navegador interno de otra app', / wv\)|FBAN|FBAV|Instagram|WhatsApp/i.test(ua) ? 'sí (probá en Chrome)' : 'no'],
+  ];
+  datos.forEach(function(d){
+    var dt = document.createElement('dt'); dt.textContent = d[0];
+    var dd = document.createElement('dd'); dd.textContent = d[1];
+    info.appendChild(dt); info.appendChild(dd);
+  });
+  document.getElementById('b').onclick = function(){
+    if(!('vibrate' in navigator)){
+      res.className = 'mal';
+      res.textContent = 'Este navegador no puede vibrar. En iPhone ninguna página web puede; en Android abrila en Chrome.';
+      return;
+    }
+    var acepto = false;
+    try{ acepto = navigator.vibrate([400, 150, 400]); }catch(e){}
+    if(acepto){
+      res.className = 'ok';
+      res.textContent = 'El navegador mandó la vibración. Si no la sentiste: sacá el modo silencio o "No molestar", el ahorro de batería, y activá la vibración al tocar (Ajustes → Sonido y vibración).';
+    } else {
+      res.className = 'mal';
+      res.textContent = 'El navegador rechazó la vibración. Probá en Chrome, fuera de WhatsApp o Instagram.';
+    }
+  };
+})();
+</script>
+</body>
+</html>

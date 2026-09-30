@@ -24,7 +24,7 @@ function tokenQueVenceEn(minutos) {
 }
 
 // hoy: 'AAAA-MM-DD' para fijar el día. Toda la elección de jornada depende de eso.
-function armar(hoy) {
+function armar(hoy, extra) {
   const nodos = {};
   function nodo(id) {
     if (!nodos[id]) {
@@ -102,7 +102,11 @@ function armar(hoy) {
     Math, JSON, String, Number, Boolean, Array, Object, RegExp, Error, Promise, isNaN, parseInt, parseFloat, encodeURIComponent, decodeURIComponent,
     __timers: [],
   };
-  s.window.location = { reload() { s.__recargo = true; } };
+  s.window.location = { reload() { s.__recargo = true; }, hash: '', pathname: '/acreditacion.html', search: '' };
+  s.window.history = { replaceState(a, b, url) { s.__url = url; s.window.location.hash = ''; } };
+  if (extra && extra.hash) s.window.location.hash = extra.hash;
+  if (extra && extra.fetch) s.fetch = extra.fetch;
+  if (extra && extra.guardado) s.localStorage._d.cepaAcredToken = extra.guardado;
   s.webkitAudioContext = s.AudioContext;
 
   vm.createContext(s);
@@ -316,7 +320,8 @@ console.log('── 7 · El lector entra solo si el permiso ya se dio en el pane
   // localStorage) y el lector seguía pidiendo permiso, justo al revés de lo que se quería.
   const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
   ok(/function entrarSinMolestar/.test(html), 'existe el intento silencioso al abrir');
-  ok(/else \s*\{[\s\S]{0,60}entrarSinMolestar/.test(html),
+  // Se mide el efecto y no el texto: entrarSinMolestar deja programado el tope de 6 s.
+  ok(armar().__timers.some((t) => t.ms === 6000),
     'y se llama cuando NO hay token guardado, que es la apertura limpia');
   ok(/auto_select:\s*true/.test(html), 'con auto_select puesto, que es lo que lo hace silencioso');
 }
@@ -484,10 +489,24 @@ console.log('── 12 · Un toque antes de la cámara, para que Android deje vi
   ok(patrones.length === 1, 'vibra una vez: así se sabe que la vibración anda');
   ok(camaras === 1, 'y arranca la cámara');
 
-  // La sesión se renueva sola cada hora: eso no puede volver a pedir el toque.
+  // La sesión se renueva sola cada hora: eso no puede volver a pedir el toque. Sin cámara
+  // (acá el getUserMedia falla) se reintenta, que es lo que conviene.
   s.entrarConToken(tokenQueVenceEn(60));
   ok(!s.nodos.empezar.clases.has('visible'), 'al renovarse la sesión no lo vuelve a pedir');
-  ok(camaras === 2, 'la cámara sigue sin tocar nada');
+  ok(camaras === 2, 'si la cámara no había arrancado, la renovación la reintenta');
+}
+{
+  // Con la cámara andando, renovar NO pide otra: cada una sumaba un stream y un loop de lectura.
+  const s = armar('2026-10-10');
+  let camaras = 0;
+  s.navigator.vibrate = () => true;
+  s.entrarConToken(tokenQueVenceEn(60));
+  s.nodos.empezarBtn.onclick();
+  s.__leer('CAMARA_ANDANDO = true');
+  s.navigator.mediaDevices.getUserMedia = () => { camaras++; return Promise.reject(new Error('x')); };
+  s.entrarConToken(tokenQueVenceEn(60));
+  s.entrarConToken(tokenQueVenceEn(60));
+  ok(camaras === 0, 'con la cámara andando, renovar la sesión no prende otra');
 }
 {
   // Un teléfono sin vibración ni audio tiene que poder empezar igual.
@@ -511,6 +530,109 @@ console.log('── 13 · El lector se instala como app propia');
   ok(m.icons.every((i) => fs.existsSync(__dirname + i.src)), 'todos los íconos existen');
 }
 
-console.log('────────────────────────────────────────────────────────────────');
-console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
-process.exitCode = fallaron ? 1 : 0;
+console.log('');
+console.log('── 14 · Del panel al lector sin segundo login');
+function backendQueAcepta(bueno) {
+  return (url, opts) => {
+    const tok = JSON.parse(opts.body).id_token;
+    const ok = tok === bueno;
+    return Promise.resolve({ json: () => Promise.resolve(ok ? { ok: true, rol: 'acreditador' } : { ok: false, error: 'Token inválido o vencido' }) });
+  };
+}
+const esperar = () => new Promise((r) => setImmediate(r));
+async function seccion14() {
+  {
+    const s = armar('2026-10-10', { hash: '#t=tok-del-panel', fetch: backendQueAcepta('tok-del-panel') });
+    ok(s.__url === '/acreditacion.html', 'el token se borra de la barra de direcciones apenas se lee');
+    await esperar(); await esperar(); await esperar();
+    ok(s.__leer('ID_TOKEN') === 'tok-del-panel', 'entra con el token que mandó el panel, sin botón de Google');
+    ok(s.localStorage.getItem('cepaAcredToken') === 'tok-del-panel', 'y lo guarda para la próxima vez');
+  }
+  {
+    // El del panel venció pero el lector tenía uno bueno guardado: no se pierde.
+    const s = armar('2026-10-10', { hash: '#t=tok-vencido', guardado: 'tok-guardado', fetch: backendQueAcepta('tok-guardado') });
+    await esperar(); await esperar(); await esperar(); await esperar(); await esperar();
+    ok(s.__leer('ID_TOKEN') === 'tok-guardado', 'si el del panel no sirve, usa el que ya tenía guardado');
+  }
+  {
+    // Ninguno sirve: cae al camino de siempre, que termina mostrando el botón.
+    const s = armar('2026-10-10', { hash: '#t=malo', fetch: backendQueAcepta('otro') });
+    await esperar(); await esperar(); await esperar();
+    ok(s.__leer('ID_TOKEN') === '', 'con un token que no valida no entra');
+    ok(s.__timers.some((t) => t.ms === 6000), 'y sigue el intento de siempre (con el botón como tope)');
+  }
+  {
+    const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+    ok(/admin\.cepatagonia\.com\/\?desde=lector/.test(html), 'el link a "quién falta" avisa que viene del lector, para no rebotar');
+  }
+}
+
+async function seccion15() {
+  console.log('');
+  console.log('── 15 · La renovación de cada hora no echa a nadie');
+  {
+    // Google devuelve el token Y avisa "dismissed" con motivo credential_returned. Eso es éxito.
+    const s = armar('2026-10-10');
+    let fallas = 0;
+    s.google.accounts.id.prompt = (listener) => {
+      listener({ isNotDisplayed: () => false, isSkippedMoment: () => false, isDismissedMoment: () => true, getDismissedReason: () => 'credential_returned' });
+    };
+    s.window.google = s.google;   // renovarEnSilencio mira window.google
+    s.renovarEnSilencio(() => { fallas++; });
+    ok(fallas === 0, 'credential_returned no se toma como falla');
+    s.renovarEnSilencio.marcarListo();
+    const tope = s.__timers.filter((t) => t.ms === 12000).pop();
+    tope.fn();
+    ok(fallas === 0, 'y el tope de 12 s no muestra el login después de renovar');
+  }
+  {
+    // Si de verdad no se pudo, se avisa UNA vez aunque llamen el aviso y el tope.
+    const s = armar('2026-10-10');
+    let fallas = 0;
+    s.google.accounts.id.prompt = (listener) => {
+      listener({ isNotDisplayed: () => false, isSkippedMoment: () => true, isDismissedMoment: () => false });
+    };
+    s.window.google = s.google;   // renovarEnSilencio mira window.google
+    s.renovarEnSilencio(() => { fallas++; });
+    s.__timers.filter((t) => t.ms === 12000).pop().fn();
+    ok(fallas === 1, 'una renovación que falla avisa una sola vez');
+  }
+  {
+    // Error de sesión en medio de un escaneo: la lectura se libera.
+    const s = armar('2026-10-10');
+    // La renovación queda en curso (Google todavía no contestó): nadie llama a cerrar().
+    s.window.google = s.google;
+    s.google.accounts.id.prompt = () => {};
+    s.__leer('ocupado = true');
+    s.resultadoNegativo({ ok: false, motivo: 'Token inválido o vencido' });
+    ok(s.__leer('ocupado') === false, 'un error de sesión no deja la cámara sin leer');
+  }
+  {
+    // Mientras se valida el token guardado ya corre el tope del botón.
+    const s = armar('2026-10-10', { guardado: 'tok-guardado', fetch: () => new Promise(() => {}) });
+    ok(s.__timers.some((t) => t.ms === 6000), 'con el backend colgado, el botón aparece igual a los 6 s');
+  }
+  {
+    // Una falla pasajera del servidor no borra un token bueno.
+    const s = armar('2026-10-10', { guardado: 'tok-guardado',
+      fetch: () => Promise.resolve({ json: () => Promise.resolve({ ok: false, error: 'No se pudo validar el token con Google' }) }) });
+    await esperar(); await esperar(); await esperar();
+    ok(s.localStorage.getItem('cepaAcredToken') === 'tok-guardado', 'un error pasajero no borra el token guardado');
+    const s2 = armar('2026-10-10', { guardado: 'tok-guardado',
+      fetch: () => Promise.resolve({ json: () => Promise.resolve({ ok: false, error: 'Token inválido o vencido' }) }) });
+    await esperar(); await esperar(); await esperar();
+    ok(s2.localStorage.getItem('cepaAcredToken') === null, 'un token vencido sí se borra');
+  }
+  {
+    // El #t= se borra en el primer script, antes de cargar Google.
+    const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+    ok(html.indexOf('TOKEN_DEL_PANEL = decodeURIComponent') < html.indexOf('accounts.google.com/gsi/client"'),
+      'el token del panel se borra de la barra antes de cargar el script de Google');
+  }
+}
+
+seccion14().then(seccion15).then(() => {
+  console.log('────────────────────────────────────────────────────────────────');
+  console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
+  process.exitCode = fallaron ? 1 : 0;
+});
