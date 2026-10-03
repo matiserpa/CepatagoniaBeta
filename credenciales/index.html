@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Credenciales · CEPATAGONIA</title>
+<meta name="theme-color" content="#1F3326">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!--
+  CREDENCIALES DE UN GRUPO (stand, laboratorio, prensa, staff). La organización crea el grupo en
+  el panel y le manda al responsable UN link: cepatagonia.com/credenciales/?g=<token>.
+  Acá el responsable carga a su gente dentro del cupo, ve el estado de cada persona y, apenas
+  la organización la aprueba, su QR para reenviárselo. Toda la lógica (cupo, validación,
+  aprobación) vive en el backend (Grupos.js): esta página solo muestra y envía.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --fondo:#1F3326; --fondo2:#26402F; --texto:#E8E6D4; --suave:#A1B2A3;
+    --acento:#91BBAE; --verde:#6B8F71; --linea:rgba(232,230,212,.14);
+    --ok:#9fd3a8; --pend:#e6c97a; --mal:#e8a39a;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{background:var(--fondo)}
+  body{color:var(--texto);font-family:'Montserrat',system-ui,-apple-system,sans-serif;min-height:100vh;
+       padding:calc(26px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+  main{max-width:560px;margin:0 auto}
+  .logo{display:block;width:150px;height:auto;margin:0 auto 18px}
+  .kicker{text-align:center;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--acento);font-weight:700}
+  h1{font-family:'Playfair Display',Georgia,serif;font-weight:700;text-align:center;font-size:clamp(28px,8vw,38px);margin:8px 0 6px;line-height:1.15}
+  .bajada{text-align:center;color:var(--suave);font-size:12.5px;line-height:1.6;letter-spacing:.02em}
+  .cupo{margin:22px 0 8px;background:var(--fondo2);border:1px solid var(--linea);border-radius:14px;padding:14px 16px}
+  .cupo-txt{display:flex;justify-content:space-between;font-size:13px;color:var(--suave);margin-bottom:8px}
+  .cupo-txt b{color:var(--texto)}
+  .barra{height:6px;border-radius:99px;background:rgba(232,230,212,.1);overflow:hidden}
+  .barra i{display:block;height:100%;background:var(--acento);border-radius:99px;transition:width .4s}
+  h2{font-family:'Playfair Display',Georgia,serif;font-weight:500;font-size:20px;margin:26px 0 10px}
+  .vacio{color:var(--suave);font-size:13.5px;line-height:1.6}
+  .persona{background:var(--fondo2);border:1px solid var(--linea);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  .p-cab{display:flex;align-items:flex-start;gap:10px}
+  .p-nom{font-weight:600;font-size:15px;line-height:1.35}
+  .p-sub{font-size:12px;color:var(--suave);margin-top:3px}
+  .chip{margin-left:auto;flex-shrink:0;font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:99px;white-space:nowrap}
+  .chip.PENDIENTE{background:rgba(230,201,122,.14);color:var(--pend)}
+  .chip.APROBADA{background:rgba(159,211,168,.14);color:var(--ok)}
+  .chip.RECHAZADA{background:rgba(232,163,154,.14);color:var(--mal)}
+  .p-qr{display:flex;gap:14px;align-items:center;margin-top:12px}
+  .p-qr img{width:96px;height:96px;border-radius:10px;background:#fff;padding:6px;flex-shrink:0}
+  .p-acc{display:flex;flex-direction:column;gap:8px;flex:1}
+  .btn{display:block;text-align:center;text-decoration:none;font:inherit;font-weight:700;font-size:13px;border-radius:99px;padding:10px 14px;cursor:pointer;border:0}
+  .btn.wa{background:#25D366;color:#fff}
+  .btn.claro{background:rgba(232,230,212,.1);color:var(--texto)}
+  .btn.borde{background:none;border:1px solid var(--linea);color:var(--suave);font-weight:600;padding:6px 12px;font-size:12px;display:inline-block;margin-top:10px}
+  .motivo{font-size:12.5px;color:var(--mal);margin-top:8px}
+  .todos{margin:4px 0 6px}
+  /* formulario */
+  .fila{background:var(--fondo2);border:1px solid var(--linea);border-radius:14px;padding:14px 16px;margin-bottom:10px}
+  .fila-cab{display:flex;align-items:center;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--acento);margin-bottom:10px}
+  .fila-cab button{margin-left:auto;background:none;border:1px solid var(--linea);color:var(--suave);border-radius:99px;padding:3px 10px;font:inherit;font-size:11.5px;cursor:pointer;text-transform:none;letter-spacing:0;font-weight:600}
+  .cats{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .cats button{flex:1 1 auto;padding:8px 10px;border-radius:99px;border:1px solid var(--linea);background:none;color:var(--texto);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+  .cats button.on{background:var(--acento);border-color:var(--acento);color:var(--fondo)}
+  label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--suave);margin:8px 0 4px}
+  input{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--linea);background:rgba(0,0,0,.18);color:var(--texto);font:inherit;font-size:15px}
+  input:focus{outline:2px solid var(--acento);outline-offset:0;border-color:transparent}
+  input::placeholder{color:rgba(232,230,212,.35)}
+  .dos{display:flex;gap:10px}.dos>div{flex:1;min-width:0}
+  .mas{width:100%;margin:2px 0 12px;padding:11px;border-radius:12px;border:1px dashed rgba(145,187,174,.5);background:none;color:var(--acento);font:inherit;font-weight:700;font-size:14px;cursor:pointer}
+  .enviar{width:100%;padding:16px;border-radius:99px;border:0;background:var(--acento);color:var(--fondo);font:inherit;font-weight:700;font-size:15px;letter-spacing:.06em;cursor:pointer}
+  .enviar:disabled{opacity:.6;cursor:wait}
+  .errores{display:none;margin:12px 0;background:rgba(232,163,154,.12);border:1px solid rgba(232,163,154,.35);border-radius:12px;padding:12px 14px;color:var(--mal);font-size:13px;line-height:1.55}
+  .aviso{font-size:12px;color:var(--suave);line-height:1.6;margin-top:12px;text-align:center}
+  .estado{text-align:center;color:var(--suave);font-size:14px;line-height:1.7;margin-top:30px}
+  .lleno{background:var(--fondo2);border:1px solid var(--linea);border-radius:14px;padding:16px;font-size:13.5px;color:var(--suave);line-height:1.6;text-align:center}
+</style>
+</head>
+<body>
+<main>
+  <img class="logo" src="/programa/logo-cepatagonia-claro.png" alt="CEPATAGONIA" width="480" height="303">
+  <p class="kicker">Credenciales</p>
+  <h1 id="titulo">CEPATAGONIA</h1>
+  <p class="bajada">Primer Congreso de Estética de la Patagonia<br>10 y 11 de octubre de 2026 · San Martín de los Andes</p>
+
+  <div id="cargando" class="estado">Cargando…</div>
+  <div id="sinLink" class="estado" style="display:none"></div>
+
+  <div id="app" style="display:none">
+    <div class="cupo">
+      <div class="cupo-txt"><span><b id="usados">0</b> de <b id="cupo">0</b> lugares</span><span id="libresTxt"></span></div>
+      <div class="barra"><i id="barra" style="width:0"></i></div>
+    </div>
+
+    <h2>Tu equipo</h2>
+    <div id="lista"></div>
+    <div id="todosWrap" class="todos" style="display:none"><a id="todos" class="btn wa" href="#" target="_blank" rel="noopener">Mandar todos los QR por WhatsApp</a></div>
+
+    <div id="cargaWrap">
+      <h2>Sumar personas</h2>
+      <p class="vacio" style="margin-bottom:12px">Cargá a cada persona que viene con vos. La organización revisa los datos y, al aprobarla, su código QR aparece en esta misma página.</p>
+      <div id="filas"></div>
+      <button type="button" class="mas" id="mas">+ Agregar otra persona</button>
+      <div class="errores" id="errores"></div>
+      <button type="button" class="enviar" id="enviar">Enviar</button>
+      <p class="aviso">Guardá este link: acá vas a ver el estado de cada persona y sus códigos QR.</p>
+    </div>
+    <div id="llenoWrap" class="lleno" style="display:none"></div>
+  </div>
+</main>
+
+<script>
+(function(){
+  // El deployment del PANEL (@219), no el de la puerta (@220): las acciones de grupos se
+  // publican ahí, y la puerta queda en la versión probada para el congreso.
+  var API_URL = 'https://script.google.com/macros/s/AKfycbxoHE_qWnb7xBOHlCA-6wO8lovkEO3jU-HTiF4uwOwavKaY16Hkbb-d2kVvg3E6jMLhAw/exec';
+  var CATEGORIAS = [
+    { t: 'AYUDANTE', nombre: 'Stand / laboratorio' },
+    { t: 'INVITADO', nombre: 'Invitado' },
+    { t: 'STAFF', nombre: 'Staff' },
+  ];
+  var NOMBRE_CAT = { AYUDANTE: 'Stand / laboratorio', INVITADO: 'Invitado', STAFF: 'Staff' };
+  var ESTADO_TXT = { PENDIENTE: 'Pendiente', APROBADA: 'Aprobada', RECHAZADA: 'Rechazada' };
+
+  var $ = function(id){ return document.getElementById(id); };
+  var token = '';
+  try { token = String(new URLSearchParams(location.search).get('g') || '').replace(/[^a-zA-Z0-9]/g, '').slice(0, 40); } catch (e) {}
+  var datos = null, tipoGrupo = 'AYUDANTE', enviando = false;
+
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+  function urlQR(orderId){ return 'https://cepatagonia.com/gracias.html?external_reference=' + encodeURIComponent(orderId) + '&p=1&status=approved'; }
+
+  // El cuerpo va en ASCII puro (\uXXXX): por text/plain los emoji llegan rotos a Apps Script.
+  function aAscii(o){ return JSON.stringify(o).replace(/[^\x00-\x7F]/g, function(c){ return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4); }); }
+  function llamar(cuerpo){
+    return fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: aAscii(cuerpo) })
+      .then(function(r){ return r.json(); });
+  }
+
+  function mostrarSinLink(texto){
+    $('cargando').style.display = 'none'; $('app').style.display = 'none';
+    $('sinLink').style.display = 'block'; $('sinLink').textContent = texto;
+  }
+
+  function cargar(){
+    if (!token) return mostrarSinLink('Este link está incompleto. Pedile a la organización el link de tu grupo.');
+    return llamar({ action: 'grupoInfo', token: token }).then(function(r){
+      if (!r || !r.ok) return mostrarSinLink((r && r.error) || 'No pudimos abrir este link.');
+      datos = r; pintar();
+    }).catch(function(){
+      if (!datos) mostrarSinLink('No pudimos conectarnos. Revisá la conexión y volvé a abrir el link.');
+    });
+  }
+
+  function pintar(){
+    var g = datos.grupo;
+    tipoGrupo = NOMBRE_CAT[g.tipo] ? g.tipo : 'AYUDANTE';
+    $('cargando').style.display = 'none'; $('sinLink').style.display = 'none'; $('app').style.display = 'block';
+    $('titulo').textContent = g.nombre;
+    document.title = g.nombre + ' · Credenciales · CEPATAGONIA';
+    $('usados').textContent = g.ocupados; $('cupo').textContent = g.cupo;
+    $('libresTxt').textContent = g.libres === 1 ? 'queda 1' : (g.libres ? 'quedan ' + g.libres : 'cupo completo');
+    $('barra').style.width = (g.cupo ? Math.min(100, Math.round(g.ocupados * 100 / g.cupo)) : 0) + '%';
+
+    var lista = $('lista');
+    if (!datos.personas.length) {
+      lista.innerHTML = '<p class="vacio">Todavía no cargaste a nadie.</p>';
+    } else {
+      lista.innerHTML = datos.personas.map(function(p){
+        var html = '<div class="persona"><div class="p-cab"><div><div class="p-nom">' + esc(p.nombre + ' ' + p.apellido) + '</div>' +
+          '<div class="p-sub">' + esc(NOMBRE_CAT[p.tipo] || p.tipo) + (p.dni ? ' · DNI ' + esc(p.dni) : '') + '</div></div>' +
+          '<span class="chip ' + esc(p.estado) + '">' + esc(ESTADO_TXT[p.estado] || p.estado) + '</span></div>';
+        if (p.estado === 'APROBADA' && p.orderId) {
+          var u = urlQR(p.orderId);
+          var texto = '¡Hola ' + p.nombre + '! 🌿 Tu credencial para CEPATAGONIA (10 y 11 de octubre, Hotel Le Village, San Martín de los Andes):\n' + u +
+            '\n\nEn la acreditación mostrá este código QR y tu DNI. Se acredita desde las 8:00.';
+          html += '<div class="p-qr"><img alt="QR de ' + esc(p.nombre) + '" loading="lazy" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(u) + '">' +
+            '<div class="p-acc"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(texto) + '">Enviar por WhatsApp</a>' +
+            '<a class="btn claro" target="_blank" rel="noopener" href="' + esc(u) + '">Ver credencial</a></div></div>';
+        } else if (p.estado === 'PENDIENTE') {
+          html += '<p class="p-sub" style="margin-top:8px">La organización la está revisando. El QR aparece acá cuando la aprueben.</p>' +
+            '<button type="button" class="btn borde" data-quitar="' + esc(p.id) + '">Quitar</button>';
+        } else if (p.estado === 'RECHAZADA') {
+          html += '<p class="motivo">' + (p.motivo ? esc(p.motivo) : 'No fue aprobada.') + ' Si creés que es un error, escribile a la organización.</p>';
+        }
+        return html + '</div>';
+      }).join('');
+    }
+
+    // Un solo mensaje con todos los QR aprobados, para el grupo de WhatsApp del equipo.
+    var aprobadas = datos.personas.filter(function(p){ return p.estado === 'APROBADA' && p.orderId; });
+    $('todosWrap').style.display = aprobadas.length > 1 ? 'block' : 'none';
+    if (aprobadas.length > 1) {
+      var txt = 'Credenciales de ' + g.nombre + ' para CEPATAGONIA 🌿 (10 y 11 de octubre, Hotel Le Village). Cada uno abre su link y muestra el QR y el DNI en la acreditación:\n\n' +
+        aprobadas.map(function(p){ return '• ' + p.nombre + ' ' + p.apellido + ': ' + urlQR(p.orderId); }).join('\n');
+      $('todos').href = 'https://wa.me/?text=' + encodeURIComponent(txt);
+    }
+
+    var puedeCargar = g.activo && g.libres > 0;
+    $('cargaWrap').style.display = puedeCargar ? 'block' : 'none';
+    $('llenoWrap').style.display = puedeCargar ? 'none' : 'block';
+    $('llenoWrap').textContent = !g.activo
+      ? 'Este link ya no recibe más personas. Si necesitás sumar a alguien, escribile a la organización.'
+      : 'El cupo de ' + g.nombre + ' está completo. Si necesitás más lugares, escribile a la organización.';
+    if (puedeCargar && !$('filas').children.length) agregarFila();
+    ajustarFilas();
+  }
+
+  // ---------- formulario ----------
+  function agregarFila(){
+    var filas = $('filas');
+    if (datos && filas.children.length >= datos.grupo.libres) return;
+    var d = document.createElement('div');
+    d.className = 'fila';
+    d.dataset.tipo = tipoGrupo;
+    d.innerHTML =
+      '<div class="fila-cab"><span class="n"></span><button type="button" class="quitar">quitar</button></div>' +
+      '<div class="cats">' + CATEGORIAS.map(function(c){ return '<button type="button" data-t="' + c.t + '">' + c.nombre + '</button>'; }).join('') + '</div>' +
+      '<div class="dos"><div><label>Nombre</label><input class="f-nombre" autocomplete="off"></div>' +
+      '<div><label>Apellido</label><input class="f-apellido" autocomplete="off"></div></div>' +
+      '<label>DNI</label><input class="f-dni" inputmode="numeric" autocomplete="off" placeholder="Solo números">' +
+      '<div class="dos"><div><label>Email (opcional)</label><input class="f-email" type="email" inputmode="email" autocomplete="off"></div>' +
+      '<div><label>Celular (opcional)</label><input class="f-tel" inputmode="tel" autocomplete="off"></div></div>';
+    var pintarCats = function(){ d.querySelectorAll('.cats button').forEach(function(b){ b.classList.toggle('on', b.dataset.t === d.dataset.tipo); }); };
+    d.querySelectorAll('.cats button').forEach(function(b){ b.onclick = function(){ d.dataset.tipo = b.dataset.t; pintarCats(); }; });
+    pintarCats();
+    d.querySelector('.quitar').onclick = function(){ d.remove(); if (!$('filas').children.length) agregarFila(); ajustarFilas(); };
+    filas.appendChild(d);
+    ajustarFilas();
+  }
+  function ajustarFilas(){
+    var filas = $('filas').children;
+    for (var i = 0; i < filas.length; i++) filas[i].querySelector('.n').textContent = 'Persona ' + (i + 1);
+    var libres = datos ? datos.grupo.libres : 0;
+    $('mas').style.display = filas.length < libres ? 'block' : 'none';
+    $('enviar').textContent = filas.length > 1 ? 'Enviar ' + filas.length + ' personas' : 'Enviar';
+  }
+  $('mas').onclick = function(){ agregarFila(); var f = $('filas').lastChild; if (f) f.querySelector('.f-nombre').focus(); };
+
+  function mostrarErrores(lista){
+    var e = $('errores');
+    if (!lista || !lista.length) { e.style.display = 'none'; return; }
+    e.innerHTML = lista.map(esc).join('<br>'); e.style.display = 'block';
+  }
+
+  $('enviar').onclick = function(){
+    if (enviando) return;
+    var personas = [], errores = [];
+    Array.prototype.forEach.call($('filas').children, function(d, i){
+      var v = function(c){ return d.querySelector(c).value.trim(); };
+      var p = { tipo: d.dataset.tipo, nombre: v('.f-nombre'), apellido: v('.f-apellido'), dni: v('.f-dni').replace(/\D/g, ''), email: v('.f-email'), telefono: v('.f-tel') };
+      if (!p.nombre && !p.apellido && !p.dni && !p.email && !p.telefono) return;   // fila vacía
+      var quien = 'Persona ' + (i + 1) + (p.nombre ? ' (' + p.nombre + ')' : '');
+      if (!p.nombre || !p.apellido) errores.push(quien + ': falta nombre o apellido');
+      else if (p.dni.length < 6 || p.dni.length > 9) errores.push(quien + ': revisá el DNI (solo números)');
+      else if (p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) errores.push(quien + ': el email no parece válido');
+      personas.push(p);
+    });
+    if (!personas.length) errores.push('Cargá al menos una persona.');
+    if (errores.length) return mostrarErrores(errores);
+    mostrarErrores(null);
+    enviando = true; $('enviar').disabled = true; $('enviar').textContent = 'Enviando…';
+    llamar({ action: 'grupoEnviar', token: token, personas: personas }).then(function(r){
+      if (!r || !r.ok) { mostrarErrores((r && r.errores) || [(r && r.error) || 'No se pudo enviar. Probá de nuevo.']); return; }
+      datos = r; $('filas').innerHTML = ''; pintar();
+      window.scrollTo({ top: $('lista').offsetTop - 20, behavior: 'smooth' });
+    }).catch(function(){
+      mostrarErrores(['No pudimos conectarnos. Revisá la conexión y probá de nuevo: lo que cargaste sigue acá.']);
+    }).then(function(){ enviando = false; $('enviar').disabled = false; ajustarFilas(); });
+  };
+
+  // Quitar a alguien pendiente (se equivocó o ya no viene).
+  $('lista').addEventListener('click', function(ev){
+    var b = ev.target.closest && ev.target.closest('[data-quitar]');
+    if (!b) return;
+    if (!confirm('¿Sacar a esta persona del pedido?')) return;
+    b.disabled = true;
+    llamar({ action: 'grupoRetirar', token: token, id: b.getAttribute('data-quitar') }).then(function(r){
+      if (r && r.ok) { datos = r; pintar(); } else { alert((r && r.error) || 'No se pudo.'); b.disabled = false; }
+    }).catch(function(){ alert('No pudimos conectarnos.'); b.disabled = false; });
+  });
+
+  // Mientras haya pendientes, se vuelve a mirar cada minuto y al volver a la página: así el QR
+  // aparece solo cuando la organización aprueba, sin que nadie tenga que recargar.
+  function hayPendientes(){ return datos && datos.personas.some(function(p){ return p.estado === 'PENDIENTE'; }); }
+  setInterval(function(){ if (hayPendientes() && document.visibilityState === 'visible' && !enviando) cargar(); }, 60000);
+  document.addEventListener('visibilitychange', function(){ if (document.visibilityState === 'visible' && datos && !enviando) cargar(); });
+
+  cargar();
+})();
+</script>
+</body>
+</html>
