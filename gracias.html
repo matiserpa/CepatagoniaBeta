@@ -39,6 +39,9 @@ fbq('track', 'PageView');
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:var(--font-body);background:var(--cream);color:var(--charcoal);min-height:100vh;font-size:15px;line-height:1.55}
   header.site{border-bottom:1px solid rgba(14,20,16,.12);padding:26px 20px 20px;text-align:center}
+  /* El logo claro (transparente), oscurecido para el fondo crema. */
+  header.site .logo{display:block;width:150px;height:auto;margin:0 auto;filter:brightness(0) opacity(.85)}
+  .titular{font-family:var(--font-display);font-weight:600;font-size:20px;margin:-8px 0 18px}
   .horizon{width:120px;height:1px;background:var(--dark-green);margin:0 auto 14px;position:relative}
   .horizon::after{content:'';position:absolute;left:50%;top:-7px;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;border-top:1px solid var(--dark-green);border-left:1px solid var(--dark-green);background:var(--cream)}
   h1{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.32em;text-indent:.32em}
@@ -70,14 +73,13 @@ fbq('track', 'PageView');
 </head>
 <body>
 <header class="site">
-  <div class="horizon"></div>
-  <h1>CEPATAGONIA</h1>
+  <h1><img class="logo" src="/programa/logo-cepatagonia-claro.png" alt="CEPATAGONIA" width="480" height="303"></h1>
   <p>Ciencia que regenera · Naturaleza que inspira</p>
 </header>
 <main>
   <section class="panel" id="panel">
     <div class="spinner"></div>
-    <p class="sub">Confirmando tu compra…</p>
+    <p class="sub" id="cargandoTxt">Cargando tu entrada…</p>
   </section>
 </main>
 <script>
@@ -86,6 +88,14 @@ const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDzt
 const params = new URLSearchParams(location.search);
 const orderId = params.get('external_reference') || '';
 const status = (params.get('collection_status') || params.get('status') || '').toLowerCase();
+
+// Qué decir mientras carga: "compra" solo cuando se vuelve de pagar en Mercado Pago. Una
+// credencial (CRE-) o un QR abierto desde el mail o el WhatsApp no son una compra.
+(function(){
+  const t = document.getElementById('cargandoTxt');
+  if (/^CRE-/i.test(orderId)) { t.textContent = 'Cargando tu credencial…'; document.title = 'CEPATAGONIA — Credencial'; }
+  else if (params.get('payment_id') || params.get('collection_id')) t.textContent = 'Confirmando tu compra…';
+})();
 
 function money(n){ return '$ ' + Number(n).toLocaleString('es-AR'); }
 function esc(s){ const d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
@@ -158,11 +168,26 @@ async function init(){
   if(orden.estado === 'CREDENCIAL'){
     // Rama propia: NO llama a registrarCompra —no hubo compra— y no habla de pagos ni de
     // totales. Es la pantalla que ve un disertante o alguien de un stand al escanear su QR.
+    // Con &p=n (el link de cada persona) se muestra solo SU código y su nombre.
+    const n = parseInt(params.get('p') || '', 10);
+    const una = n >= 1 && n <= personas.length;
+    const qrDeUna = una
+      ? '<div class="qr-box"><img alt="QR de ' + esc(personas[n - 1]) + '" src="https://api.qrserver.com/v1/create-qr-code/?size=380x380&data=' +
+        encodeURIComponent('https://cepatagonia.com/gracias.html?external_reference=' + orden.orderId + '&p=' + n + '&status=approved') +
+        '"><p>Presentá este código en la acreditación</p></div>'
+      : qr;
+    document.title = 'CEPATAGONIA — Credencial' + (una ? ' de ' + personas[n - 1] : '');
     render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
       '<h2>Credencial confirmada</h2>' +
+      (una ? '<p class="titular">' + esc(personas[n - 1]) + '</p>' : '') +
       '<p class="sub">Congreso de Estética de la Patagonia · 10 y 11 de octubre 2026 · Hotel Le Village, San Martín de los Andes</p>' +
-      qr +
+      qrDeUna +
       '<div class="nota">Presentá este código y tu DNI en la acreditación, desde las 8:00. Se acredita una vez por día.</div>');
+  } else if(/^CRE-/i.test(orden.orderId)){
+    // Una credencial anulada por la organización: no es un pago rechazado.
+    render('<div class="badge err"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg></div>' +
+      '<h2>Esta credencial ya no es válida</h2>' +
+      '<p class="sub">La organización la dio de baja. Si creés que es un error, escribinos a info@cepatagonia.com.</p>');
   } else if(orden.estado === 'PAGADO' || orden.estado === 'CORTESIA'){
     registrarCompra(orden);
     render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
