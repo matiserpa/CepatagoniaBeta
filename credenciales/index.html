@@ -201,7 +201,7 @@
           '<span class="chip ' + esc(p.estado) + '">' + esc(ESTADO_TXT[p.estado] || p.estado) + '</span></div>';
         if (p.estado === 'APROBADA' && p.orderId) {
           var u = urlQR(p.orderId);
-          var texto = '¡Hola ' + p.nombre + '! 🌿 Tu credencial para CEPATAGONIA (10 y 11 de octubre, Hotel Le Village, San Martín de los Andes):\n' + u +
+          var texto = '¡Hola ' + p.nombre + '! Tu credencial para CEPATAGONIA (10 y 11 de octubre, Hotel Le Village, San Martín de los Andes):\n' + u +
             '\n\nEn la acreditación mostrá este código QR y tu DNI. Se acredita desde las 8:00.';
           html += '<div class="p-qr"><img alt="QR de ' + esc(p.nombre) + '" loading="lazy" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(u) + '">' +
             '<div class="p-acc"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(texto) + '">Enviar por WhatsApp</a>' +
@@ -223,7 +223,7 @@
     $('todosWrap').style.display = aprobadas.length > 1 ? 'block' : 'none';
     $('sinCel').style.display = aprobadas.length ? 'block' : 'none';
     if (aprobadas.length > 1) {
-      var txt = 'Credenciales de ' + g.nombre + ' para CEPATAGONIA 🌿 (10 y 11 de octubre, Hotel Le Village). Cada uno abre su link y muestra el QR y el DNI en la acreditación:\n\n' +
+      var txt = 'Credenciales de ' + g.nombre + ' para CEPATAGONIA (10 y 11 de octubre, Hotel Le Village). Cada uno abre su link y muestra el QR y el DNI en la acreditación:\n\n' +
         aprobadas.map(function(p){ return '• ' + p.nombre + ' ' + p.apellido + ': ' + urlQR(p.orderId); }).join('\n');
       $('todos').href = 'https://wa.me/?text=' + encodeURIComponent(txt);
     }
