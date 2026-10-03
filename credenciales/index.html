@@ -46,7 +46,7 @@
   .chip{margin-left:auto;flex-shrink:0;font-size:11px;font-weight:700;letter-spacing:.04em;padding:4px 10px;border-radius:99px;white-space:nowrap}
   .chip.PENDIENTE{background:rgba(230,201,122,.14);color:var(--pend)}
   .chip.APROBADA{background:rgba(159,211,168,.14);color:var(--ok)}
-  .chip.RECHAZADA{background:rgba(232,163,154,.14);color:var(--mal)}
+  .chip.RECHAZADA,.chip.ANULADA{background:rgba(232,163,154,.14);color:var(--mal)}
   .p-qr{display:flex;gap:14px;align-items:center;margin-top:12px}
   .p-qr img{width:96px;height:96px;border-radius:10px;background:#fff;padding:6px;flex-shrink:0}
   .p-acc{display:flex;flex-direction:column;gap:8px;flex:1}
@@ -74,6 +74,16 @@
   .errores{display:none;margin:12px 0;background:rgba(232,163,154,.12);border:1px solid rgba(232,163,154,.35);border-radius:12px;padding:12px 14px;color:var(--mal);font-size:13px;line-height:1.55}
   .aviso{font-size:12px;color:var(--suave);line-height:1.6;margin-top:12px;text-align:center}
   .estado{text-align:center;color:var(--suave);font-size:14px;line-height:1.7;margin-top:30px}
+  .pegar{margin:0 0 12px}
+  .pegar summary{cursor:pointer;color:var(--acento);font-size:13px;font-weight:600;list-style:none;padding:4px 0}
+  .pegar summary::-webkit-details-marker{display:none}
+  .pegar textarea{width:100%;min-height:110px;margin-top:8px;padding:11px 12px;border-radius:10px;border:1px solid var(--linea);background:rgba(0,0,0,.18);color:var(--texto);font:inherit;font-size:14px;line-height:1.5;resize:vertical}
+  .pegar textarea:focus{outline:2px solid var(--acento);outline-offset:0;border-color:transparent}
+  .pegar textarea::placeholder{color:rgba(232,230,212,.35)}
+  .pegar .btn{margin-top:8px}
+  .pegar-ok{font-size:12.5px;color:var(--ok);margin-top:8px;line-height:1.5}
+  .doc-otro{background:none;border:0;color:var(--suave);font:inherit;font-size:11.5px;text-decoration:underline;cursor:pointer;margin-top:5px;padding:0}
+  .sin-cel{font-size:12.5px;color:var(--acento);line-height:1.6;margin:10px 0 0;text-align:center}
   .lleno{background:var(--fondo2);border:1px solid var(--linea);border-radius:14px;padding:16px;font-size:13.5px;color:var(--suave);line-height:1.6;text-align:center}
 </style>
 </head>
@@ -96,15 +106,22 @@
     <h2>Tu equipo</h2>
     <div id="lista"></div>
     <div id="todosWrap" class="todos" style="display:none"><a id="todos" class="btn wa" href="#" target="_blank" rel="noopener">Mandar todos los QR por WhatsApp</a></div>
+    <p id="sinCel" class="sin-cel" style="display:none">Si alguien no tiene celular o no le llega el QR, entra igual: en la acreditación lo buscan por su nombre y DNI.</p>
 
     <div id="cargaWrap">
       <h2>Sumar personas</h2>
-      <p class="vacio" style="margin-bottom:12px">Cargá a cada persona que viene con vos. La organización revisa los datos y, al aprobarla, su código QR aparece en esta misma página.</p>
+      <p class="vacio" id="intro" style="margin-bottom:12px">Cargá a cada persona que viene con vos. La organización revisa los datos y, al aprobarla, su código QR aparece en esta misma página.</p>
+      <details class="pegar" id="pegarWrap">
+        <summary>¿Tenés la lista en un Excel o en un mensaje? Pegala acá</summary>
+        <textarea id="pegarTxt" placeholder="Una persona por renglón: nombre, apellido y DNI (el email es opcional).&#10;Juan, Pérez, 30111222&#10;María López 28456789"></textarea>
+        <button type="button" class="btn claro" id="pegarBtn">Cargar la lista</button>
+        <p class="pegar-ok" id="pegarOk" style="display:none"></p>
+      </details>
       <div id="filas"></div>
       <button type="button" class="mas" id="mas">+ Agregar otra persona</button>
       <div class="errores" id="errores"></div>
       <button type="button" class="enviar" id="enviar">Enviar</button>
-      <p class="aviso">Guardá este link: acá vas a ver el estado de cada persona y sus códigos QR.</p>
+      <p class="aviso">Guardá este link: acá vas a ver el estado de cada persona y sus códigos QR.<br>Si alguien no tiene celular, entra igual con su nombre y DNI.</p>
     </div>
     <div id="llenoWrap" class="lleno" style="display:none"></div>
   </div>
@@ -115,13 +132,14 @@
   // El deployment del PANEL (@219), no el de la puerta (@220): las acciones de grupos se
   // publican ahí, y la puerta queda en la versión probada para el congreso.
   var API_URL = 'https://script.google.com/macros/s/AKfycbxoHE_qWnb7xBOHlCA-6wO8lovkEO3jU-HTiF4uwOwavKaY16Hkbb-d2kVvg3E6jMLhAw/exec';
+  // Lo que el responsable elige por persona. Staff no: la cinta verde la decide la organización
+  // creando un grupo de Staff, y en ese grupo no se elige nada (el backend lo fuerza igual).
   var CATEGORIAS = [
     { t: 'AYUDANTE', nombre: 'Stand / laboratorio' },
     { t: 'INVITADO', nombre: 'Invitado' },
-    { t: 'STAFF', nombre: 'Staff' },
   ];
   var NOMBRE_CAT = { AYUDANTE: 'Stand / laboratorio', INVITADO: 'Invitado', STAFF: 'Staff' };
-  var ESTADO_TXT = { PENDIENTE: 'Pendiente', APROBADA: 'Aprobada', RECHAZADA: 'Rechazada' };
+  var ESTADO_TXT = { PENDIENTE: 'Pendiente', APROBADA: 'Aprobada', RECHAZADA: 'Rechazada', ANULADA: 'Anulada' };
 
   var $ = function(id){ return document.getElementById(id); };
   var token = '';
@@ -129,6 +147,10 @@
   var datos = null, tipoGrupo = 'AYUDANTE', enviando = false;
 
   function esc(t){ return String(t == null ? '' : t).replace(/[&<>"']/g, function(c){ return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]; }); }
+  // El documento como lo guarda el backend: mayúsculas, solo letras y números (un DNI con
+  // puntos queda en números; un RUT con K o un pasaporte conservan sus letras).
+  function normDoc(v){ return String(v == null ? '' : v).toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 12); }
+  function docValido(d){ return d.length >= 6 && d.length <= 12 && (d.match(/\d/g) || []).length >= 4; }
   function urlQR(orderId){ return 'https://cepatagonia.com/gracias.html?external_reference=' + encodeURIComponent(orderId) + '&p=1&status=approved'; }
 
   // El cuerpo va en ASCII puro (\uXXXX): por text/plain los emoji llegan rotos a Apps Script.
@@ -158,6 +180,9 @@
     tipoGrupo = NOMBRE_CAT[g.tipo] ? g.tipo : 'AYUDANTE';
     $('cargando').style.display = 'none'; $('sinLink').style.display = 'none'; $('app').style.display = 'block';
     $('titulo').textContent = g.nombre;
+    $('intro').textContent = g.auto
+      ? 'Cargá a cada persona que viene con vos. Al enviar, su código QR aparece en esta misma página para que se lo reenvíes.'
+      : 'Cargá a cada persona que viene con vos. La organización revisa los datos y, al aprobarla, su código QR aparece en esta misma página.';
     document.title = g.nombre + ' · Credenciales · CEPATAGONIA';
     $('usados').textContent = g.ocupados; $('cupo').textContent = g.cupo;
     $('libresTxt').textContent = g.libres === 1 ? 'queda 1' : (g.libres ? 'quedan ' + g.libres : 'cupo completo');
@@ -183,6 +208,8 @@
             '<button type="button" class="btn borde" data-quitar="' + esc(p.id) + '">Quitar</button>';
         } else if (p.estado === 'RECHAZADA') {
           html += '<p class="motivo">' + (p.motivo ? esc(p.motivo) : 'No fue aprobada.') + ' Si creés que es un error, escribile a la organización.</p>';
+        } else if (p.estado === 'ANULADA') {
+          html += '<p class="motivo">' + (p.motivo ? esc(p.motivo) + '. ' : '') + 'La organización anuló esta credencial: su QR ya no sirve y el lugar volvió al cupo.</p>';
         }
         return html + '</div>';
       }).join('');
@@ -191,6 +218,7 @@
     // Un solo mensaje con todos los QR aprobados, para el grupo de WhatsApp del equipo.
     var aprobadas = datos.personas.filter(function(p){ return p.estado === 'APROBADA' && p.orderId; });
     $('todosWrap').style.display = aprobadas.length > 1 ? 'block' : 'none';
+    $('sinCel').style.display = aprobadas.length ? 'block' : 'none';
     if (aprobadas.length > 1) {
       var txt = 'Credenciales de ' + g.nombre + ' para CEPATAGONIA 🌿 (10 y 11 de octubre, Hotel Le Village). Cada uno abre su link y muestra el QR y el DNI en la acreditación:\n\n' +
         aprobadas.map(function(p){ return '• ' + p.nombre + ' ' + p.apellido + ': ' + urlQR(p.orderId); }).join('\n');
@@ -216,18 +244,30 @@
     d.dataset.tipo = tipoGrupo;
     d.innerHTML =
       '<div class="fila-cab"><span class="n"></span><button type="button" class="quitar">quitar</button></div>' +
-      '<div class="cats">' + CATEGORIAS.map(function(c){ return '<button type="button" data-t="' + c.t + '">' + c.nombre + '</button>'; }).join('') + '</div>' +
+      (tipoGrupo === 'STAFF' ? '' : '<div class="cats">' + CATEGORIAS.map(function(c){ return '<button type="button" data-t="' + c.t + '">' + c.nombre + '</button>'; }).join('') + '</div>') +
       '<div class="dos"><div><label>Nombre</label><input class="f-nombre" autocomplete="off"></div>' +
       '<div><label>Apellido</label><input class="f-apellido" autocomplete="off"></div></div>' +
-      '<label>DNI</label><input class="f-dni" inputmode="numeric" autocomplete="off" placeholder="Solo números">' +
+      '<label>DNI</label><input class="f-dni" inputmode="numeric" autocomplete="off" autocapitalize="characters" placeholder="Solo números">' +
+      '<button type="button" class="doc-otro">¿RUT o pasaporte? Tocá acá para escribir letras</button>' +
       '<div class="dos"><div><label>Email (opcional)</label><input class="f-email" type="email" inputmode="email" autocomplete="off"></div>' +
       '<div><label>Celular (opcional)</label><input class="f-tel" inputmode="tel" autocomplete="off"></div></div>';
     var pintarCats = function(){ d.querySelectorAll('.cats button').forEach(function(b){ b.classList.toggle('on', b.dataset.t === d.dataset.tipo); }); };
     d.querySelectorAll('.cats button').forEach(function(b){ b.onclick = function(){ d.dataset.tipo = b.dataset.t; pintarCats(); }; });
     pintarCats();
+    // El teclado numérico de Android no tiene letras: para un RUT con K o un pasaporte se
+    // cambia a teclado común.
+    d.querySelector('.doc-otro').onclick = function(){ docConLetras(d, true); };
     d.querySelector('.quitar').onclick = function(){ d.remove(); if (!$('filas').children.length) agregarFila(); ajustarFilas(); };
     filas.appendChild(d);
     ajustarFilas();
+    return d;
+  }
+  function docConLetras(d, enfocar){
+    var i = d.querySelector('.f-dni');
+    i.setAttribute('inputmode', 'text'); i.placeholder = 'DNI, RUT o pasaporte';
+    i.previousElementSibling.textContent = 'Documento';
+    d.querySelector('.doc-otro').style.display = 'none';
+    if (enfocar) { i.blur(); i.focus(); }   // blur y focus: así el celular cambia de teclado
   }
   function ajustarFilas(){
     var filas = $('filas').children;
@@ -249,11 +289,11 @@
     var personas = [], errores = [];
     Array.prototype.forEach.call($('filas').children, function(d, i){
       var v = function(c){ return d.querySelector(c).value.trim(); };
-      var p = { tipo: d.dataset.tipo, nombre: v('.f-nombre'), apellido: v('.f-apellido'), dni: v('.f-dni').replace(/\D/g, ''), email: v('.f-email'), telefono: v('.f-tel') };
+      var p = { tipo: d.dataset.tipo, nombre: v('.f-nombre'), apellido: v('.f-apellido'), dni: normDoc(v('.f-dni')), email: v('.f-email'), telefono: v('.f-tel') };
       if (!p.nombre && !p.apellido && !p.dni && !p.email && !p.telefono) return;   // fila vacía
       var quien = 'Persona ' + (i + 1) + (p.nombre ? ' (' + p.nombre + ')' : '');
       if (!p.nombre || !p.apellido) errores.push(quien + ': falta nombre o apellido');
-      else if (p.dni.length < 6 || p.dni.length > 9) errores.push(quien + ': revisá el DNI (solo números)');
+      else if (!docValido(p.dni)) errores.push(quien + ': revisá el DNI o documento');
       else if (p.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(p.email)) errores.push(quien + ': el email no parece válido');
       personas.push(p);
     });
@@ -268,6 +308,64 @@
     }).catch(function(){
       mostrarErrores(['No pudimos conectarnos. Revisá la conexión y probá de nuevo: lo que cargaste sigue acá.']);
     }).then(function(){ enviando = false; $('enviar').disabled = false; ajustarFilas(); });
+  };
+
+  // ---------- pegar una lista ----------
+  // Un renglón por persona, como venga: columnas de Excel (tabulaciones), separado por comas o
+  // punto y coma, o "Nombre Apellido DNI" de un mensaje. Solo completa las filas: el
+  // responsable las revisa y toca Enviar, y las valida el backend como siempre.
+  function esDoc(c){ var n = normDoc(c); return c.indexOf('@') < 0 && docValido(n) && (n.match(/\d/g) || []).length >= 6 && n.length <= 10; }
+  function leerRenglon(linea){
+    var porColumnas = /[\t;,]/.test(linea);
+    var partes = linea.split(porColumnas ? /[\t;,]/ : /\s+/).map(function(x){ return x.trim(); }).filter(Boolean);
+    var p = { nombre: '', apellido: '', dni: '', email: '', telefono: '' }, nombres = [];
+    partes.forEach(function(c){
+      if (c.indexOf('@') > 0 && !p.email) p.email = c;
+      else if (!p.dni && esDoc(c)) p.dni = normDoc(c);
+      else if (p.dni && !p.telefono && (c.replace(/\D/g, '').length >= 8)) p.telefono = c;
+      else if (!p.dni && /[a-záéíóúñü]/i.test(c) && !/\d/.test(c)) nombres.push(c);
+    });
+    if (porColumnas && nombres.length >= 2) { p.nombre = nombres[0]; p.apellido = nombres.slice(1).join(' '); }
+    else {
+      var palabras = nombres.join(' ').split(/\s+/).filter(Boolean);
+      p.nombre = palabras[0] || ''; p.apellido = palabras.slice(1).join(' ');
+    }
+    p.renglon = linea;
+    return p;
+  }
+  $('pegarBtn').onclick = function(){
+    var renglones = $('pegarTxt').value.split(/\r?\n/).map(function(x){ return x.trim(); }).filter(Boolean);
+    var gente = renglones.map(leerRenglon).filter(function(p){ return p.dni || (p.nombre && p.apellido); });
+    // Un renglón de encabezado ("Nombre, Apellido, DNI") no tiene documento: se descarta.
+    gente = gente.filter(function(p){ return p.dni || !/(nombre|apellido|dni|documento)/i.test(p.renglon); });
+    var ok = $('pegarOk');
+    if (!gente.length) { ok.style.display = 'block'; ok.style.color = 'var(--mal)'; ok.textContent = 'No encontramos personas en lo que pegaste. Poné una por renglón: nombre, apellido y DNI.'; return; }
+    var libres = datos ? datos.grupo.libres : 0;
+    // Primero las filas vacías que ya están; después se agregan.
+    var vacias = Array.prototype.filter.call($('filas').children, function(d){
+      return !Array.prototype.some.call(d.querySelectorAll('input'), function(i){ return i.value.trim(); });
+    });
+    var ocupadas = $('filas').children.length - vacias.length;
+    var entran = Math.max(0, libres - ocupadas);
+    var cargadas = gente.slice(0, entran);
+    cargadas.forEach(function(p){
+      var d = vacias.shift() || agregarFila();
+      if (!d) return;
+      d.querySelector('.f-nombre').value = p.nombre;
+      d.querySelector('.f-apellido').value = p.apellido;
+      d.querySelector('.f-dni').value = p.dni;
+      if (/[A-Z]/.test(p.dni)) docConLetras(d, false);
+      d.querySelector('.f-email').value = p.email;
+      d.querySelector('.f-tel').value = p.telefono;
+    });
+    vacias.forEach(function(d){ if ($('filas').children.length > 1) d.remove(); });
+    ajustarFilas();
+    ok.style.display = 'block'; ok.style.color = '';
+    ok.textContent = 'Cargamos ' + cargadas.length + ' persona' + (cargadas.length === 1 ? '' : 's') + ' abajo: revisalas y tocá Enviar.' +
+      (gente.length > cargadas.length ? ' Había lugar para ' + entran + ': ' +
+        (gente.length - cargadas.length === 1 ? '1 quedó afuera' : (gente.length - cargadas.length) + ' quedaron afuera') + '.' : '');
+    $('pegarTxt').value = '';
+    $('pegarWrap').open = false;
   };
 
   // Quitar a alguien pendiente (se equivocó o ya no viene).
