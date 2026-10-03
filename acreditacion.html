@@ -148,13 +148,6 @@
   .entrando .pto:nth-child(3){ animation-delay:.3s }
   @keyframes pto{ 0%,100%{opacity:.25; transform:translateY(0)} 40%{opacity:1; transform:translateY(-3px)} }
   @media (prefers-reduced-motion: reduce){ .entrando .pto{ animation:none; opacity:.6 } }
-
-  /* Un toque antes de prender la camara. En Android el navegador NO deja vibrar (ni sonar)
-     hasta que la persona toca la pagina al menos una vez, y con la entrada automatica nadie
-     tocaba nada: la primera lectura llegaba muda. */
-  .empezar{position:fixed;inset:0;background:var(--bg-marco);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
-  .empezar.visible{display:flex}
-  .empezar button{margin-top:6px;width:100%;padding:18px;border:0;border-radius:999px;background:var(--dark);color:#fdfdf9;font-family:var(--font-body);font-size:17px;font-weight:700;cursor:pointer}
 </style>
 </head>
 <body>
@@ -170,16 +163,6 @@
     <p class="pedir">Acceso exclusivo del equipo. Ingresá con tu cuenta de Google autorizada.</p>
     <div class="gwrap" id="gBtn"></div>
     <p class="err" id="loginErr"></p>
-  </div>
-</div>
-
-<div class="empezar" id="empezar">
-  <div class="login-card">
-    <img src="https://cepatagonia.com/assets/logo-oficial.png" alt="CEPATAGONIA">
-    <h1>Puerta lista</h1>
-    <p id="empezarTxt">Tocá para prender la cámara. El teléfono va a vibrar una vez: así sabés que también va a vibrar en cada lectura. Si no vibra, ponelo en modo Vibrar (no Silencio) y sacá el ahorro de batería.</p>
-    <button type="button" id="empezarBtn">Empezar a escanear</button>
-    <p style="margin:14px 0 0;font-size:11px;color:var(--muted-2)">versión 30/9 · <a href="/prueba-vibracion.html" style="color:inherit">¿no vibra?</a></p>
   </div>
 </div>
 
@@ -440,34 +423,25 @@ function entrarConToken(token){
   arrancarPuerta();
 }
 
-// La primera vez se pide un toque (ver .empezar). Las siguientes —cuando la sesión se
-// renueva sola— la cámara sigue sin molestar: ese toque ya habilitó la vibración para toda
-// la vida de la página.
-var PUERTA_ARRANCADA = false;
+// Sin pantallas intermedias: apenas entra la sesión, la cámara arranca sola.
+// Con la cámara ya andando no se pide otra: cada renovación de la sesión sumaba un stream y un
+// loop de lectura más, y en iPhone eso calienta el teléfono y traba los toques.
 function arrancarPuerta(){
-  // En iPhone ninguna página puede vibrar: se dice, para que no parezca que algo anda mal.
-  try{
-    if(!('vibrate' in navigator)){
-      document.getElementById('empezarTxt').textContent = 'Tocá para prender la cámara. En iPhone la página no puede vibrar: mirá el color de la pantalla, y sacá el modo silencio para escuchar el pitido.';
-    }
-  }catch(e){}
-  // Con la cámara ya andando no se pide otra: cada renovación sumaba un stream y un loop de
-  // lectura más, y en iPhone eso calienta el teléfono y traba los toques.
-  if(PUERTA_ARRANCADA){ if(!CAMARA_ANDANDO) iniciarCamara(); return; }
-  document.getElementById('empezar').classList.add('visible');
+  if(!CAMARA_ANDANDO) iniciarCamara();
 }
-function empezarAEscanear(){
-  PUERTA_ARRANCADA = true;
-  document.getElementById('empezar').classList.remove('visible');
-  // El sonido también necesita el toque: un AudioContext creado sin él nace suspendido.
+
+// Android no deja vibrar ni sonar hasta que la persona toca la página una vez. No se le pide
+// ese toque: se aprovecha el primero que haga (Confirmar, la jornada, cualquier lado). La
+// vibración se habilita sola con ese toque; el sonido hay que despertarlo acá, porque un
+// AudioContext creado sin toque nace suspendido.
+function despertarSonido(){
   try{
     var ctx = beep.ctx || (beep.ctx = new (window.AudioContext || window.webkitAudioContext)());
     if(ctx.resume) ctx.resume();
   }catch(e){}
-  vibrar('ok');
-  iniciarCamara();
+  try{ ['pointerdown','touchstart','keydown'].forEach(function(t){ document.removeEventListener(t, despertarSonido, true); }); }catch(e){}
 }
-document.getElementById('empezarBtn').onclick = empezarAEscanear;
+try{ ['pointerdown','touchstart','keydown'].forEach(function(t){ document.addEventListener(t, despertarSonido, true); }); }catch(e){}
 
 // Vuelve a mostrar el login, explicando que el problema es la sesion y NO la entrada de la
 // persona que esta parada enfrente. Esa distincion es todo el arreglo: sin ella el staff

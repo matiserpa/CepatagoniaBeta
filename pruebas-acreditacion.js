@@ -71,6 +71,7 @@ function armar(hoy, extra) {
       },
       querySelector() { return null; },
       addEventListener() {},
+      removeEventListener() {},
       createElement: () => nodo('tmp' + Math.random()),
       body: nodo('body'),
       hidden: false,
@@ -470,38 +471,25 @@ console.log('── 11 · La pantalla no se apaga entre persona y persona');
 }
 
 console.log('');
-console.log('── 12 · Un toque antes de la cámara, para que Android deje vibrar');
+console.log('── 12 · Directo a la cámara, sin pantallas ni botones');
 {
-  // Android no deja vibrar hasta que la persona toca la página. Con la entrada automática nadie
-  // tocaba nada y la primera lectura llegaba muda: por eso la cámara espera ese toque.
+  // Sin pantalla intermedia: apenas entra la sesión, la cámara arranca sola.
   const s = armar('2026-10-10');
   let camaras = 0;
-  const patrones = [];
   s.navigator.mediaDevices.getUserMedia = () => { camaras++; return Promise.reject(new Error('sin cámara')); };
-  s.navigator.vibrate = (p) => { patrones.push(p); return true; };
-
   s.entrarConToken(tokenQueVenceEn(60));
-  ok(s.nodos.empezar.clases.has('visible'), 'al entrar aparece el botón de empezar');
-  ok(camaras === 0, 'y la cámara todavía no arrancó');
+  ok(camaras === 1, 'al entrar la cámara arranca sola, sin tocar nada');
+  const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+  ok(!/id="empezar"|Puerta lista|Empezar a escanear/.test(html), 'no queda la pantalla "Puerta lista" ni su botón');
 
-  s.nodos.empezarBtn.onclick();
-  ok(!s.nodos.empezar.clases.has('visible'), 'al tocarlo se va');
-  ok(patrones.length === 1, 'vibra una vez: así se sabe que la vibración anda');
-  ok(camaras === 1, 'y arranca la cámara');
-
-  // La sesión se renueva sola cada hora: eso no puede volver a pedir el toque. Sin cámara
-  // (acá el getUserMedia falla) se reintenta, que es lo que conviene.
+  // Sin cámara (acá el getUserMedia falla), la renovación de la sesión la reintenta.
   s.entrarConToken(tokenQueVenceEn(60));
-  ok(!s.nodos.empezar.clases.has('visible'), 'al renovarse la sesión no lo vuelve a pedir');
   ok(camaras === 2, 'si la cámara no había arrancado, la renovación la reintenta');
 }
 {
   // Con la cámara andando, renovar NO pide otra: cada una sumaba un stream y un loop de lectura.
   const s = armar('2026-10-10');
   let camaras = 0;
-  s.navigator.vibrate = () => true;
-  s.entrarConToken(tokenQueVenceEn(60));
-  s.nodos.empezarBtn.onclick();
   s.__leer('CAMARA_ANDANDO = true');
   s.navigator.mediaDevices.getUserMedia = () => { camaras++; return Promise.reject(new Error('x')); };
   s.entrarConToken(tokenQueVenceEn(60));
@@ -509,14 +497,18 @@ console.log('── 12 · Un toque antes de la cámara, para que Android deje vi
   ok(camaras === 0, 'con la cámara andando, renovar la sesión no prende otra');
 }
 {
-  // Un teléfono sin vibración ni audio tiene que poder empezar igual.
+  // El sonido se despierta con el primer toque que haga el acreditador, en cualquier lado.
   const s = armar('2026-10-10');
-  s.navigator.vibrate = undefined;
-  s.AudioContext = undefined; s.webkitAudioContext = undefined;
-  s.entrarConToken(tokenQueVenceEn(60));
+  let reanudo = 0;
+  s.AudioContext = function () { return { resume() { reanudo++; }, createOscillator() {}, createGain() {}, destination: {}, currentTime: 0 }; };
+  s.window.AudioContext = s.AudioContext;   // la página lo busca en window
+  s.__leer('beep.ctx = null; despertarSonido()');
+  ok(reanudo === 1, 'el primer toque despierta el sonido');
+  const s2 = armar('2026-10-10');
+  s2.AudioContext = undefined; s2.webkitAudioContext = undefined;
   let exploto = false;
-  try { s.nodos.empezarBtn.onclick(); } catch (e) { exploto = true; }
-  ok(!exploto, 'sin vibración ni sonido el botón funciona igual');
+  try { s2.__leer('beep.ctx = null; despertarSonido()'); } catch (e) { exploto = true; }
+  ok(!exploto, 'sin audio en el navegador no explota');
 }
 
 console.log('');
