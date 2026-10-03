@@ -550,6 +550,32 @@ document.addEventListener('visibilitychange', function(){
   if(document.visibilityState === 'visible' && !desvelo) mantenerDespierta();
 });
 
+// ---------- se actualiza sola ----------
+// Un teléfono que deja el lector abierto en segundo plano —sobre todo un iPhone— no vuelve a
+// pedir la página: retoma la que tenía cargada, aunque se haya publicado otra. Así un arreglo
+// no llegaba a la puerta. Al volver a primer plano, y cada cinco minutos, se mira la versión
+// publicada; si cambió, se recarga. Nunca en medio de una lectura: solo con la cámara libre y
+// sin una pantalla de resultado abierta. La sesión está en localStorage, así que recargar no
+// pide login.
+var VERSION_LECTOR = '2026-10-03';
+function hayVersionNueva(){
+  try{
+    if(document.visibilityState !== 'visible' || ocupado) return;
+    var r = document.getElementById('result');
+    if(r && r.classList.contains('visible')) return;
+    fetch('/acreditacion.html?v=' + Date.now(), { cache: 'no-store' })
+      .then(function(res){ return res.ok ? res.text() : ''; })
+      .then(function(html){
+        // Armada en partes para que esta línea no coincida consigo misma en el HTML.
+        var m = new RegExp('var VERSION' + '_LECTOR = \'([^\']+)\'').exec(html || '');
+        if(m && m[1] !== VERSION_LECTOR && !ocupado) window.location.reload();
+      })
+      .catch(function(){});   // sin red no pasa nada: se vuelve a mirar después
+  }catch(e){}
+}
+document.addEventListener('visibilitychange', hayVersionNueva);
+setInterval(hayVersionNueva, 5 * 60 * 1000);
+
 // ---------- foco en el campo manual ----------
 // El lector USB "escribe" como un teclado, así que necesita el foco puesto ahí sin que nadie
 // toque nada. Pero en un teléfono cada foco abre el teclado en pantalla Y TAPA LA CÁMARA: hay

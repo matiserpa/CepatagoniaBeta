@@ -623,7 +623,43 @@ async function seccion15() {
   }
 }
 
-seccion14().then(seccion15).then(() => {
+async function seccion16() {
+  console.log('');
+  console.log('── 16 · Se actualiza sola cuando hay versión nueva');
+  const respuesta = (html) => () => Promise.resolve({ ok: true, text: () => Promise.resolve(html) });
+  {
+    const s = armar('2026-10-10');
+    s.fetch = respuesta("var VERSION_LECTOR = 'otra-version';");
+    s.__leer('hayVersionNueva()'); await esperar(); await esperar();
+    ok(s.__recargo === true, 'con una versión publicada distinta, recarga');
+  }
+  {
+    const s = armar('2026-10-10');
+    const actual = s.__leer('VERSION_LECTOR');
+    s.fetch = respuesta("var VERSION_LECTOR = '" + actual + "';");
+    s.__leer('hayVersionNueva()'); await esperar(); await esperar();
+    ok(!s.__recargo, 'con la misma versión no recarga');
+  }
+  {
+    const s = armar('2026-10-10');
+    s.fetch = respuesta("var VERSION_LECTOR = 'otra-version';");
+    s.__leer('ocupado = true; hayVersionNueva()'); await esperar(); await esperar();
+    ok(!s.__recargo, 'en medio de una lectura no recarga');
+  }
+  {
+    const s = armar('2026-10-10');
+    s.fetch = () => Promise.reject(new Error('sin red'));
+    let exploto = false;
+    try { s.__leer('hayVersionNueva()'); await esperar(); } catch (e) { exploto = true; }
+    ok(!exploto && !s.__recargo, 'sin red no rompe ni recarga');
+  }
+  {
+    const html = fs.readFileSync(__dirname + '/acreditacion.html', 'utf8');
+    ok((html.match(/var VERSION_LECTOR = '[^']+'/g) || []).length === 1, 'hay una sola marca de versión en la página');
+  }
+}
+
+seccion14().then(seccion15).then(seccion16).then(() => {
   console.log('────────────────────────────────────────────────────────────────');
   console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
   process.exitCode = fallaron ? 1 : 0;
