@@ -48,6 +48,7 @@ fbq('track', 'PageView');
   header.site{border-bottom:1px solid rgba(14,20,16,.12);padding:26px 20px 20px;text-align:center}
   /* El logo claro (transparente), oscurecido para el fondo crema. */
   header.site .logo{display:block;width:150px;height:auto;margin:0 auto;filter:brightness(0) opacity(.85)}
+  .butaca{display:inline-block;margin:-6px 0 16px;padding:6px 16px;border-radius:99px;background:#e3efe3;color:#3d4a3d;font-size:14px;letter-spacing:.04em}
   .titular{font-family:var(--font-display);font-weight:600;font-size:20px;margin:-8px 0 18px}
   .horizon{width:120px;height:1px;background:var(--dark-green);margin:0 auto 14px;position:relative}
   .horizon::after{content:'';position:absolute;left:50%;top:-7px;transform:translateX(-50%) rotate(45deg);width:10px;height:10px;border-top:1px solid var(--dark-green);border-left:1px solid var(--dark-green);background:var(--cream)}
@@ -187,6 +188,7 @@ async function init(){
     render('<div class="badge ok"><svg viewBox="0 0 24 24" fill="none" stroke="#E8E6D4" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg></div>' +
       '<h2>Credencial confirmada</h2>' +
       (una ? '<p class="titular">' + esc(personas[n - 1]) + '</p>' : '') +
+      (orden.asientos ? '<p class="butaca">Butaca <b>' + esc(orden.asientos) + '</b></p>' : '') +
       '<p class="sub">Congreso de Estética de la Patagonia · 10 y 11 de octubre 2026 · Hotel Le Village, San Martín de los Andes</p>' +
       qrDeUna +
       '<div class="nota">Presentá este código y tu DNI en la acreditación, desde las 8:00. Se acredita una vez por día.</div>');
