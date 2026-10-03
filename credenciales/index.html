@@ -155,6 +155,11 @@
   // puntos queda en números; un RUT con K o un pasaporte conservan sus letras).
   function normDoc(v){ return String(v == null ? '' : v).toUpperCase().replace(/[^0-9A-Z]/g, '').slice(0, 12); }
   function docValido(d){ return d.length >= 6 && d.length <= 12 && (d.match(/\d/g) || []).length >= 4; }
+  // Sin emojis en lo que va por wa.me: WhatsApp Web los rompe y llegan como "�".
+  function sinEmojis(t){
+    try { return String(t || '').replace(/\p{Extended_Pictographic}/gu, '').replace(/[\u{1F1E6}-\u{1F1FF}\u{1F3FB}-\u{1F3FF}]/gu, '').replace(/\u{FE0F}|\u{200D}/gu, '').replace(/[ \t]{2,}/g, ' '); }
+    catch (e) { return String(t || ''); }
+  }
   function urlQR(orderId){ return 'https://cepatagonia.com/gracias.html?external_reference=' + encodeURIComponent(orderId) + '&p=1&status=approved'; }
 
   // El cuerpo va en ASCII puro (\uXXXX): por text/plain los emoji llegan rotos a Apps Script.
@@ -207,7 +212,7 @@
             (p.asiento ? '\n\nTu butaca: ' + p.asiento + '.' : '') +
             '\n\nEn la acreditación mostrá este código QR y tu DNI. Se acredita desde las 8:00.';
           html += '<div class="p-qr"><img alt="QR de ' + esc(p.nombre) + '" loading="lazy" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(u) + '">' +
-            '<div class="p-acc"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(texto) + '">Enviar por WhatsApp</a>' +
+            '<div class="p-acc"><a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=' + encodeURIComponent(sinEmojis(texto)) + '">Enviar por WhatsApp</a>' +
             '<a class="btn claro" target="_blank" rel="noopener" href="' + esc(u) + '">Ver credencial</a></div></div>';
         } else if (p.estado === 'PENDIENTE') {
           html += '<p class="p-sub" style="margin-top:8px">La organización la está revisando. El QR aparece acá cuando la aprueben.</p>' +
@@ -228,7 +233,7 @@
     if (aprobadas.length > 1) {
       var txt = 'Credenciales de ' + g.nombre + ' para CEPATAGONIA (10 y 11 de octubre, Hotel Le Village). Cada uno abre su link y muestra el QR y el DNI en la acreditación:\n\n' +
         aprobadas.map(function(p){ return '• ' + p.nombre + ' ' + p.apellido + (p.asiento ? ' (butaca ' + p.asiento + ')' : '') + ': ' + urlQR(p.orderId); }).join('\n');
-      $('todos').href = 'https://wa.me/?text=' + encodeURIComponent(txt);
+      $('todos').href = 'https://wa.me/?text=' + encodeURIComponent(sinEmojis(txt));
     }
 
     var puedeCargar = g.activo && g.libres > 0;

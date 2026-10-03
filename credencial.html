@@ -173,7 +173,7 @@
     };
     var link = PANEL + '?solicitud=' + b64url(pedido);
     var texto =
-      'Hola 👋 Soy ' + pedido.nombre + ' ' + pedido.apellido + ' (DNI ' + pedido.dni + ') y pido credencial para CEPATAGONIA como ' +
+      'Hola, soy ' + pedido.nombre + ' ' + pedido.apellido + ' (DNI ' + pedido.dni + ') y pido credencial para CEPATAGONIA como ' +
       ETIQUETA[tipo] + (pedido.organizacion ? ' de ' + pedido.organizacion : '') + '.' +
       (acomps.length ? '\nVienen conmigo: ' + acomps.map(function(a){ return a.nombre + ' ' + a.apellido + ' (DNI ' + a.dni + ')'; }).join(', ') + '.' : '') +
       '\n\nPara revisarlo y aprobarlo:\n' + link;
