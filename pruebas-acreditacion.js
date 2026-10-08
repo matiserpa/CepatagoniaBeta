@@ -101,6 +101,7 @@ function armar(hoy, extra) {
     jsQR: () => null,
     Date: hoy ? class extends Date { toLocaleDateString() { return hoy; } } : Date,
     Math, JSON, String, Number, Boolean, Array, Object, RegExp, Error, Promise, isNaN, parseInt, parseFloat, encodeURIComponent, decodeURIComponent,
+    AbortController,
     __timers: [],
   };
   s.window.location = { reload() { s.__recargo = true; }, hash: '', pathname: '/acreditacion.html', search: '' };
@@ -659,7 +660,98 @@ async function seccion16() {
   }
 }
 
-seccion14().then(seccion15).then(seccion16).then(() => {
+async function seccion17() {
+  console.log('');
+  console.log('── 17 · Sistema ocupado o Google colgado: ni rojo ni teléfono trabado');
+  const titulo = (s) => String((s.nodos.rTitulo && s.nodos.rTitulo.textContent) || '');
+  const amarillo = (s) => /\bwarn\b/.test(String((s.nodos.result && s.nodos.result.className) || ''));
+  [
+    { motivo: 'Error del sistema. Probá de nuevo; si se repite, anotala en papel y seguí.', error: 'Se cortó la operación: Exception: Lock timeout' },
+    { motivo: 'Error del sistema. Probá de nuevo; si se repite, anotala en papel y seguí.' },
+  ].forEach(function (resp) {
+    const s = armar();
+    s.entrarConToken('tok');
+    s.nodos.login.style.display = 'none';
+    s.resultadoNegativo(Object.assign({ ok: false }, resp));
+    ok(titulo(s) === 'Sistema ocupado' && amarillo(s) && s.nodos.login.style.display === 'none',
+      JSON.stringify(String(resp.motivo || resp.error).slice(0, 30)) + ' → amarillo "Sistema ocupado", no "No válido"');
+  });
+  {
+    const s = armar();
+    s.entrarConToken('tok');
+    s.resultadoNegativo({ ok: false, motivo: 'Orden no encontrada' });
+    ok(/No v[áa]lido/.test(titulo(s)), 'un rechazo de verdad ("Orden no encontrada") sigue en rojo');
+  }
+  {
+    // Un QR trucho que trae escrito "Error del sistema" no se hace pasar por sistema ocupado.
+    const s = armar();
+    s.entrarConToken('tok');
+    s.resultadoNegativo({ ok: false, motivo: 'Orden no encontrada: Error del sistema' });
+    ok(/No v[áa]lido/.test(titulo(s)), 'un QR con "Error del sistema" escrito adentro sigue en rojo');
+  }
+  {
+    // Solo mirar el QR (sin registrar) no dice que un «Ya ingresó» de recién sea la misma persona.
+    const s = armar();
+    s.entrarConToken('tok');
+    s.resultadoNegativo({ ok: false, motivo: 'Error de conexión' });
+    ok(!/misma persona/.test(String(s.nodos.rDet.innerHTML || '')), 'si solo se miró el QR, no dice "es esta misma persona"');
+    const s2 = armar();
+    s2.entrarConToken('tok');
+    s2.resultadoNegativo({ ok: false, motivo: 'Error del sistema. Probá de nuevo; si se repite, anotala en papel y seguí.' }, true);
+    ok(/misma persona/.test(String(s2.nodos.rDet.innerHTML || '')), 'si se había mandado a registrar, sí lo dice');
+  }
+  {
+    // Google no contesta: a los 20 s se deja de esperar y sale "Sin conexión" (volver a escanear).
+    let pedidos = 0;
+    const colgado = (url, opts) => { pedidos++; return new Promise((res, rej) => {
+      if (opts && opts.signal) opts.signal.addEventListener('abort', () => rej(new Error('AbortError')));
+    }); };
+    const s = armar('2026-10-10', { fetch: colgado });
+    s.entrarConToken('tok');
+    const antes = s.__timers.length;
+    s.procesar('CEP-AAA-P1');
+    await esperar();
+    const corte = s.__timers.slice(antes).find((t) => t.ms === 20000);
+    ok(!!corte && pedidos === 1, 'al escanear queda un corte a los 20 s');
+    ok(!/visible/.test(String((s.nodos.result && s.nodos.result.className) || '')), 'mientras tanto no muestra nada (está esperando)');
+    corte && corte.fn();
+    await esperar(); await esperar(); await esperar();
+    ok(titulo(s) === 'Sin conexión' && amarillo(s), 'a los 20 s muestra "Sin conexión" en amarillo');
+    ok(!/misma persona/.test(String(s.nodos.rDet.innerHTML || '')), 'y como solo se estaba mirando el QR, no dice "es la misma persona"');
+    s.cerrar();
+    ok(s.__leer('ocupado') === false, 'al cerrar, la cámara queda libre para el siguiente');
+  }
+  {
+    // Acreditación directa: el pedido que se corta YA era para registrar, así que sí lo avisa.
+    const colgado = (url, opts) => new Promise((res, rej) => {
+      if (opts && opts.signal) opts.signal.addEventListener('abort', () => rej(new Error('AbortError')));
+    });
+    const s = armar('2026-10-10', { fetch: colgado });
+    s.entrarConToken('tok');
+    s.nodos.rapido.checked = true;
+    const antes = s.__timers.length;
+    s.procesar('CEP-BBB-P1');
+    await esperar();
+    const corte = s.__timers.slice(antes).find((t) => t.ms === 20000);
+    corte && corte.fn();
+    await esperar(); await esperar(); await esperar();
+    ok(titulo(s) === 'Sin conexión' && /misma persona/.test(String(s.nodos.rDet.innerHTML || '')),
+      'en acreditación directa, al cortarse avisa que un «Ya ingresó» de recién es la misma persona');
+  }
+  {
+    // Cobrar no se corta solo: repetir un cobro a ciegas no es seguro.
+    const s = armar('2026-10-10', { fetch: () => Promise.resolve({ json: () => Promise.resolve({ ok: true }) }) });
+    s.entrarConToken('tok');
+    const antes = s.__timers.length;
+    await s.llamar('cobrarYAcreditar', 'CEP-AAA-P1', { medio: 'efectivo' });
+    ok(!s.__timers.slice(antes).some((t) => t.ms === 20000), 'cobrar y entrar no tiene corte automático');
+    const antes2 = s.__timers.length;
+    await s.llamar('acreditar', 'CEP-AAA-P1');
+    ok(s.__timers.slice(antes2).some((t) => t.ms === 20000), 'registrar el ingreso sí');
+  }
+}
+
+seccion14().then(seccion15).then(seccion16).then(seccion17).then(() => {
   console.log('────────────────────────────────────────────────────────────────');
   console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
   process.exitCode = fallaron ? 1 : 0;

@@ -150,7 +150,11 @@
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbxGP7MPB28EBwcoJVmftDztoraRSUh5Y7ZR1uNjYohbuks-Dwtot2oSEJvglX2ygduMFA/exec';
-const REFRESH_MS = 8000;
+// Cada 60 s y solo con la pestaña a la vista. Antes era cada 8 s, aunque nadie la mirara: una
+// pantalla de estas abierta todo el día le pedía a Google ~450 veces por hora, con el mismo
+// cupo diario que usan la puerta y el panel.
+const REFRESH_MS = 60000;
+let cargandoStats = false;
 
 let CLAVE = '';
 let pollId = null;
@@ -171,11 +175,18 @@ function mostrarError(msg){
 }
 
 async function cargarStats(){
+  // Pestaña oculta o pedido anterior todavía en camino: no se manda otro encima.
+  if(document.hidden || cargandoStats) return;
+  cargandoStats = true;
+  // Si no vuelve en 30 s se deja de esperar, para que un pedido trabado no frene a los siguientes.
+  const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+  const corte = ctl ? setTimeout(function(){ ctl.abort(); }, 30000) : 0;
   try{
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action: 'stats', clave: CLAVE })
+      body: JSON.stringify({ action: 'stats', clave: CLAVE }),
+      signal: ctl ? ctl.signal : undefined
     });
     const data = await res.json();
     if(!data.ok){
@@ -194,8 +205,14 @@ async function cargarStats(){
     document.getElementById('updated').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-AR');
   }catch(err){
     mostrarError('Error de conexión. Reintentando…');
+  }finally{
+    if(corte) clearTimeout(corte);
+    cargandoStats = false;
   }
 }
+
+// Al volver a la pestaña, se pone al día enseguida.
+document.addEventListener('visibilitychange', function(){ if(!document.hidden && pollId) cargarStats(); });
 
 function iniciarPolling(){
   if(pollId) clearInterval(pollId);

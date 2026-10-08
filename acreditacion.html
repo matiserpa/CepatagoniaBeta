@@ -557,7 +557,7 @@ document.addEventListener('visibilitychange', function(){
 // publicada; si cambió, se recarga. Nunca en medio de una lectura: solo con la cámara libre y
 // sin una pantalla de resultado abierta. La sesión está en localStorage, así que recargar no
 // pide login.
-var VERSION_LECTOR = '2026-10-03';
+var VERSION_LECTOR = '2026-10-08';
 function hayVersionNueva(){
   try{
     if(document.visibilityState !== 'visible' || ocupado) return;
@@ -666,12 +666,25 @@ document.querySelectorAll('.jbtn').forEach(b=>{
 document.getElementById('rapido').addEventListener('change', enfocarManual);
 
 // ---------- API ----------
+// Si Google no contesta en 20 s, se deja de esperar: antes el teléfono quedaba trabado (la
+// cámara no leía a nadie más) hasta que alguien recargaba, con la fila esperando. Solo al leer
+// un QR y al registrar el ingreso: volver a escanear es seguro, porque el sistema vuelve a mirar
+// si esa persona ya entró. Cobrar y deshacer no se cortan: tienen su pantalla con "Cancelar" y
+// repetirlos a ciegas no es seguro.
+var ESPERA_MAX_MS = 20000;
 async function llamar(action, codigo, extra){
   const cuerpo = Object.assign({ action:action, id_token:ID_TOKEN, codigo:codigo, jornada:jornada }, extra||{});
-  const res = await fetch(API_URL, { method:'POST',
-    headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-    body: JSON.stringify(cuerpo) });
-  return res.json();
+  const conCorte = (action === 'verificarAcceso' || action === 'acreditar') && typeof AbortController === 'function';
+  const ctl = conCorte ? new AbortController() : null;
+  const corte = ctl ? setTimeout(function(){ ctl.abort(); }, ESPERA_MAX_MS) : 0;
+  try{
+    const res = await fetch(API_URL, { method:'POST',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: JSON.stringify(cuerpo), signal: ctl ? ctl.signal : undefined });
+    return await res.json();
+  }finally{
+    if(corte) clearTimeout(corte);
+  }
 }
 
 // ---------- resultado ----------
@@ -735,7 +748,7 @@ document.getElementById('rConfirmar').onclick = async function(){
   this.textContent = 'Confirmando…';
   const data = await llamar('acreditar', pendiente).catch(()=>({ok:false,motivo:'Error de conexión'}));
   this.textContent = 'Confirmar ingreso';
-  if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
+  if(data.ok){ registrarOK(data); } else { resultadoNegativo(data, true); }
 };
 document.getElementById('rDeshacer').onclick = async function(){
   if(!deshacerCod) return cerrar();
@@ -759,7 +772,7 @@ document.getElementById('rCobrar').onclick = async function(){
   this.textContent = 'Cobrando…';
   const data = await llamar('cobrarYAcreditar', pendiente, { medio: medioCobro }).catch(()=>({ok:false,motivo:'Error de conexión'}));
   this.textContent = 'Cobrar y entrar';
-  if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
+  if(data.ok){ registrarOK(data); } else { resultadoNegativo(data, true); }
 };
 document.querySelectorAll('#rCobroMedios .mchip').forEach(function(b){
   b.onclick = function(){ medioCobro = b.dataset.medio; actualizarChips(); };
@@ -784,7 +797,13 @@ function registrarOK(data){
   clearTimeout(cerrarTimer);
   cerrarTimer = setTimeout(cerrar, 4500);
 }
-function resultadoNegativo(data){
+// intentoRegistrar: el pedido que falló era para REGISTRAR el ingreso (acreditar o cobrar y
+// entrar), no solo para mirar el QR. Solo en ese caso un «Ya ingresó» de recién puede ser esta
+// misma persona; si solo se miró el QR, un «Ya ingresó» de recién es OTRA persona con el mismo QR.
+function resultadoNegativo(data, intentoRegistrar){
+  const mismaPersona = intentoRegistrar
+    ? '<br>Como ya se había mandado a registrar el ingreso: si al volver a escanear dice \u00abYa ingres\u00f3\u00bb con la hora de reci\u00e9n, es esta misma persona.'
+    : '';
   // Un problema de SESION no es una entrada invalida. El regex cubre los textos que produce
   // verificarSesionPanel_ en el backend y ninguno de los motivos de negocio ("YA INGRESÓ",
   // "no está paga", "no incluye el Post Congreso"), asi que no puede tapar un rechazo real.
@@ -801,7 +820,17 @@ function resultadoNegativo(data){
   if(/conexi\u00f3n|conexion|sin red/i.test(String(data.motivo||''))){
     beep(320,200);
     mostrar('warn','Sin conexi\u00f3n','',
-      'No se pudo hablar con el sistema. <b>La entrada no est\u00e1 rechazada</b>: volv\u00e9 a escanear en unos segundos.<br>Si sigue igual, anotala en papel y segu\u00ed.',
+      'No se pudo hablar con el sistema. <b>La entrada no est\u00e1 rechazada</b>: volv\u00e9 a escanear en unos segundos.' + mismaPersona + '<br>Si sigue igual, anotala en papel y segu\u00ed.',
+      '', false);
+    return;
+  }
+  // El sistema estaba ocupado o tardó (muchas lecturas a la vez, Google lento): tampoco es una
+  // entrada inválida. Antes salía "No válido" en rojo para gente que tenía todo bien.
+  // Solo los textos exactos que arma el backend al cortarse (no algo que venga escrito en el QR).
+  if(/^Error del sistema/.test(String(data.motivo||'')) || /^Se cort[o\u00f3] la operaci/.test(String(data.error||''))){
+    beep(320,200);
+    mostrar('warn','Sistema ocupado','',
+      'El sistema tard\u00f3 o estaba ocupado. <b>La entrada no est\u00e1 rechazada</b>: volv\u00e9 a escanear.' + mismaPersona + '<br>Si se repite, anotala en papel y segu\u00ed.',
       '', false);
     return;
   }
@@ -833,7 +862,7 @@ async function procesar(codigo){
     .catch(()=>({ok:false,motivo:'Error de conexión'}));
 
   if(directo){
-    if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
+    if(data.ok){ registrarOK(data); } else { resultadoNegativo(data, true); }
     return;
   }
   if(!data.ok){ resultadoNegativo(data); return; }
