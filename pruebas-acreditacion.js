@@ -511,6 +511,107 @@ console.log('── 13 · El lector se instala como app propia');
   ok(m.icons.every((i) => fs.existsSync(__dirname + i.src)), 'todos los íconos existen');
 }
 
+console.log('');
+console.log('── 14 · Deshacer no puede borrar el ingreso de otro');
+{
+  // El bug: el botón salía TAMBIÉN en la pantalla de "Ya ingresó". Ahí el ingreso que existe
+  // es casi siempre el legítimo —el de la primera vez que esa persona pasó—, el botón cae
+  // justo donde va el dedo para seguir con el que viene, y borraba sin pedir nada.
+  const s = armar('2026-10-10');
+  s.entrarConToken('tok');
+  s.nodos.login.style.display = 'none';
+  s.resultadoNegativo({
+    ok: false, motivo: 'YA INGRESÓ',
+    detalle: { persona: 'Meylin Gutiérrez', codigo: 'CEP-AAA-P1', yaIngreso: new Date().toISOString() },
+  });
+  ok(s.nodos.rDeshacer.style.display === 'none', 'en "Ya ingresó" el botón no aparece');
+  ok(s.__leer('deshacerCod') === null, 'y no queda ningún ingreso cargado para deshacer');
+}
+{
+  // En la pantalla verde sí queda: ese ingreso es el que se acaba de hacer. Pero con dos
+  // toques y un motivo, que viaja al backend para que el borrado quede explicado.
+  const s = armar('2026-10-10');
+  s.entrarConToken('tok');
+  const cuerpos = [];
+  s.fetch = function (url, opts) {
+    cuerpos.push(JSON.parse(opts.body));
+    return Promise.resolve({ json: () => Promise.resolve({ ok: true, persona: 'Meylin Gutiérrez' }) });
+  };
+  s.registrarOK({ codigo: 'CEP-AAA-P1', persona: 'Meylin Gutiérrez', asientos: 'A1', personaNum: 1, totalPersonas: 1 });
+  ok(s.nodos.rDeshacer.style.display === 'block', 'en el ingreso recién hecho sí está');
+
+  s.nodos.rDeshacer.onclick.call(s.nodos.rDeshacer);
+  ok(cuerpos.length === 0, 'el primer toque no manda nada al backend');
+  ok(s.nodos.rMotivos.style.display === 'flex', 'muestra la lista de motivos');
+  ok(s.nodos.rDeshacer.disabled === true, 'y el botón queda bloqueado hasta elegir uno');
+
+  // Sin motivo, el segundo toque tampoco borra (acá se fuerza el botón habilitado a mano,
+  // justamente para probar que el motivo y no el estilo es lo que frena el borrado).
+  s.nodos.rDeshacer.disabled = false;
+  s.nodos.rDeshacer.onclick.call(s.nodos.rDeshacer);
+  ok(cuerpos.length === 0, 'sin motivo elegido no borra nada');
+
+  s.__leer('motivoDeshacer = "doble-escaneo"');
+  s.nodos.rDeshacer.onclick.call(s.nodos.rDeshacer);
+  ok(cuerpos.length === 1, 'con el motivo puesto, el segundo toque sí lo manda');
+  ok(cuerpos.length === 1 && cuerpos[0].action === 'desacreditar', 'y es un desacreditar');
+  ok(cuerpos.length === 1 && cuerpos[0].motivo === 'doble-escaneo',
+    'con el motivo adentro, para que el registro diga por qué');
+}
+
+console.log('');
+console.log('── 15 · Ninguna pantalla deja la estación parada esperando un dedo');
+{
+  const s = armar('2026-10-10');
+  s.entrarConToken('tok');
+  s.nodos.login.style.display = 'none';
+  s.__timers.length = 0;
+  s.registrarOK({ codigo: 'CEP-AAA-P1', persona: 'Meylin', asientos: 'A1', personaNum: 1, totalPersonas: 1 });
+  const ms = s.__timers.map((t) => t.ms);
+  ok(ms.indexOf(1500) >= 0, 'el ingreso registrado vuelve al lector en 1,5 s');
+  ok(ms.indexOf(4500) < 0, 'y ya no se queda 4,5 s mirando un cartel');
+}
+{
+  // Esta era la peor: un código rechazado NO programaba ningún cierre, así que la pantalla
+  // roja quedaba clavada hasta que alguien tocara Volver, con la fila esperando.
+  const s = armar('2026-10-10');
+  s.entrarConToken('tok');
+  s.nodos.login.style.display = 'none';
+  s.__timers.length = 0;
+  s.resultadoNegativo({ ok: false, motivo: 'La orden CEP-X no está paga (estado: EXPIRADO)' });
+  ok(s.__timers.some((t) => t.ms === 2500), 'un rechazo también se cierra solo');
+}
+{
+  // Y "sin conexión", que es donde cae el corte de los 15 segundos de llamar().
+  const s = armar('2026-10-10');
+  s.entrarConToken('tok');
+  s.nodos.login.style.display = 'none';
+  s.__timers.length = 0;
+  s.resultadoNegativo({ ok: false, motivo: 'Error de conexión' });
+  ok(s.__timers.some((t) => t.ms === 2500), 'y un corte de red deja la estación lista para reintentar');
+}
+
+console.log('');
+console.log('── 16 · Un pedido que se cuelga no mata la estación');
+{
+  const s = armar('2026-10-10');
+  s.entrarConToken('tok');
+  s.nodos.login.style.display = 'none';
+  // Un fetch que NO resuelve nunca: es el caso real de Apps Script esperando el candado.
+  let abortado = false;
+  s.AbortController = function () {
+    this.signal = {};
+    this.abort = function () { abortado = true; };
+  };
+  s.fetch = function () { return new Promise(function () {}); };
+  s.procesar('CEP-AAA1-P1');
+  ok(s.nodos.rTitulo.textContent === 'Verificando…', 'mientras espera, la pantalla lo dice');
+  ok(s.__timers.some((t) => t.ms === 15000), 'y programa el corte a los 15 segundos');
+  const corte = s.__timers.filter((t) => t.ms === 15000)[0];
+  corte.fn();
+  ok(abortado, 'al cumplirse, aborta el pedido en vez de esperar para siempre');
+}
+
 console.log('────────────────────────────────────────────────────────────────');
 console.log('  pasaron: ' + pasaron + '   ·   fallaron: ' + fallaron);
 process.exitCode = fallaron ? 1 : 0;

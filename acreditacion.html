@@ -101,10 +101,16 @@
   .result .acciones button{flex:1;padding:16px;border:none;border-radius:10px;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
   .b-conf{background:#fdfdf9;color:var(--dark)}
   .b-sec{background:rgba(0,0,0,.22);color:inherit}
-  .cobro-medios{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:18px;width:100%;max-width:380px}
-  .cobro-medios .cm-lbl{font-size:13px;opacity:.85;letter-spacing:.04em;width:100%;margin-bottom:2px}
-  .cobro-medios .mchip{flex:1;min-width:120px;padding:12px 10px;border:2px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(0,0,0,.14);color:inherit;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.03em;cursor:pointer}
-  .cobro-medios .mchip.active{background:#fdfdf9;color:var(--dark);border-color:#fdfdf9}
+  /* Los motivos para deshacer un ingreso llevan la MISMA pinta que los medios de cobro: es la
+     misma cosa —elegir una opción antes de confirmar— y no vale inventar un segundo chip. */
+  .cobro-medios,.motivos{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;margin-top:18px;width:100%;max-width:380px}
+  .cobro-medios .cm-lbl,.motivos .cm-lbl{font-size:13px;opacity:.85;letter-spacing:.04em;width:100%;margin-bottom:2px}
+  .cobro-medios .mchip,.motivos .mchip{flex:1;min-width:120px;padding:12px 10px;border:2px solid rgba(255,255,255,.45);border-radius:999px;background:rgba(0,0,0,.14);color:inherit;font-family:var(--font-body);font-size:14px;font-weight:700;letter-spacing:.03em;cursor:pointer}
+  .cobro-medios .mchip.active,.motivos .mchip.active{background:#fdfdf9;color:var(--dark);border-color:#fdfdf9}
+  .result .acciones button:disabled{opacity:.45;cursor:default}
+  /* "Verificando…" no es un veredicto: no lleva ni verde ni rojo, para que nadie lea una
+     pantalla de color como una respuesta que todavía no llegó. */
+  .result.esperando{background:var(--dark);color:#fdfdf9}
 
   /* ---- pantallas angostas ---- */
   @media (max-width:400px){
@@ -218,6 +224,17 @@
   </div>
   <div id="busqResultados" style="display:none"></div>
 
+  <!-- QUEDA APAGADO POR DEFECTO, A PROPÓSITO. Es tentador prenderlo para ahorrar un toque por
+       persona, pero en modo directo se cobra de menos:
+         · procesar() llama 'acreditar' y retorna ANTES del bloque que arma "Cobrar $X y entrar"
+           (el if(data.faltaAbonar) del final), así que ese botón nunca se arma;
+         · y mostrar() esconde rCobrar y rCobroMedios en cada pantalla, así que tampoco queda
+           de la persona anterior.
+       Resultado: una orden RESERVADO —paga en la puerta— entra acreditada, con la fila ya
+       escrita en Ingresos y la orden todavía en RESERVADO. La pantalla avisa "FALTA ABONAR"
+       en el texto, pero no hay con qué cobrarle: la plata hay que correrla después, a mano,
+       desde "entró debiendo" del panel. Prenderlo por defecto sólo es seguro el día que el
+       modo directo sepa frenar en los RESERVADO. -->
   <label class="rapido"><input type="checkbox" id="rapido"> Acreditación directa (confirma sola al escanear)</label>
 </div>
 
@@ -232,6 +249,15 @@
     <span class="cm-lbl">¿Cómo paga el saldo?</span>
     <button type="button" class="mchip active" data-medio="efectivo">💵 Efectivo</button>
     <button type="button" class="mchip" data-medio="transferencia">🏦 Transferencia</button>
+  </div>
+  <!-- Deshacer borra un ingreso: es la única acción de la puerta que destruye un dato. Aparece
+       sólo en la pantalla verde del ingreso que se acaba de registrar, pide dos toques y exige
+       un motivo de esta lista, que viaja al backend y queda en el Panel Log. -->
+  <div id="rMotivos" class="motivos" style="display:none">
+    <span class="cm-lbl">¿Por qué se deshace este ingreso?</span>
+    <button type="button" class="mchip" data-motivo="codigo-equivocado">Código equivocado</button>
+    <button type="button" class="mchip" data-motivo="doble-escaneo">Doble escaneo</button>
+    <button type="button" class="mchip" data-motivo="no-entro">No entró</button>
   </div>
   <div class="acciones">
     <button class="b-sec" type="button" id="rCancelar">Volver</button>
@@ -308,6 +334,16 @@ let cerrarTimer = null;
 let deshacerCod = null;
 let medioCobro = 'efectivo';
 let pendienteSaldo = 0;
+let motivoDeshacer = '';     // el motivo elegido; sin motivo no se borra ningún ingreso
+let deshacerArmado = false;  // deshacer son dos toques: el primero sólo pide el motivo
+let turnoProcesar = 0;       // para descartar la respuesta de un escaneo que ya nadie espera
+
+// Cuánto queda cada pantalla de resultado antes de volver sola al lector. El verde no tiene
+// nada que leer —la persona ya está entrando— y 4,5 segundos era la estación parada mirando
+// un cartel: con una fila de 300, son minutos regalados. El rojo sí hay que leerlo, y además
+// hay que decidir qué hacer con esa persona, así que dura un poco más.
+const CERRAR_OK_MS = 1500;
+const CERRAR_MAL_MS = 2500;
 
 // ---------- sonido ----------
 function beep(freq, ms){
@@ -624,12 +660,29 @@ document.querySelectorAll('.jbtn').forEach(b=>{
 document.getElementById('rapido').addEventListener('change', enfocarManual);
 
 // ---------- API ----------
+// 15 segundos y corta. Un fetch sin timeout no vuelve nunca: la promesa queda viva, la pantalla
+// esperando y la estación parada. Cortando, el .catch() de cada llamador muestra "Sin conexión"
+// —que NO es rechazar la entrada— y el acreditador puede volver a intentar cuando quiera.
+//
+// NO hay reintento automático, y no es un olvido: abortar del lado del cliente no libera el
+// ScriptLock del servidor. Si el pedido se colgó porque el candado está ocupado, un reintento
+// mete una SEGUNDA ejecución en la cola mientras la primera sigue adentro — más espera, no
+// menos, y dos appendRow posibles de la misma persona. Reintentar lo decide la persona.
+const TIMEOUT_MS = 15000;
 async function llamar(action, codigo, extra){
   const cuerpo = Object.assign({ action:action, id_token:ID_TOKEN, codigo:codigo, jornada:jornada }, extra||{});
-  const res = await fetch(API_URL, { method:'POST',
-    headers:{ 'Content-Type':'text/plain;charset=utf-8' },
-    body: JSON.stringify(cuerpo) });
-  return res.json();
+  // AbortController puede no existir en un navegador viejo: ahí se llama como antes, sin corte.
+  const ctrl = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+  const corte = ctrl ? setTimeout(function(){ ctrl.abort(); }, TIMEOUT_MS) : null;
+  try {
+    const res = await fetch(API_URL, { method:'POST',
+      headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+      body: JSON.stringify(cuerpo),
+      signal: ctrl ? ctrl.signal : undefined });
+    return await res.json();
+  } finally {
+    if(corte) clearTimeout(corte);
+  }
 }
 
 // ---------- resultado ----------
@@ -674,14 +727,46 @@ function mostrar(tipo, titulo, persona, det, cod, conConfirmar, cinta){
   conf.style.display = conConfirmar ? 'block' : 'none';
   conf.textContent = 'Confirmar ingreso';
   conf.className = 'b-conf';
+  const desh = document.getElementById('rDeshacer');
+  desh.style.display = 'none';
+  // El deshacer se desarma en CADA pantalla: si no, un motivo elegido para la persona
+  // anterior quedaba puesto y el segundo toque borraba el ingreso de otra.
+  desh.textContent = 'Deshacer ingreso';
+  desh.disabled = false;
+  deshacerArmado = false;
+  motivoDeshacer = '';
+  document.getElementById('rMotivos').style.display = 'none';
+  document.querySelectorAll('#rMotivos .mchip').forEach(function(b){ b.classList.remove('active'); });
+  document.getElementById('rCobrar').style.display = 'none';
+  document.getElementById('rCobroMedios').style.display = 'none';
+}
+
+// Pantalla de espera mientras se le pregunta al backend. No pasa por mostrar() porque no es un
+// resultado: no vibra, no suena y no pinta un veredicto. Antes acá no se mostraba NADA, y un
+// pedido que tardaba parecía un código que no se leyó: el acreditador volvía a escanear.
+function mostrarVerificando(){
+  const r = document.getElementById('result');
+  r.className = 'result visible esperando';
+  document.getElementById('rIcono').textContent = '⋯';
+  document.getElementById('rTitulo').textContent = 'Verificando…';
+  document.getElementById('rPersona').textContent = '';
+  document.getElementById('rDet').innerHTML = 'Un segundo, estoy preguntando por esta entrada.';
+  document.getElementById('rCod').textContent = '';
+  pintarCinta(null);
+  document.getElementById('rConfirmar').style.display = 'none';
   document.getElementById('rDeshacer').style.display = 'none';
   document.getElementById('rCobrar').style.display = 'none';
   document.getElementById('rCobroMedios').style.display = 'none';
+  document.getElementById('rMotivos').style.display = 'none';
 }
 function cerrar(){
   clearTimeout(cerrarTimer);
   document.getElementById('result').className = 'result';
   pendiente = null; ocupado = false; deshacerCod = null; medioCobro = 'efectivo'; pendienteSaldo = 0;
+  motivoDeshacer = ''; deshacerArmado = false;
+  // Cambiar de turno acá es lo que hace que una respuesta que llega tarde —el pedido que se
+  // colgó y vuelve a los 14 segundos— no pinte una pantalla encima de la persona siguiente.
+  turnoProcesar++;
   // enfocarManual y NO m.focus() directo: después de cada persona, en un teléfono, esto
   // levantaba el teclado encima de la cámara justo cuando llega el siguiente de la fila.
   const m = document.getElementById('manual'); m.value=''; enfocarManual();
@@ -694,13 +779,37 @@ document.getElementById('rConfirmar').onclick = async function(){
   this.textContent = 'Confirmar ingreso';
   if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
 };
+// Dos toques y motivo obligatorio. Deshacer borra la fila de Ingresos: es la única acción de
+// la puerta que destruye un dato, y con la pantalla verde a 1,5 segundos un toque de más al
+// lado del botón no puede alcanzar para perder un ingreso legítimo. El primer toque sólo
+// muestra los motivos; el segundo, con un motivo elegido, es el que borra.
+document.querySelectorAll('#rMotivos .mchip').forEach(function(b){
+  b.onclick = function(){
+    motivoDeshacer = b.dataset.motivo;
+    document.querySelectorAll('#rMotivos .mchip').forEach(function(x){ x.classList.toggle('active', x === b); });
+    const d = document.getElementById('rDeshacer');
+    d.disabled = false;
+    d.textContent = 'Confirmar: deshacer';
+  };
+});
 document.getElementById('rDeshacer').onclick = async function(){
   if(!deshacerCod) return cerrar();
-  clearTimeout(cerrarTimer);
+  clearTimeout(cerrarTimer);   // que la pantalla no se cierre sola mientras se elige el motivo
+  if(!deshacerArmado){
+    deshacerArmado = true;
+    document.getElementById('rMotivos').style.display = 'flex';
+    this.textContent = 'Elegí el motivo';
+    this.disabled = true;      // lo habilita el chip del motivo, no este toque
+    return;
+  }
+  if(!motivoDeshacer) return;  // sin motivo no se borra nada (el botón está deshabilitado)
   const cod = deshacerCod.codigo, conto = deshacerCod.conto;
   this.textContent = 'Deshaciendo…';
-  const data = await llamar('desacreditar', cod).catch(()=>({ok:false,motivo:'Error de conexión'}));
+  this.disabled = true;
+  const data = await llamar('desacreditar', cod, { motivo: motivoDeshacer })
+    .catch(()=>({ok:false,motivo:'Error de conexión'}));
   this.textContent = 'Deshacer ingreso';
+  this.disabled = false;
   if(data.ok){
     if(conto && contador>0){ contador--; document.getElementById('cnt').textContent = contador; }
     beep(440,200);
@@ -739,7 +848,7 @@ function registrarOK(data){
   deshacerCod = { codigo: data.codigo, conto: true };
   document.getElementById('rDeshacer').style.display = 'block';
   clearTimeout(cerrarTimer);
-  cerrarTimer = setTimeout(cerrar, 4500);
+  cerrarTimer = setTimeout(cerrar, CERRAR_OK_MS);
 }
 function resultadoNegativo(data){
   // Un problema de SESION no es una entrada invalida. El regex cubre los textos que produce
@@ -757,6 +866,10 @@ function resultadoNegativo(data){
     mostrar('warn','Sin conexi\u00f3n','',
       'No se pudo hablar con el sistema. <b>La entrada no est\u00e1 rechazada</b>: volv\u00e9 a escanear en unos segundos.<br>Si sigue igual, anotala en papel y segu\u00ed.',
       '', false);
+    // Esta es la pantalla donde cae el corte de los 15 segundos de llamar(), y lo que hay que
+    // hacer es justamente volver a escanear: la estaci\u00f3n tiene que quedar lista sola.
+    clearTimeout(cerrarTimer);
+    cerrarTimer = setTimeout(cerrar, CERRAR_MAL_MS);
     return;
   }
   beep(220,350);
@@ -765,10 +878,18 @@ function resultadoNegativo(data){
     mostrar('warn','Ya ingresó', d.persona,
       'Este código ya fue acreditado en '+jorNombre()+'<br>Primer ingreso: <b>'+new Date(d.yaIngreso).toLocaleTimeString('es-AR')+'</b>'+avisoAbonar(d),
       d.codigo, false);
-    deshacerCod = { codigo: d.codigo, conto: false };
-    document.getElementById('rDeshacer').style.display = 'block';
+    // ACÁ NO VA "DESHACER". Esta pantalla sale cuando el código YA tiene un ingreso, y ese
+    // ingreso es casi siempre el legítimo: el de la primera vez que la persona pasó. El botón
+    // estaba justo donde cae el dedo para seguir con el que viene, y un toque borraba el
+    // ingreso real —sin confirmación y sin dejar motivo—. Si de verdad hay que deshacerlo, se
+    // hace desde la pantalla verde del ingreso recién hecho, con los dos toques y el motivo.
   } else {
     mostrar('bad','No válido','', escHtml(data.motivo || 'Error'), '', false);
+    // Un rechazo también tiene que devolver la estación al lector sola. Sin esto, un código
+    // que no sirve dejaba la pantalla roja clavada hasta que alguien tocara Volver: la fila
+    // parada por una entrada que no era de nadie que estuviera esperando.
+    clearTimeout(cerrarTimer);
+    cerrarTimer = setTimeout(cerrar, CERRAR_MAL_MS);
   }
 }
 
@@ -780,11 +901,25 @@ async function procesar(codigo){
   if(codigo === ultimo.c && ahora - ultimo.t < 3000) return; // anti doble lectura
   ultimo = { c: codigo, t: ahora };
   ocupado = true;
+  const miTurno = ++turnoProcesar;
   beep(660,80);
+  // Mientras se espera la respuesta hay que mostrar ALGO. Sin esto, un pedido lento era una
+  // pantalla que no cambiaba: el acreditador apuntaba de nuevo creyendo que el QR no se leyó.
+  mostrarVerificando();
 
   const directo = document.getElementById('rapido').checked;
-  const data = await llamar(directo ? 'acreditar' : 'verificarAcceso', codigo)
-    .catch(()=>({ok:false,motivo:'Error de conexión'}));
+  let data;
+  try {
+    data = await llamar(directo ? 'acreditar' : 'verificarAcceso', codigo)
+      .catch(()=>({ok:false,motivo:'Error de conexión'}));
+  } finally {
+    // 'ocupado' se suelta ACÁ y no sólo en cerrar(). Antes, un fetch que no volvía nunca dejaba
+    // la estación muerta —el lector ignoraba todo— hasta recargar la página en medio de la fila.
+    ocupado = false;
+  }
+  // Si la pantalla ya se cerró (alguien tocó Volver y siguió con el que viene), esta respuesta
+  // llegó tarde y no se pinta: es de una persona que ya no está adelante.
+  if(miTurno !== turnoProcesar) return;
 
   if(directo){
     if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
