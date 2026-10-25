@@ -95,7 +95,12 @@ function render(d) {
     '<div class="sum-line"><span>Congreso</span><b>1.ª edición · 10 y 11 de octubre de 2026</b></div>' +
     '<div class="sum-line"><span>Sede</span><b>Hotel Le Village, San Martín de los Andes</b></div>';
   if (d.horas) filas += '<div class="sum-line"><span>Carga horaria</span><b>' + esc(d.horas) + ' horas reloj</b></div>';
-  if (d.emitido) filas += '<div class="sum-line"><span>Emitido</span><b>' + esc(d.emitido) + '</b></div>';
+  // La misma fecha que va impresa en el PDF («Emitido … el …»): la del evento, no la del día en
+  // que se generó (esa queda anotada en la planilla).
+  const FECHA_EVENTO = { CONGRESO: '10 y 11 de octubre de 2026', DISERTACION: '10 y 11 de octubre de 2026',
+    FINCI: '12 de octubre de 2026', FERREIRA: '12 de octubre de 2026' };
+  const emitido = FECHA_EVENTO[d.jornada] || d.emitido;
+  if (emitido) filas += '<div class="sum-line"><span>Emitido</span><b>' + esc(emitido) + '</b></div>';
   filas += '<div class="sum-line"><span>Código</span><b>' + esc(d.codigo) + '</b></div>';
 
   panel.innerHTML =
