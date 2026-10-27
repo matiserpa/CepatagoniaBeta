@@ -73,8 +73,6 @@
   .manual input::placeholder{color:var(--muted-2);font-size:13px}
   .manual button{padding:12px 16px;border:none;border-radius:10px;background:var(--a1);color:#fdfdf9;font-weight:700;cursor:pointer;font-family:var(--font-body);white-space:nowrap}
 
-  .rapido{display:flex;align-items:center;gap:8px;margin:0 14px 16px;font-size:12px;color:var(--muted)}
-  .rapido input{width:16px;height:16px;accent-color:var(--a1)}
   #busqResultados{margin:0 14px 12px;display:flex;flex-direction:column;gap:6px}
   .busq-msg{font-size:13px;color:var(--muted-2);padding:4px 2px}
   .busq-item{text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--text);font-family:var(--font-body);font-size:14px;cursor:pointer}
@@ -123,7 +121,6 @@
     .scanner{margin:10px}
     .manual{margin:0 10px 10px;gap:6px}
     .manual button{padding:12px 14px;font-size:13px}
-    .rapido{margin:0 10px 12px;font-size:11.5px}
     .result h2{font-size:24px}
     .result .persona{font-size:19px}
     .result .det{font-size:13.5px}
@@ -161,6 +158,30 @@
   .empezar{position:fixed;inset:0;background:var(--bg-marco);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
   .empezar.visible{display:flex}
   .empezar button{margin-top:6px;width:100%;padding:18px;border:0;border-radius:999px;background:var(--dark);color:#fdfdf9;font-family:var(--font-body);font-size:17px;font-weight:700;cursor:pointer}
+
+  /* ---- pantalla del invitado ----
+     Fondo oscuro a proposito, y no por gusto: esta pantalla se lee de dos metros, de costado y
+     con la luz del salon encima. El nombre y el color de la cinta son lo unico que tiene que
+     entrar de un vistazo, asi que todo lo demas es chico y gris.
+     Las medidas van en vmin para que el mismo archivo sirva en una tablet de 10 pulgadas
+     apoyada en el mostrador y en un monitor de 27 colgado atras. */
+  .invitado{display:none}
+  body.modo-invitado{background:var(--dark)}
+  body.modo-invitado .app,
+  body.modo-invitado .result,
+  body.modo-invitado .login,
+  body.modo-invitado .empezar{display:none!important}
+  body.modo-invitado .invitado{
+    display:flex;flex-direction:column;justify-content:center;
+    position:fixed;inset:0;padding:6vmin 7vmin;background:var(--dark);color:#f4f2ec;
+    transition:background .4s ease;
+  }
+  .inv-saludo{font-size:clamp(12px,2.1vmin,20px);letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:rgba(244,242,236,.58);margin-bottom:1.6vmin}
+  .inv-nombre{font-family:var(--font-display);font-weight:700;font-size:clamp(30px,10.5vmin,120px);line-height:1.05;margin-bottom:3vmin}
+  .inv-chips{display:flex;flex-wrap:wrap;gap:1.6vmin}
+  .inv-chip{display:inline-flex;align-items:center;gap:1.3vmin;padding:1.2vmin 2.6vmin;border-radius:999px;background:rgba(244,242,236,.08);border:1px solid rgba(244,242,236,.16);font-size:clamp(13px,2.5vmin,26px);font-weight:600}
+  .inv-muestra{width:2.2vmin;height:2.2vmin;min-width:12px;min-height:12px;border-radius:4px;display:inline-block}
+  .inv-aviso{margin-top:3vmin;font-size:clamp(14px,2.7vmin,28px);color:rgba(244,242,236,.7);max-width:26ch;line-height:1.35}
 </style>
 </head>
 <body>
@@ -224,18 +245,17 @@
   </div>
   <div id="busqResultados" style="display:none"></div>
 
-  <!-- QUEDA APAGADO POR DEFECTO, A PROPÓSITO. Es tentador prenderlo para ahorrar un toque por
-       persona, pero en modo directo se cobra de menos:
-         · procesar() llama 'acreditar' y retorna ANTES del bloque que arma "Cobrar $X y entrar"
-           (el if(data.faltaAbonar) del final), así que ese botón nunca se arma;
-         · y mostrar() esconde rCobrar y rCobroMedios en cada pantalla, así que tampoco queda
-           de la persona anterior.
-       Resultado: una orden RESERVADO —paga en la puerta— entra acreditada, con la fila ya
-       escrita en Ingresos y la orden todavía en RESERVADO. La pantalla avisa "FALTA ABONAR"
-       en el texto, pero no hay con qué cobrarle: la plata hay que correrla después, a mano,
-       desde "entró debiendo" del panel. Prenderlo por defecto sólo es seguro el día que el
-       modo directo sepa frenar en los RESERVADO. -->
-  <label class="rapido"><input type="checkbox" id="rapido"> Acreditación directa (confirma sola al escanear)</label>
+  <!-- La acreditación es de un solo viaje y no hay opción para apagarla: escanear acredita.
+       Acá vivía un checkbox de "acreditación directa" que quedaba apagado a propósito, porque
+       en modo directo una orden RESERVADO entraba acreditada sin con qué cobrarle. Eso ya no
+       puede pasar: el freno de los RESERVADO está en acreditar() del backend, no en esta
+       pantalla, así que el camino rápido es también el seguro y es el único que hay.
+       El toque de Confirmar que había acá no era gratis: una persona escaneada y no confirmada
+       no deja fila en Ingresos, y sin esa fila no cuenta como presente NI recibe su certificado
+       —Diplomas.js lo emite contra esa hoja—. El segundo toque borraba gente en silencio. -->
+  <div class="manual" style="margin-top:-4px">
+    <button type="button" id="abrirInvitado">Abrir pantalla del invitado</button>
+  </div>
 </div>
 
 <div class="result" id="result">
@@ -265,6 +285,19 @@
     <button class="b-conf" type="button" id="rConfirmar" style="display:none">Confirmar ingreso</button>
     <button class="b-conf" type="button" id="rCobrar" style="display:none">Cobrar y entrar</button>
   </div>
+</div>
+
+<!-- PANTALLA DEL INVITADO — mira al público, no al acreditador.
+     Se abre con esta MISMA dirección y ?invitado=1: en un segundo monitor del mismo equipo, o
+     en una tablet apoyada en el mostrador. Las dos ventanas se hablan por BroadcastChannel,
+     que es same-origin y no necesita nada del backend.
+     Lo único que sale acá es el nombre, la cinta y la butaca. Nunca un código, un DNI, un monto
+     ni un motivo de rechazo: delante de una fila, eso expone a la persona. -->
+<div class="invitado" id="invitado" aria-live="polite">
+  <p class="inv-saludo" id="invSaludo">Acreditación</p>
+  <p class="inv-nombre" id="invNombre">Acercá tu código</p>
+  <div class="inv-chips" id="invChips"></div>
+  <p class="inv-aviso" id="invAviso"></p>
 </div>
 
 <script src="https://accounts.google.com/gsi/client"></script>
@@ -337,6 +370,15 @@ let pendienteSaldo = 0;
 let motivoDeshacer = '';     // el motivo elegido; sin motivo no se borra ningún ingreso
 let deshacerArmado = false;  // deshacer son dos toques: el primero sólo pide el motivo
 let turnoProcesar = 0;       // para descartar la respuesta de un escaneo que ya nadie espera
+
+// ---------- modo "pantalla del invitado" ----------
+// Esta misma página con ?invitado=1 es la pantalla que mira al público. No se loguea, no prende
+// la cámara y no acredita a nadie: escucha a la ventana del operador y muestra un nombre.
+// Es la MISMA dirección a propósito: una sola página que desplegar y nada que mantener
+// sincronizado entre dos archivos.
+var ES_INVITADO = false;
+try{ ES_INVITADO = new URLSearchParams(location.search).get('invitado') === '1'; }catch(e){}
+if(ES_INVITADO && document.body) document.body.classList.add('modo-invitado');
 
 // Cuánto queda cada pantalla de resultado antes de volver sola al lector. El verde no tiene
 // nada que leer —la persona ya está entrando— y 4,5 segundos era la estación parada mirando
@@ -518,6 +560,10 @@ async function handleCredentialResponse(resp){
   }
 }
 (function(){
+  // La pantalla del invitado no se loguea: no llama al backend ni acredita a nadie, sólo
+  // escucha. Pedirle una cuenta de Google a un monitor colgado de la pared no tiene sentido,
+  // y además dejaría el cartel de login tapando la pantalla que mira el público.
+  if(ES_INVITADO) return;
   // Si el script de Google no bajó —red del hotel, bloqueo, caída— `google` no existe y esta
   // línea tiraba, llevándose puesto TODO el resto del script: incluido el campo manual y el
   // lector USB, que son justamente el plan B. Ahora falla acotado y lo dice.
@@ -595,6 +641,7 @@ function enfocarManual(forzar){
 // El foco permanente es para el lector USB. En un teléfono este intervalo era lo peor de todo:
 // bajabas el teclado y volía a subir un segundo después.
 setInterval(()=>{
+  if(ES_INVITADO) return;   // la pantalla del invitado no tiene campo que enfocar
   if(!HAY_TECLADO && CAMARA_ANDANDO) return;
   // No robar el foco si el staff está tipeando en la búsqueda por nombre
   const a = document.activeElement;
@@ -657,7 +704,7 @@ document.querySelectorAll('.jbtn').forEach(b=>{
   });
   repintarJornadas();
 })();
-document.getElementById('rapido').addEventListener('change', enfocarManual);
+document.getElementById('abrirInvitado').addEventListener('click', abrirPantallaInvitado);
 
 // ---------- API ----------
 // 15 segundos y corta. Un fetch sin timeout no vuelve nunca: la promesa queda viva, la pantalla
@@ -713,6 +760,99 @@ function vibrar(tipo){
   try{ if(navigator.vibrate) navigator.vibrate(VIBRA[tipo] || VIBRA.mal); }catch(e){}
 }
 
+// ---------- las dos ventanas ----------
+// BroadcastChannel es same-origin y no pasa por el backend: el operador publica, la pantalla
+// del invitado escucha. Si el navegador no lo tiene, cae a un evento de localStorage, que hace
+// lo mismo un poco más lento — y "más lento" acá es una persona cada doce segundos.
+var CANAL_INVITADO = 'puerta-invitado';
+var canalInvitado = null;
+try{ if(window.BroadcastChannel) canalInvitado = new BroadcastChannel(CANAL_INVITADO); }catch(e){}
+
+function avisarInvitado(estado){
+  if(ES_INVITADO) return;              // la pantalla escucha, no publica
+  var paquete;
+  try{ paquete = JSON.stringify({ t: Date.now(), estado: estado }); }catch(e){ return; }
+  try{ if(canalInvitado) canalInvitado.postMessage(paquete); }catch(e){}
+  // Se escribe SIEMPRE, no sólo cuando falta BroadcastChannel: es lo que permite que una
+  // pantalla que se abre a mitad del evento arranque mostrando algo y no en blanco.
+  try{ localStorage.setItem(CANAL_INVITADO, paquete); }catch(e){}
+}
+
+function pintarInvitado(estado){
+  var inv = document.getElementById('invitado');
+  if(!inv || !estado) return;
+  var chips = document.getElementById('invChips');
+  var aviso = document.getElementById('invAviso');
+  chips.textContent = '';
+  aviso.textContent = '';
+
+  if(estado.tipo === 'bienvenida'){
+    document.getElementById('invSaludo').textContent = 'Bienvenida';
+    document.getElementById('invNombre').textContent = estado.nombre || '';
+    var c = estado.cinta;
+    if(c && c.etiqueta){
+      var chip = document.createElement('span');
+      chip.className = 'inv-chip';
+      var m = document.createElement('span');
+      m.className = 'inv-muestra';
+      m.style.background = c.color || '#ccc';
+      chip.appendChild(m);
+      chip.appendChild(document.createTextNode('Cinta ' + String(c.etiqueta).toLowerCase()));
+      chips.appendChild(chip);
+    }
+    if(estado.butaca){
+      var b = document.createElement('span');
+      b.className = 'inv-chip';
+      b.textContent = 'Asientos ' + estado.butaca;
+      chips.appendChild(b);
+    }
+    return;
+  }
+  if(estado.tipo === 'cobro'){
+    document.getElementById('invSaludo').textContent = 'Falta un paso';
+    document.getElementById('invNombre').textContent = estado.nombre || '';
+    aviso.textContent = 'Lo terminamos acá mismo y entrás.';
+    return;
+  }
+  if(estado.tipo === 'ayuda'){
+    document.getElementById('invSaludo').textContent = 'Un momento';
+    document.getElementById('invNombre').textContent = 'Te ayudamos acá';
+    aviso.textContent = 'Pasá al costado, lo resolvemos ahora.';
+    return;
+  }
+  document.getElementById('invSaludo').textContent = 'Acreditación';
+  document.getElementById('invNombre').textContent = 'Acercá tu código';
+}
+
+// Lo guardado sirve para arrancar, pero sólo si es de recién. Sin este corte, una pantalla que
+// se abre a la mañana siguiente recibe al primero de la fila con el nombre del último de ayer.
+var INVITADO_FRESCO_MS = 30000;
+function escucharComoInvitado(){
+  function recibir(crudo, exigirFresco){
+    try{
+      var p = JSON.parse(crudo);
+      if(exigirFresco && (Date.now() - Number(p.t) > INVITADO_FRESCO_MS)) return;
+      pintarInvitado(p.estado);
+    }catch(e){}
+  }
+  try{ if(canalInvitado) canalInvitado.onmessage = function(e){ recibir(e.data, false); }; }catch(e){}
+  window.addEventListener('storage', function(e){
+    if(e.key === CANAL_INVITADO && e.newValue) recibir(e.newValue, false);
+  });
+  try{ var ult = localStorage.getItem(CANAL_INVITADO); if(ult) recibir(ult, true); }catch(e){}
+}
+
+function abrirPantallaInvitado(){
+  var url = location.pathname + '?invitado=1';
+  var v = null;
+  try{ v = window.open(url, 'puertaInvitado'); }catch(e){}
+  // Si el navegador la bloquea no hay nada que hacer desde acá: lo único útil es que el
+  // operador vea la dirección para abrirla a mano en la tablet o en el otro monitor.
+  if(!v) alert('El navegador bloqueó la ventana.\n\nAbrí esta dirección en la otra pantalla:\n' + location.origin + url);
+}
+
+if(ES_INVITADO) escucharComoInvitado();
+
 function mostrar(tipo, titulo, persona, det, cod, conConfirmar, cinta){
   vibrar(tipo === 'ok' ? 'ok' : (tipo === 'warn' ? 'warn' : 'mal'));
   pintarCinta(cinta);
@@ -767,15 +907,24 @@ function cerrar(){
   // Cambiar de turno acá es lo que hace que una respuesta que llega tarde —el pedido que se
   // colgó y vuelve a los 14 segundos— no pinte una pantalla encima de la persona siguiente.
   turnoProcesar++;
+  avisarInvitado({ tipo:'espera' });
   // enfocarManual y NO m.focus() directo: después de cada persona, en un teléfono, esto
   // levantaba el teclado encima de la cámara justo cuando llega el siguiente de la fila.
+  // En notebook SÍ enfoca, y eso es lo que deja la estación lista para una pistola lectora:
+  // la pistola teclea el código y manda Enter, sin que nadie toque nada entre persona y persona.
   const m = document.getElementById('manual'); m.value=''; enfocarManual();
 }
 document.getElementById('rCancelar').onclick = cerrar;
+// Este botón ya no es el paso obligatorio de cada persona: escanear acredita solo. Queda como
+// el "sólo entrar" de una reserva, que es el único caso donde la puerta todavía tiene que
+// elegir entre cobrar o dejar pasar debiendo.
 document.getElementById('rConfirmar').onclick = async function(){
   if(!pendiente) return cerrar();
   this.textContent = 'Confirmando…';
-  const data = await llamar('acreditar', pendiente).catch(()=>({ok:false,motivo:'Error de conexión'}));
+  // permitirDeuda va a propósito: sin esa bandera el backend vuelve a frenar, que es lo que
+  // tiene que hacer con cualquier otra pantalla que llame a acreditar sin pensar en el saldo.
+  const data = await llamar('acreditar', pendiente, { permitirDeuda: true })
+    .catch(()=>({ok:false,motivo:'Error de conexión'}));
   this.textContent = 'Confirmar ingreso';
   if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
 };
@@ -842,9 +991,14 @@ function registrarOK(data){
   const cobroTxt = (Number(data.cobrado) > 0)
     ? '<br><b style="display:inline-block;margin-top:10px;padding:5px 14px;border-radius:999px;background:#fdfdf9;color:#1b7a3d;font-size:15.5px">✓ Cobrado $'+Number(data.cobrado).toLocaleString('es-AR')+(data.medioCobro ? ' · '+data.medioCobro : '')+'</b>'
     : '';
+  // "Incluye: ..." estaba sólo en la pantalla de antes de confirmar, que ya no existe. Va acá
+  // para no perderlo: es lo que le dice al acreditador que esta persona además tiene un post.
   mostrar('ok','Ingreso registrado', data.persona,
-    'Asientos: <b>'+escHtml(data.asientos)+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+'<br>'+jorNombre()+cobroTxt+avisoAbonar(data),
+    'Asientos: <b>'+escHtml(data.asientos)+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+
+    (data.post && data.post!=='NO' ? '<br>Incluye: '+escHtml(data.post) : '')+
+    '<br>'+jorNombre()+cobroTxt+avisoAbonar(data),
     data.codigo, false, data.cinta);
+  avisarInvitado({ tipo:'bienvenida', nombre: data.persona, cinta: data.cinta, butaca: data.asientos });
   deshacerCod = { codigo: data.codigo, conto: true };
   document.getElementById('rDeshacer').style.display = 'block';
   clearTimeout(cerrarTimer);
@@ -858,6 +1012,11 @@ function resultadoNegativo(data){
     pedirReLogin();
     return;
   }
+  // Un solo aviso para todo lo que sigue, y a propósito neutro: la pantalla del invitado no
+  // distingue entre "ya ingresó", "no está paga" y "se cayó el wifi", porque la persona que
+  // está parada ahí adelante no tiene nada que ver con ninguna de las tres. El detalle lo lee
+  // el operador en su pantalla.
+  avisarInvitado({ tipo:'ayuda' });
   // Quedarse sin señal no es que la entrada este mal. Iban las dos cosas a la misma pantalla
   // roja, y el staff no tenia como distinguirlas: con el wifi de un hotel lleno, eso significa
   // rechazar gente por un problema de red.
@@ -907,10 +1066,17 @@ async function procesar(codigo){
   // pantalla que no cambiaba: el acreditador apuntaba de nuevo creyendo que el QR no se leyó.
   mostrarVerificando();
 
-  const directo = document.getElementById('rapido').checked;
+  // UN SOLO VIAJE, Y SIN TOQUE INTERMEDIO. Antes eran dos llamadas: verificarAcceso para mirar
+  // y acreditar recién al tocar Confirmar. acreditar() ya hace las dos cosas —llama a
+  // datosAcceso() por dentro— así que el viaje de mirar era puro ida y vuelta de más.
+  //
+  // Lo que se saca no es un toque de comodidad: una persona escaneada y no confirmada no deja
+  // fila en Ingresos, y sin esa fila no figura presente en ningún reporte ni recibe su
+  // certificado, porque Diplomas.js los emite contra esa hoja. El toque borraba gente, y en
+  // silencio: una fila que no se escribió no se puede ni marcar como problema.
   let data;
   try {
-    data = await llamar(directo ? 'acreditar' : 'verificarAcceso', codigo)
+    data = await llamar('acreditar', codigo)
       .catch(()=>({ok:false,motivo:'Error de conexión'}));
   } finally {
     // 'ocupado' se suelta ACÁ y no sólo en cerrar(). Antes, un fetch que no volvía nunca dejaba
@@ -921,34 +1087,41 @@ async function procesar(codigo){
   // llegó tarde y no se pinta: es de una persona que ya no está adelante.
   if(miTurno !== turnoProcesar) return;
 
-  if(directo){
-    if(data.ok){ registrarOK(data); } else { resultadoNegativo(data); }
+  if(data.ok){ registrarOK(data); return; }
+
+  // La reserva es el ÚNICO caso que frena y pide una decisión de persona: cobrar el saldo o
+  // dejar entrar debiendo. El backend todavía no escribió nada, así que mientras esta pantalla
+  // está arriba esa persona no tiene ingreso registrado: lo decide el botón que se toque.
+  if(data.motivo === 'FALTA ABONAR' && data.detalle){
+    pantallaCobro(codigo, data.detalle);
     return;
   }
-  if(!data.ok){ resultadoNegativo(data); return; }
-  if(data.yaIngreso){
-    resultadoNegativo({ motivo:'YA INGRESÓ', detalle:data });
-    return;
-  }
+  resultadoNegativo(data);
+}
+
+function pantallaCobro(codigo, d){
   pendiente = codigo;
-  // También antes de confirmar: quien acredita busca la cinta mientras la persona se acerca,
-  // no después de darle al botón.
-  mostrar('ok','Entrada válida', data.persona,
-    'Asientos: <b>'+escHtml(data.asientos)+'</b> · Persona '+data.personaNum+' de '+data.totalPersonas+
-    (data.post && data.post!=='NO' ? '<br>Incluye: '+escHtml(data.post) : '')+'<br>'+jorNombre()+avisoAbonar(data),
-    data.codigo, true, data.cinta);
-  if(data.faltaAbonar){
-    pendienteSaldo = Number(data.saldo) || 0;
-    medioCobro = 'efectivo';
-    const rc = document.getElementById('rCobrar');
-    rc.textContent = pendienteSaldo > 0 ? ('Cobrar $'+pendienteSaldo.toLocaleString('es-AR')+' y entrar') : 'Cobrar y entrar';
-    rc.style.display = 'block';
-    document.getElementById('rCobroMedios').style.display = 'flex';
-    const conf = document.getElementById('rConfirmar');
-    conf.textContent = 'Sólo entrar';
-    conf.className = 'b-sec';
-    actualizarChips();
-  }
+  pendienteSaldo = Number(d.saldo) || 0;
+  medioCobro = 'efectivo';
+  mostrar('warn','Falta abonar', d.persona,
+    'Asientos: <b>'+escHtml(d.asientos)+'</b> · Persona '+d.personaNum+' de '+d.totalPersonas+
+    (d.post && d.post!=='NO' ? '<br>Incluye: '+escHtml(d.post) : '')+'<br>'+jorNombre()+avisoAbonar(d),
+    d.codigo, true, d.cinta);
+  // Después de mostrar() y no antes: mostrar() esconde estos dos en cada pantalla, justamente
+  // para que no queden puestos de la persona anterior.
+  const rc = document.getElementById('rCobrar');
+  rc.textContent = pendienteSaldo > 0 ? ('Cobrar $'+pendienteSaldo.toLocaleString('es-AR')+' y entrar') : 'Cobrar y entrar';
+  rc.style.display = 'block';
+  document.getElementById('rCobroMedios').style.display = 'flex';
+  const conf = document.getElementById('rConfirmar');
+  conf.textContent = 'Sólo entrar';
+  conf.className = 'b-sec';
+  actualizarChips();
+  // El saldo NO va a la pantalla del invitado: lo que debe una persona no se proyecta delante
+  // de la fila. El operador lo lee en la suya y se lo dice.
+  avisarInvitado({ tipo:'cobro', nombre: d.persona });
+  // Sin cierre automático: acá hay plata esperando que alguien decida.
+  clearTimeout(cerrarTimer);
 }
 
 // ---------- entrada manual / lector USB ----------
